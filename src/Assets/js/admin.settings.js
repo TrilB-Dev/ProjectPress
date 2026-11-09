@@ -1,0 +1,166 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const root = document;
+  const panel = root.querySelector('#pluginname-settings-panel');
+  const config = window.pluginnameSettingsTabs;
+  if (!panel || !config) return;
+
+  const fieldValue = (name, scope = root) => {
+    const source = scope || root;
+    const candidates = source.querySelectorAll('[name]');
+    const match = Array.from(candidates).find((field) => {
+      const fieldName = field.getAttribute('name') || '';
+      return fieldName === name || fieldName === `settings[${name}]`;
+    }) || Array.from(root.querySelectorAll('[name]')).find((field) => {
+      const fieldName = field.getAttribute('name') || '';
+      return fieldName === name || fieldName === `settings[${name}]`;
+    });
+
+    if (!match) return '';
+    if (match.type === 'checkbox') return match.checked ? '1' : '0';
+    if (match.type === 'radio') {
+      const checked = (scope || root).querySelectorAll(`input[name="${match.name}"]:checked`)[0] || root.querySelectorAll(`input[name="${match.name}"]:checked`)[0];
+      return checked ? checked.value : '';
+    }
+    return match.value;
+  };
+
+  const conditionMatches = (condition, scope = root) => {
+    if (!condition || typeof condition !== 'object') return true;
+    return Object.entries(condition).every(([key, expected]) => {
+      const actual = String(fieldValue(key, scope) ?? '');
+      const target = Array.isArray(expected) ? expected.map(String) : String(expected ?? '');
+      if (Array.isArray(expected)) return target.includes(actual);
+      return actual === target;
+    });
+  };
+
+  const updateConditionalFields = () => {
+    root.querySelectorAll('[data-pluginname-visible-when], [data-pluginname-required-when]').forEach((field) => {
+      const visibleRule = field.dataset.pluginnameVisibleWhen ? JSON.parse(field.dataset.pluginnameVisibleWhen) : null;
+      const requiredRule = field.dataset.pluginnameRequiredWhen ? JSON.parse(field.dataset.pluginnameRequiredWhen) : null;
+      const visible = (!visibleRule || conditionMatches(visibleRule, field.closest('form') || root)) && (!requiredRule || conditionMatches(requiredRule, field.closest('form') || root));
+      field.hidden = !visible;
+      field.style.display = visible ? '' : 'none';
+      field.querySelectorAll('input, select, textarea, button').forEach((element) => {
+        if (element === field) return;
+        element.disabled = !visible;
+      });
+    });
+  };
+
+  const stateFromHash = () => {
+    const hash = window.location.hash.replace(/^#/, '') || panel.dataset.currentTab || 'general';
+    if (hash.indexOf('layout-') === 0) return { tab: 'layout', section: hash.replace('layout-', '') || 'general' };
+    return { tab: hash, section: 'general' };
+  };
+
+  const setActive = (tab, section) => {
+    root.querySelectorAll('[data-pluginname-settings-tab]').forEach((link) => {
+      const active = link.dataset.pluginnameSettingsTab === tab && (!link.dataset.pluginnameSettingsSection || link.dataset.pluginnameSettingsSection === section);
+      link.classList.toggle('active', active);
+      link.setAttribute('aria-selected', active ? 'true' : 'false');
+      if (active) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
+    });
+  };
+
+  const bindForms = () => root.querySelectorAll('.pluginname-settings-form, .pluginname-import-form').forEach((form) => {
+    form.addEventListener('submit', () => {
+      const submit = form.querySelector('[type="submit"]');
+      if (submit) submit.disabled = true;
+    });
+    form.querySelectorAll('input, select, textarea').forEach((input) => {
+      input.addEventListener('change', updateConditionalFields);
+      input.addEventListener('input', updateConditionalFields);
+    });
+  });
+
+  const activateLayoutTab = (button) => {
+    const target = root.querySelector(button.dataset.bsTarget);
+    if (!target) return;
+
+    const current = root.querySelector('#pluginname-layout-tab .nav-link.active');
+    const currentPane = root.querySelector('#pluginname-layout-tab-content .tab-pane.active');
+    if (current === button && currentPane === target) return;
+
+    root.querySelectorAll('#pluginname-layout-tab .nav-link').forEach((tab) => {
+      const active = tab === button;
+      tab.classList.toggle('active', active);
+      tab.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+
+    if (currentPane) {
+      currentPane.classList.remove('show');
+      window.setTimeout(() => currentPane.classList.remove('active'), 150);
+    }
+
+    target.classList.add('active');
+    requestAnimationFrame(() => target.classList.add('show'));
+  };
+
+  const loadTab = (tab, section, updateHash = true) => {
+    const currentContent = panel.querySelector('.pluginname-settings-tab-content');
+    if (currentContent) currentContent.classList.add('is-loading');
+    panel.setAttribute('aria-busy', 'true');
+    const body = new URLSearchParams({ action: 'pluginname_load_settings_tab', nonce: config.nonce, tab, layout_section: section });
+    fetch(config.ajaxUrl, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' }, body })
+      .then((response) => response.json())
+      .then((response) => {
+        if (!response.success || !response.data.html) throw new Error('Unable to load settings tab');
+        panel.innerHTML = response.data.html;
+        panel.dataset.currentTab = response.data.tab;
+        panel.dataset.currentSection = response.data.layout_section;
+        setActive(response.data.tab, response.data.layout_section);
+        if (updateHash) window.history.pushState({}, '', `${window.location.pathname}${window.location.search}#${response.data.tab === 'layout' ? `layout-${response.data.layout_section}` : response.data.tab}`);
+        bindForms();
+        const nextContent = panel.querySelector('.pluginname-settings-tab-content');
+        if (nextContent) requestAnimationFrame(() => nextContent.classList.remove('is-loading'));
+      })
+      .catch(() => { panel.classList.remove('is-loading'); })
+      .finally(() => panel.removeAttribute('aria-busy'));
+  };
+
+  root.addEventListener('click', (event) => {
+    const layoutButton = event.target.closest?.('[data-pluginname-layout-tab]');
+    if (layoutButton) {
+      event.preventDefault();
+      activateLayoutTab(layoutButton);
+      window.history.pushState({}, '', `${window.location.pathname}${window.location.search}#layout-${layoutButton.dataset.pluginnameLayoutTab}`);
+      panel.dataset.currentTab = 'layout';
+      panel.dataset.currentSection = layoutButton.dataset.pluginnameLayoutTab;
+      return;
+    }
+
+    const link = event.target.closest?.('#pluginname-settings-panel [data-pluginname-settings-tab]');
+    if (!link) return;
+    event.preventDefault();
+    event.stopPropagation();
+    loadTab(link.dataset.pluginnameSettingsTab, link.dataset.pluginnameSettingsSection || 'general');
+  }, true);
+  const navigateFromHash = () => {
+    const state = stateFromHash();
+    if ('layout' === state.tab) {
+      const button = root.querySelector(`[data-pluginname-layout-tab="${state.section}"]`);
+      if (button) {
+        activateLayoutTab(button);
+        panel.dataset.currentTab = 'layout';
+        panel.dataset.currentSection = state.section;
+      }
+      return;
+    }
+    loadTab(state.tab, state.section, false);
+  };
+  window.addEventListener('popstate', navigateFromHash);
+  window.addEventListener('hashchange', navigateFromHash);
+
+  const initial = stateFromHash();
+  setActive(initial.tab, initial.section);
+  if ('layout' === initial.tab) {
+    const button = root.querySelector(`[data-pluginname-layout-tab="${initial.section}"]`);
+    if (button) activateLayoutTab(button);
+  }
+  if (window.location.hash && 'layout' !== initial.tab && (initial.tab !== panel.dataset.currentTab || initial.section !== panel.dataset.currentSection)) loadTab(initial.tab, initial.section, false);
+  updateConditionalFields();
+  bindForms();
+  updateConditionalFields();
+});

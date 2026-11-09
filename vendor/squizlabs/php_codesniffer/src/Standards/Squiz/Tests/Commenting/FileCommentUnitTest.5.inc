@@ -1,0 +1,7 @@
+<?php
+/*
+ * Wrong comment style.
+ */
+
+
+

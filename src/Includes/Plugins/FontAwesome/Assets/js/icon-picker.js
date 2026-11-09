@@ -1,0 +1,288 @@
+/**
+ * PluginName FontAwesome Icon Picker JavaScript
+ *
+ * @package PluginName
+ * @subpackage FontAwesome
+ * @since 1.0.0
+ */
+
+(($) => {
+    'use strict';
+
+    /**
+     * FontAwesome Icon Picker
+     */
+    var PluginNameFAIconPicker = {
+
+        /**
+         * Initialize the icon picker
+         */
+        init: function() {
+            this.bindEvents();
+        },
+
+        /**
+         * Bind event handlers
+         */
+        bindEvents: function() {
+            var self = this;
+
+            // Open picker modal
+            $(document).on('click', '.pluginname-fa-picker-button', function(e) {
+                e.preventDefault();
+                var pickerId = $(this).data('picker-id');
+                self.openPicker(pickerId);
+            });
+
+            // Close picker modal
+            $(document).on('click', '.pluginname-fa-picker-close, .pluginname-fa-picker-overlay, .pluginname-fa-picker-cancel', (e) => {
+                e.preventDefault();
+                self.closePicker();
+            });
+
+            // Search icons
+            $(document).on('input', '.pluginname-fa-picker-search-input', () => {
+                self.searchIcons();
+            });
+
+            // Filter by pack
+            $(document).on('change', '.pluginname-fa-picker-pack-filter', function() {
+                var pack = $(this).val();
+                var $container = $(this).closest('.pluginname-fa-picker-modal');
+                var $styleFilter = $container.find('.pluginname-fa-picker-style-filter');
+
+                // Handle brands pack - it only has one style
+                if (pack === 'brands') {
+                    $styleFilter.prop('disabled', true).hide();
+                    // Set style to solid for brands
+                    $styleFilter.val('solid');
+                } else {
+                    $styleFilter.prop('disabled', false).show();
+                }
+
+                self.searchIcons();
+            });
+
+            // Filter by style
+            $(document).on('change', '.pluginname-fa-picker-style-filter', () => {
+                self.searchIcons();
+            });
+
+            // Select icon
+            $(document).on('click', '.pluginname-fa-picker-icon-item', function() {
+                self.selectIcon($(this));
+                self.confirmSelection();
+            });
+
+            // Confirm selection
+            $(document).on('click', '.pluginname-fa-picker-select', () => {
+                self.confirmSelection();
+            });
+
+            // Load more icons (pagination)
+            $(document).on('click', '.pluginname-fa-picker-load-more', () => {
+                self.loadMoreIcons();
+            });
+        },
+
+        /**
+         * Open the icon picker modal
+         *
+         * @param {string} pickerId The picker container ID
+         */
+        openPicker: function(pickerId) {
+            this.currentPickerId = pickerId;
+            this.currentPage = 1;
+            this.selectedIcon = null;
+
+            var $container = $('#' + pickerId);
+            var $modal = $container.find('.pluginname-fa-picker-modal');
+
+            // Show modal
+            $modal.show();
+
+            // Handle initial pack selection
+            var $packFilter = $modal.find('.pluginname-fa-picker-pack-filter');
+            var $styleFilter = $modal.find('.pluginname-fa-picker-style-filter');
+            var pack = $packFilter.val();
+
+            if (pack === 'brands') {
+                $styleFilter.prop('disabled', true).hide();
+            } else {
+                $styleFilter.prop('disabled', false).show();
+            }
+
+            // Load initial icons
+            this.searchIcons();
+        },
+
+        /**
+         * Close the icon picker modal
+         */
+        closePicker: function() {
+            $('.pluginname-fa-picker-modal').hide();
+            this.currentPickerId = null;
+            this.selectedIcon = null;
+        },
+
+        /**
+         * Search for icons
+         */
+        searchIcons: function() {
+            var self = this;
+            var $container = $('#' + this.currentPickerId);
+            var $searchInput = $container.find('.pluginname-fa-picker-search-input');
+            var $packFilter = $container.find('.pluginname-fa-picker-pack-filter');
+            var $styleFilter = $container.find('.pluginname-fa-picker-style-filter');
+            var $results = $container.find('.pluginname-fa-picker-results');
+
+            var search = ($searchInput.val() || '').toLowerCase();
+            var pack = $packFilter.val();
+            var style = $styleFilter.val();
+            var catalog = (window.pluginname_fa_picker && window.pluginname_fa_picker.icons) || [];
+
+            $results.html('<div class="pluginname-fa-picker-loading">' + pluginname_fa_picker.strings.loading + '</div>');
+
+            var filtered = catalog.filter((icon) => {
+                var terms = [(icon.name || ''), (icon.label || ''), ...(icon.search_terms || [])];
+                return !search || terms.some((term) => (term || '').toLowerCase().indexOf(search) !== -1);
+            }).map((icon) => {
+                var prefix = (pack === 'brands') ? 'fab' : ((style === 'regular') ? 'far' : ((style === 'light') ? 'fal' : ((style === 'thin') ? 'fat' : 'fas')));
+                return {
+                    name: icon.name,
+                    label: icon.label,
+                    prefix: prefix,
+                    className: prefix + ' fa-' + icon.name
+                };
+            });
+
+            self.displayIcons({ icons: filtered, total: filtered.length, page: 1, total_pages: 1, prefix: (pack === 'brands') ? 'fab' : ((style === 'regular') ? 'far' : ((style === 'light') ? 'fal' : ((style === 'thin') ? 'fat' : 'fas'))) }, pack, style);
+        },
+
+        /**
+         * Display icons in the results area
+         *
+         * @param {object} data Icon data from AJAX response
+         * @param {string} pack Selected pack
+         * @param {string} style Selected style
+         */
+        displayIcons: function(data, pack, style) {
+            var self = this;
+            var $container = $('#' + this.currentPickerId);
+            var $results = $container.find('.pluginname-fa-picker-results');
+
+            if (!data.icons || data.icons.length === 0) {
+                $results.html('<div class="pluginname-fa-picker-no-results">' + pluginname_fa_picker.strings.no_icons_found + '</div>');
+                return;
+            }
+
+            var html = '<div class="pluginname-fa-picker-grid">';
+
+            data.icons.forEach((icon) => {
+                var iconClass = data.prefix + ' fa-' + icon.name;
+
+                html += '<div class="pluginname-fa-picker-icon-item" data-icon-name="' + icon.name + '" data-icon-pack="' + pack + '" data-icon-style="' + style + '" data-icon-prefix="' + data.prefix + '">';
+                html += '<i class="' + iconClass + '"></i>';
+                html += '<span class="pluginname-fa-picker-icon-label">' + icon.label + '</span>';
+                html += '</div>';
+            });
+
+            html += '</div>';
+
+            // Add pagination if needed
+            if (data.total_pages > 1 && data.page < data.total_pages) {
+                html += '<div class="pluginname-fa-picker-pagination">';
+                html += '<button class="btn btn-link pluginname-fa-picker-load-more" data-next-page="' + (data.page + 1) + '">' + 'Load More' + '</button>';
+                html += '</div>';
+            }
+
+            $results.html(html);
+        },
+
+        /**
+         * Select an icon
+         *
+         * @param {jQuery} $iconItem The clicked icon item
+         */
+        selectIcon: function($iconItem) {
+            var $container = $('#' + this.currentPickerId);
+
+            // Remove previous selection
+            $container.find('.pluginname-fa-picker-icon-item').removeClass('selected');
+
+            // Add selection to clicked item
+            $iconItem.addClass('selected');
+
+            // Store selected icon data
+            this.selectedIcon = {
+                name: $iconItem.data('icon-name'),
+                pack: $iconItem.data('icon-pack'),
+                style: $iconItem.data('icon-style'),
+                prefix: $iconItem.data('icon-prefix'),
+                class: $iconItem.data('icon-prefix') + ' fa-' + $iconItem.data('icon-name')
+            };
+
+            // Enable select button
+            $container.find('.pluginname-fa-picker-select').prop('disabled', false);
+        },
+
+        /**
+         * Confirm the icon selection
+         */
+        confirmSelection: function() {
+            if (!this.selectedIcon) {
+                return;
+            }
+
+            var $container = $('#' + this.currentPickerId);
+            var $input = $container.find('.pluginname-fa-picker-input');
+            var $preview = $container.find('.pluginname-fa-picker-preview');
+
+            // Update hidden input
+            $input.val(this.selectedIcon.class).trigger('change');
+
+            // Update preview
+            $preview.html('<i class="' + this.selectedIcon.class + '"></i>');
+
+            // Directly update mod manager fields if present
+            if (jQuery('#taxonomy-icon-class').length) {
+                jQuery('#taxonomy-icon-class').val(this.selectedIcon.class);
+                jQuery('#taxonomy-icon-color').val('#333333');
+                jQuery('#taxonomy-icon-preview-icon').attr('class', this.selectedIcon.class).css('color', '#333333');
+                jQuery('#taxonomy-icon-preview').show();
+            }
+
+            // Trigger custom event for external listeners
+            $container.trigger('icon-selected', [this.selectedIcon.class, '#333333']);
+
+            // Close modal
+            this.closePicker();
+        },
+
+        /**
+         * Load more icons (pagination)
+         */
+        loadMoreIcons: function() {
+            var $container = $('#' + this.currentPickerId);
+            var $loadMoreBtn = $container.find('.pluginname-fa-picker-load-more');
+
+            this.currentPage = parseInt($loadMoreBtn.data('next-page'));
+
+            // Remove load more button temporarily
+            $loadMoreBtn.remove();
+
+            // Search with new page
+            this.searchIcons();
+        }
+    };
+
+    // Initialize when document is ready
+    $(document).ready(() => {
+        PluginNameFAIconPicker.init();
+    });
+
+    // Expose to global scope for potential external use
+    window.PluginNameFAIconPicker = PluginNameFAIconPicker;
+
+})(jQuery);
+

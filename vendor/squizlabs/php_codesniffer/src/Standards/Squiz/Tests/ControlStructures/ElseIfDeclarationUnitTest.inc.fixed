@@ -1,0 +1,17 @@
+<?php
+
+if ($something) {
+} else if ($somethingElse) {
+}
+
+if ($something) {
+} else if ($somethingElse) {
+}
+
+if ($something) {
+} else if ($somethingElse) {
+} else if ($another) {
+}
+
+
+
