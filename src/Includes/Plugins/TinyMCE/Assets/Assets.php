@@ -2,16 +2,16 @@
 /**
  * TinyMCE Editor Plugin Assets
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Plugins\TinyMCE\Assets
  * @since 1.0.0
  */
 
-namespace PluginName\Includes\Plugins\TinyMCE\Assets;
+namespace ProjectPress\Includes\Plugins\TinyMCE\Assets;
 
-use PluginName\Includes\Plugins\TinyMCE\Includes\Settings\Settings;
-use PluginName\Includes\Functions\Helpers\ImageHelper;
-use PluginName\Includes\Functions\Helpers\LoaderHelper;
+use ProjectPress\Includes\Plugins\TinyMCE\Includes\Settings\Settings;
+use ProjectPress\Includes\Functions\Helpers\ImageHelper;
+use ProjectPress\Includes\Functions\Helpers\LoaderHelper;
 
 final class Assets {
 	/**
@@ -40,7 +40,7 @@ final class Assets {
 			array(
 				array(
 					'type'          => 'filter',
-					'hook'          => 'pluginname_admin_assets',
+					'hook'          => 'projectpress_admin_assets',
 					'callback'      => 'register_admin_assets',
 					'accepted_args' => 2,
 				),
@@ -63,28 +63,28 @@ final class Assets {
 			return $assets;
 		}
 
-		$base_url = PLUGINNAME_URL . 'src/Includes/Plugins/TinyMCE/Assets/tinymce/';
+		$base_url = PROJECTPRESS_URL . 'src/Includes/Plugins/TinyMCE/Assets/tinymce/';
 
 		$assets['styles'][]  = array(
-			'handle' => 'pluginname-tinymce-skin',
+			'handle' => 'projectpress-tinymce-skin',
 			'src'    => $base_url . 'skins/ui/' . Settings::ui_skin() . '/skin.min.css',
 		);
 		$assets['scripts'][] = array(
-			'handle'    => 'pluginname-tinymce',
+			'handle'    => 'projectpress-tinymce',
 			'src'       => $base_url . 'tinymce.min.js',
 			'in_footer' => true,
 		);
 		$assets['scripts'][] = array(
-			'handle'    => 'pluginname-tinymce-boot',
-			'src'       => PLUGINNAME_URL . 'src/Includes/Plugins/TinyMCE/Assets/js/tinymce.js',
-			'deps'      => array( 'pluginname-tinymce' ),
+			'handle'    => 'projectpress-tinymce-boot',
+			'src'       => PROJECTPRESS_URL . 'src/Includes/Plugins/TinyMCE/Assets/js/tinymce.js',
+			'deps'      => array( 'projectpress-tinymce' ),
 			'in_footer' => true,
 			'localize'  => array(
-				'object_name' => 'pluginnameTinyMCE',
+				'object_name' => 'projectpressTinyMCE',
 				'data'        => array(
-					'mediaTitle'   => __( 'Insert media', 'pluginname' ),
-					'mediaButton'  => __( 'Insert into editor', 'pluginname' ),
-					'mediaTooltip' => __( 'Insert media', 'pluginname' ),
+					'mediaTitle'   => __( 'Insert media', 'projectpress' ),
+					'mediaButton'  => __( 'Insert into editor', 'projectpress' ),
+					'mediaTooltip' => __( 'Insert media', 'projectpress' ),
 				),
 			),
 		);
@@ -100,7 +100,7 @@ final class Assets {
 	 * @return string The image URL, or an empty string when the path is invalid.
 	 */
 	public static function get_image( string $file ): string {
-		return ImageHelper::get_image_url( 'pluginname-tinymce', $file );
+		return ImageHelper::get_image_url( 'projectpress-tinymce', $file );
 	}
 }
 

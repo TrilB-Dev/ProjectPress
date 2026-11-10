@@ -2,13 +2,13 @@
 /**
  * Backward-compatible shortcode helper.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Functions\Helpers
  * @since 1.0.0
  */
-namespace PluginName\Includes\Functions\Helpers;
+namespace ProjectPress\Includes\Functions\Helpers;
 
-use PluginName\Includes\Core\Shortcodes;
+use ProjectPress\Includes\Core\Shortcodes;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

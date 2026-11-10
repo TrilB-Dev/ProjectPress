@@ -2,10 +2,10 @@
 /**
  * Handles sending emails through WordPress and resolving template overrides.
  *
- * @package PluginName
+ * @package ProjectPress
  */
 
-namespace PluginName\Includes\Email;
+namespace ProjectPress\Includes\Email;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -47,7 +47,7 @@ final class Email {
 	 * Instantiate an email template for a given template path or type.
 	 *
 	 * Theme overrides are supported by placing a matching file in:
-	 * wp-content/themes/<theme>/PluginNameEmails/Templates/Admin/<TemplateName>.php
+	 * wp-content/themes/<theme>/ProjectPressEmails/Templates/Admin/<TemplateName>.php
 	 *
 	 * @param string               $type Template identifier, e.g. `Admin/LicenceTypeCreated`.
 	 * @param array<string, mixed> $context Template context.
@@ -118,7 +118,7 @@ final class Email {
 		}
 
 		$class_name = ucfirst( (string) array_pop( $segments ) );
-		$namespace  = '\\PluginName\\Includes\\Email\\Templates';
+		$namespace  = '\\ProjectPress\\Includes\\Email\\Templates';
 
 		if ( ! empty( $segments ) ) {
 			$namespace .= '\\' . implode( '\\', array_map( 'ucfirst', $segments ) );
@@ -146,7 +146,7 @@ final class Email {
 		}
 
 		$class_name = ucfirst( (string) array_pop( $segments ) );
-		$namespace  = '\\PluginNameEmails\\Templates';
+		$namespace  = '\\ProjectPressEmails\\Templates';
 
 		if ( ! empty( $segments ) ) {
 			$namespace .= '\\' . implode( '\\', array_map( 'ucfirst', $segments ) );
@@ -185,7 +185,7 @@ final class Email {
 		}
 
 		foreach ( array_unique( $theme_roots ) as $theme_root ) {
-			$candidate = trailingslashit( $theme_root ) . 'PluginNameEmails/Templates';
+			$candidate = trailingslashit( $theme_root ) . 'ProjectPressEmails/Templates';
 			if ( '' !== $path ) {
 				$candidate .= '/' . $path;
 			}

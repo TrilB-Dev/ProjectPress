@@ -1,29 +1,29 @@
 <?php
 /**
- * Shortcodes class for defining and registering built-in PluginName shortcodes.
+ * Shortcodes class for defining and registering built-in ProjectPress shortcodes.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Pages
  * @since 1.0.0
  */
-namespace PluginName\Includes\Pages;
+namespace ProjectPress\Includes\Pages;
 
-use PluginName\Includes\Core\Shortcodes as ShortcodeCore;
+use ProjectPress\Includes\Core\Shortcodes as ShortcodeCore;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 /**
- * Shortcodes class for defining and registering built-in PluginName shortcodes.
+ * Shortcodes class for defining and registering built-in ProjectPress shortcodes.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Pages
  * @since 1.0.0
  */
 final class Shortcodes {
     /**
-     * Register all built-in PluginName shortcodes.
+     * Register all built-in ProjectPress shortcodes.
      *
      * @return void
      * @since 1.0.0
@@ -35,55 +35,55 @@ final class Shortcodes {
     }
 
     /**
-     * Return the built-in PluginName shortcode definitions.
+     * Return the built-in ProjectPress shortcode definitions.
      *
      * @return array<string, array<string, mixed>>
      * @since 1.0.0
      */
     public static function definitions(): array {
         $definitions = array(
-            'pluginname_alert' => array(
+            'projectpress_alert' => array(
                 'callback'   => array( self::class, 'render_alert' ),
                 'attributes' => array(
                     'type'  => 'info',
                     'title' => '',
                     'class' => '',
                 ),
-                'description' => __( 'Display a styled alert box', 'pluginname' ),
+                'description' => __( 'Display a styled alert box', 'projectpress' ),
                 'category'    => 'content',
                 'enclosing'   => true,
                 'tinymce'     => false,
             ),
-            'pluginname_button' => array(
+            'projectpress_button' => array(
                 'callback'   => array( self::class, 'render_button' ),
                 'attributes' => array(
-                    'label'  => __( 'Learn more', 'pluginname' ),
+                    'label'  => __( 'Learn more', 'projectpress' ),
                     'url'    => '#',
                     'style'  => 'primary',
                     'target' => '',
                     'rel'    => '',
                     'class'  => '',
                 ),
-                'description' => __( 'Render a styled button link', 'pluginname' ),
+                'description' => __( 'Render a styled button link', 'projectpress' ),
                 'category'    => 'content',
                 'enclosing'   => false,
                 'tinymce'     => false,
             ),
-            'pluginname_badge' => array(
+            'projectpress_badge' => array(
                 'callback'   => array( self::class, 'render_badge' ),
                 'attributes' => array(
-                    'text'  => __( 'New', 'pluginname' ),
+                    'text'  => __( 'New', 'projectpress' ),
                     'style' => 'primary',
                     'class' => '',
                 ),
-                'description' => __( 'Render a simple badge label', 'pluginname' ),
+                'description' => __( 'Render a simple badge label', 'projectpress' ),
                 'category'    => 'content',
                 'enclosing'   => false,
                 'tinymce'     => false,
             ),
         );
 
-        return apply_filters( 'pluginname_shortcode_definitions', $definitions );
+        return apply_filters( 'projectpress_shortcode_definitions', $definitions );
     }
 
     /**
@@ -111,7 +111,7 @@ final class Shortcodes {
         $message = trim( (string) ( is_string( $content ) ? $content : '' ) );
         $class   = trim( (string) $attributes['class'] );
 
-        $output = '<div class="pluginname-alert pluginname-alert-' . esc_attr( $type );
+        $output = '<div class="projectpress-alert projectpress-alert-' . esc_attr( $type );
         if ( '' !== $class ) {
             $output .= ' ' . esc_attr( $class );
         }
@@ -139,7 +139,7 @@ final class Shortcodes {
     public static function render_button( array $attributes = array(), $content = null, string $tag = '' ): string {
         $attributes = shortcode_atts(
             array(
-                'label'  => __( 'Learn more', 'pluginname' ),
+                'label'  => __( 'Learn more', 'projectpress' ),
                 'url'    => '#',
                 'style'  => 'primary',
                 'target' => '',
@@ -168,7 +168,7 @@ final class Shortcodes {
             $extra .= ' class="' . esc_attr( $class ) . '"';
         }
 
-        return '<a href="' . $url . '" class="pluginname-button pluginname-button-' . esc_attr( $style ) . '"' . $extra . '>' . esc_html( $link_text ) . '</a>';
+        return '<a href="' . $url . '" class="projectpress-button projectpress-button-' . esc_attr( $style ) . '"' . $extra . '>' . esc_html( $link_text ) . '</a>';
     }
 
     /**
@@ -183,7 +183,7 @@ final class Shortcodes {
     public static function render_badge( array $attributes = array(), $content = null, string $tag = '' ): string {
         $attributes = shortcode_atts(
             array(
-                'text'  => __( 'New', 'pluginname' ),
+                'text'  => __( 'New', 'projectpress' ),
                 'style' => 'primary',
                 'class' => '',
             ),
@@ -195,7 +195,7 @@ final class Shortcodes {
         $style = in_array( strtolower( (string) $attributes['style'] ), array( 'primary', 'secondary', 'success', 'warning', 'danger' ), true ) ? strtolower( (string) $attributes['style'] ) : 'primary';
         $class = trim( (string) $attributes['class'] );
 
-        $output = '<span class="pluginname-badge pluginname-badge-' . esc_attr( $style );
+        $output = '<span class="projectpress-badge projectpress-badge-' . esc_attr( $style );
         if ( '' !== $class ) {
             $output .= ' ' . esc_attr( $class );
         }

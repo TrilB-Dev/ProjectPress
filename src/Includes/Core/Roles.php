@@ -1,11 +1,11 @@
 <?php
 /**
- * Role registration for PluginName.
+ * Role registration for ProjectPress.
  *
- * @package PluginName\Includes\Core
+ * @package ProjectPress\Includes\Core
  * @since 1.0.0
  */
-namespace PluginName\Includes\Core;
+namespace ProjectPress\Includes\Core;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -13,17 +13,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Roles {
 	/**
-	 * Role identifiers for PluginName.
+	 * Role identifiers for ProjectPress.
 	 * 
 	 * @since 1.0.0
 	 * @var string The role identifier for the manager role.
 	 */
-	public const MANAGER_ROLE = 'pluginname_manager';
-	public const AUTHOR_ROLE = 'pluginname_author';
+	public const MANAGER_ROLE = 'projectpress_manager';
+	public const AUTHOR_ROLE = 'projectpress_author';
 
 
 	/**
-	 * Install the default PluginName roles used by PluginName.
+	 * Install the default ProjectPress roles used by ProjectPress.
 	 *
 	 * @return void
 	 */
@@ -45,15 +45,15 @@ final class Roles {
 		if ( ! get_role( self::MANAGER_ROLE ) ) {
 			add_role(
 				self::MANAGER_ROLE,
-				__( 'Mod Manager', 'pluginname' ),
+				__( 'Mod Manager', 'projectpress' ),
 				array(
 					'read'                       => true,
 					'add_users'       			 => true,
 					'edit_users'        		 => true,
 					'create_users'      		 => true,
 					'delete_users'  			 => true,
-					'pluginname_suspend_users'  	 => true,
-					'pluginname_ban_users'  	 	 => true,
+					'projectpress_suspend_users'  	 => true,
+					'projectpress_ban_users'  	 	 => true,
 				)
 			);
 		}
@@ -69,13 +69,13 @@ final class Roles {
 		if ( ! get_role( self::AUTHOR_ROLE ) ) {
 			add_role(
 				self::AUTHOR_ROLE,
-				__( 'Mod Author', 'pluginname' ),
+				__( 'Mod Author', 'projectpress' ),
 				array(
 					'read' => true,
-					'pluginname_manager_mods_view' => true,
-					'pluginname_manager_mods_edit' => true,
-					'pluginname_manager_mods_delete' => true,
-					'pluginname_manager_groups_view' => true,
+					'projectpress_manager_mods_view' => true,
+					'projectpress_manager_mods_edit' => true,
+					'projectpress_manager_mods_delete' => true,
+					'projectpress_manager_groups_view' => true,
 				)
 			);
 		}

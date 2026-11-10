@@ -1,5 +1,5 @@
 ---
-description: Security requirements for PluginName and WordPress integrations
+description: Security requirements for ProjectPress and WordPress integrations
 # applyTo: '**/*.php' # when provided, instructions are automatically added to matching files
 ---
 

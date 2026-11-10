@@ -2,13 +2,13 @@
 /**
  * Bootstrap form field rendering helpers.
  *
- * @package PluginName
+ * @package ProjectPress
  * @since 1.0.0
  */
 
-namespace PluginName\Includes\Functions\Helpers;
+namespace ProjectPress\Includes\Functions\Helpers;
 
-use PluginName\Includes\Plugins\TinyMCE\Includes\Functions\Helpers\TinyMCEHelper;
+use ProjectPress\Includes\Plugins\TinyMCE\Includes\Functions\Helpers\TinyMCEHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -21,8 +21,8 @@ final class FormFieldHelper {
 	 * @param string $base Base string used to derive the id.
 	 * @return string
 	 */
-	private static function unique_field_id( string $base = 'pluginname-field' ): string {
-		$prefix = '' !== trim( (string) $base ) ? (string) $base : 'pluginname-field';
+	private static function unique_field_id( string $base = 'projectpress-field' ): string {
+		$prefix = '' !== trim( (string) $base ) ? (string) $base : 'projectpress-field';
 		$prefix = sanitize_key( $prefix );
 
 		if ( function_exists( 'wp_unique_id' ) ) {
@@ -404,7 +404,7 @@ final class FormFieldHelper {
 		$toggle              = '<button ' . self::attributes_to_string( $attributes ) . '>' . self::render_button_label( $label, $options );
 
 		if ( ! empty( $options['split'] ) ) {
-			$toggle .= '<span class="visually-hidden">' . esc_html__( 'Toggle Dropdown', 'pluginname' ) . '</span>';
+			$toggle .= '<span class="visually-hidden">' . esc_html__( 'Toggle Dropdown', 'projectpress' ) . '</span>';
 		}
 
 		$toggle .= '</button>';
@@ -460,7 +460,7 @@ final class FormFieldHelper {
 
 		$attributes = array_merge( $options['attributes'] ?? array(), $options );
 		unset( $attributes['attributes'], $attributes['id'], $attributes['class'], $attributes['aria_label'], $attributes['gap'] );
-		$attributes['id']   = (string) ( $options['id'] ?? sanitize_title( 'pluginname-button-toolbar' ) );
+		$attributes['id']   = (string) ( $options['id'] ?? sanitize_title( 'projectpress-button-toolbar' ) );
 		$attributes['role'] = 'toolbar';
 
 		if ( ! empty( $options['aria_label'] ) ) {
@@ -741,7 +741,7 @@ final class FormFieldHelper {
 			$tooltip_type = in_array( $tooltip_type, array( 'question', 'info' ), true ) ? $tooltip_type : 'question';
 			$default_icon = 'info' === $tooltip_type ? 'fa-circle-info' : 'fa-circle-question';
 			$icon         = self::icon_class( $options['tooltip_icon'] ?? $default_icon, $default_icon );
-			$html        .= ' <button type="button" class="btn btn-link p-0 align-baseline pluginname-field-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" title="' . esc_attr( (string) $options['tooltip'] ) . '" aria-label="' . esc_attr( (string) $options['tooltip'] ) . '"><i class="' . esc_attr( $icon ) . '" aria-hidden="true"></i></button>';
+			$html        .= ' <button type="button" class="btn btn-link p-0 align-baseline projectpress-field-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" title="' . esc_attr( (string) $options['tooltip'] ) . '" aria-label="' . esc_attr( (string) $options['tooltip'] ) . '"><i class="' . esc_attr( $icon ) . '" aria-hidden="true"></i></button>';
 		}
 
 		if ( ! empty( $options['description'] ) ) {

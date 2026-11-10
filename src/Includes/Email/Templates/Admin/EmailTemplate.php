@@ -2,10 +2,10 @@
 /**
  * Base email template for admin notifications.
  *
- * @package PluginName
+ * @package ProjectPress
  */
 
-namespace PluginName\Includes\Email\Templates\Admin;
+namespace ProjectPress\Includes\Email\Templates\Admin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -106,7 +106,7 @@ abstract class EmailTemplate {
 	 * @return string
 	 */
 	protected function wrap( string $content ): string {
-		$brand = __( 'PluginName', 'pluginname' );
+		$brand = __( 'ProjectPress', 'projectpress' );
 
 		return sprintf(
 			'<div style="font-family: Arial, Helvetica, sans-serif; line-height: 1.6; color: #1f2937; background: #f9fafb; padding: 24px;">

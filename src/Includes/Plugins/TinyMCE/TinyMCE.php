@@ -1,21 +1,21 @@
 <?php
 /**
- * PluginName - TinyMCE Plugin
+ * ProjectPress - TinyMCE Plugin
  *
- * @package PluginName
+ * @package ProjectPress
  * @since 1.0.0
  */
 
-namespace PluginName\Includes\Plugins\TinyMCE;
+namespace ProjectPress\Includes\Plugins\TinyMCE;
 
-use PluginName\Includes\Plugins\AssetsProviderInterface;
-use PluginName\Includes\Plugins\I18nProviderInterface;
-use PluginName\Includes\Plugins\PluginInterface;
-use PluginName\Includes\Plugins\SettingsProviderInterface;
-use PluginName\Includes\Plugins\SettingsPageProviderInterface;
-use PluginName\Includes\Plugins\TinyMCE\Assets\Assets;
-use PluginName\Includes\Plugins\TinyMCE\Includes\Includes;
-use PluginName\Includes\Plugins\TinyMCE\Includes\Core\I18n;
+use ProjectPress\Includes\Plugins\AssetsProviderInterface;
+use ProjectPress\Includes\Plugins\I18nProviderInterface;
+use ProjectPress\Includes\Plugins\PluginInterface;
+use ProjectPress\Includes\Plugins\SettingsProviderInterface;
+use ProjectPress\Includes\Plugins\SettingsPageProviderInterface;
+use ProjectPress\Includes\Plugins\TinyMCE\Assets\Assets;
+use ProjectPress\Includes\Plugins\TinyMCE\Includes\Includes;
+use ProjectPress\Includes\Plugins\TinyMCE\Includes\Core\I18n;
 
 final class TinyMCE implements PluginInterface, SettingsProviderInterface, SettingsPageProviderInterface, AssetsProviderInterface, I18nProviderInterface {
 	/**
@@ -24,7 +24,7 @@ final class TinyMCE implements PluginInterface, SettingsProviderInterface, Setti
 	 * @return string The plugin slug.
 	 */
 	public function get_slug(): string {
-		return 'pluginname-tinymce';
+		return 'projectpress-tinymce';
 	}
 	/**
 	 * Get the plugin name.
@@ -72,7 +72,7 @@ final class TinyMCE implements PluginInterface, SettingsProviderInterface, Setti
 	 * @return string The plugin description.
 	 */
 	public function get_description(): string {
-		return __( 'Introduces a local TinyMCE 8.8 editor for PluginName.', 'pluginname' );
+		return __( 'Introduces a local TinyMCE 8.8 editor for ProjectPress.', 'projectpress' );
 	}
 	/**
 	 * Get the plugin URI.
@@ -80,7 +80,7 @@ final class TinyMCE implements PluginInterface, SettingsProviderInterface, Setti
 	 * @return string The plugin URI.
 	 */
 	public function get_uri(): string {
-		return 'https://trilb.dev/collection/web-extension/wordpress/pluginname';
+		return 'https://trilb.dev/collection/web-extension/wordpress/projectpress';
 	}
 	/**
 	 * Get the plugin license.

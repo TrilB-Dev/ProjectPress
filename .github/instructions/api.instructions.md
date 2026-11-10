@@ -1,5 +1,5 @@
 ---
-description: Reusable API and integration contracts for PluginName
+description: Reusable API and integration contracts for ProjectPress
 # applyTo: 'src/API/**/*.php' # when provided, instructions are automatically added to matching files
 ---
 

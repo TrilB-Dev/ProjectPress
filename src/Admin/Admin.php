@@ -1,31 +1,31 @@
 <?php
 /**
- * Admin class for PluginName plugin.
+ * Admin class for ProjectPress plugin.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Admin
  * @since 1.0.0
  */
-namespace PluginName\Admin;
+namespace ProjectPress\Admin;
 
-use PluginName\Includes\Settings\Settings;
-use PluginName\Includes\Functions\Helpers\AjaxHelper;
-use PluginName\Includes\Core\Capabilities;
-use PluginName\Includes\Functions\Helpers\LoaderHelper;
-use PluginName\Includes\Functions\Helpers\LoggerHelper;
-use PluginName\Includes\Functions\Helpers\RequestHelper;
-use PluginName\Includes\Functions\Helpers\SanitizationHelper;
-use PluginName\Includes\Functions\Admin\FunctionsSidebar;
-use PluginName\Assets\Assets;
-use PluginName\Admin\Manager\Manager;
-use PluginName\Admin\Manager\Tools\ToolsManager;
-use PluginName\Admin\Manager\Dashboard\DashboardManager;
-use PluginName\Admin\Manager\Mods\ModManager;
-use PluginName\Admin\Manager\Settings\SettingsManager;
-use PluginName\Admin\Manager\Tools\Export;
-use PluginName\Admin\Manager\Tools\General;
-use PluginName\Admin\Manager\Tools\Import;
-use PluginName\Admin\Manager\Tools\Reset;
+use ProjectPress\Includes\Settings\Settings;
+use ProjectPress\Includes\Functions\Helpers\AjaxHelper;
+use ProjectPress\Includes\Core\Capabilities;
+use ProjectPress\Includes\Functions\Helpers\LoaderHelper;
+use ProjectPress\Includes\Functions\Helpers\LoggerHelper;
+use ProjectPress\Includes\Functions\Helpers\RequestHelper;
+use ProjectPress\Includes\Functions\Helpers\SanitizationHelper;
+use ProjectPress\Includes\Functions\Admin\FunctionsSidebar;
+use ProjectPress\Assets\Assets;
+use ProjectPress\Admin\Manager\Manager;
+use ProjectPress\Admin\Manager\Tools\ToolsManager;
+use ProjectPress\Admin\Manager\Dashboard\DashboardManager;
+use ProjectPress\Admin\Manager\Mods\ModManager;
+use ProjectPress\Admin\Manager\Settings\SettingsManager;
+use ProjectPress\Admin\Manager\Tools\Export;
+use ProjectPress\Admin\Manager\Tools\General;
+use ProjectPress\Admin\Manager\Tools\Import;
+use ProjectPress\Admin\Manager\Tools\Reset;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -130,7 +130,7 @@ final class Admin {
 			array(
 				array(
 					'type'     => 'action',
-					'hook'     => 'wp_ajax_pluginname_dismiss_onboarding',
+					'hook'     => 'wp_ajax_projectpress_dismiss_onboarding',
 					'callback' => 'dismiss_onboarding',
 				),
 			)
@@ -143,22 +143,22 @@ final class Admin {
 	 * @since 1.0.0
 	 */
 	public function register_admin_menu(): void {
-		LoggerHelper::write_log( 'PluginName admin menu registration started.' );
+		LoggerHelper::write_log( 'ProjectPress admin menu registration started.' );
 
 		try {
 			FunctionsSidebar::register_admin_menu( $this );
-			LoggerHelper::write_log( 'PluginName admin menu registration complete.' );
+			LoggerHelper::write_log( 'ProjectPress admin menu registration complete.' );
 		} catch ( \Throwable $e ) {
-			LoggerHelper::write_log( 'PluginName admin menu registration failed: ' . $e->getMessage() );
+			LoggerHelper::write_log( 'ProjectPress admin menu registration failed: ' . $e->getMessage() );
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				wp_die( esc_html( $e->getMessage() ), __( 'PluginName admin menu error', 'pluginname' ), array( 'back_link' => true ) );
+				wp_die( esc_html( $e->getMessage() ), __( 'ProjectPress admin menu error', 'projectpress' ), array( 'back_link' => true ) );
 			}
 		}
 	}
 	/**
 	 * Render the dashboard page.
 	 *
-	 * This method is responsible for rendering the dashboard page of the PluginName plugin.
+	 * This method is responsible for rendering the dashboard page of the ProjectPress plugin.
 	 * It delegates the rendering to the DashboardManager instance.
 	 */
 	public function render_dashboard(): void {
@@ -179,7 +179,7 @@ final class Admin {
 		$tab = sanitize_key( $tab );
 		$form = sanitize_key( $form );
 		$normalized_group = array(
-			'pluginname'        => 'dashboard',
+			'projectpress'        => 'dashboard',
 			'dashboard'       => 'dashboard',
 			'mods'            => 'mods',
 			'mod-manager'     => 'mods',
@@ -190,41 +190,41 @@ final class Admin {
 			'reports'         => 'reports',
 		)[ $group ] ?? 'dashboard';
 
-		LoggerHelper::write_log( sprintf( 'PluginName dashboard render triggered. Group=%s Tab=%s Form=%s', $group, $tab, $form ) );
+		LoggerHelper::write_log( sprintf( 'ProjectPress dashboard render triggered. Group=%s Tab=%s Form=%s', $group, $tab, $form ) );
 
 		try {
 			switch ( $normalized_group ) {
 				case 'mods':
-					LoggerHelper::write_log( 'PluginName dashboard routed to mods page.' );
+					LoggerHelper::write_log( 'ProjectPress dashboard routed to mods page.' );
 					$this->render_mods( $tab, $form );
 					return;
 				case 'settings':
-					LoggerHelper::write_log( 'PluginName dashboard routed to settings page.' );
+					LoggerHelper::write_log( 'ProjectPress dashboard routed to settings page.' );
 					$this->render_settings();
 					return;
 				case 'tools':
-					LoggerHelper::write_log( 'PluginName dashboard routed to tools page.' );
+					LoggerHelper::write_log( 'ProjectPress dashboard routed to tools page.' );
 					$this->render_tools();
 					return;
 				default:
-					LoggerHelper::write_log( 'PluginName dashboard default render path selected.' );
+					LoggerHelper::write_log( 'ProjectPress dashboard default render path selected.' );
 					$this->dashboard_manager->render();
 			}
 		} catch ( \Throwable $e ) {
-			LoggerHelper::write_log( 'PluginName dashboard render failed: ' . $e->getMessage() );
+			LoggerHelper::write_log( 'ProjectPress dashboard render failed: ' . $e->getMessage() );
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				wp_die( esc_html( $e->getMessage() ), __( 'PluginName dashboard error', 'pluginname' ), array( 'back_link' => true ) );
+				wp_die( esc_html( $e->getMessage() ), __( 'ProjectPress dashboard error', 'projectpress' ), array( 'back_link' => true ) );
 			}
 		}
 	}
 	/**
 	 * Dismiss the onboarding modal.
 	 *
-	 * This method handles the AJAX request to dismiss the onboarding modal for the PluginName plugin.
+	 * This method handles the AJAX request to dismiss the onboarding modal for the ProjectPress plugin.
 	 */
 	public function dismiss_onboarding(): void {
-		if ( ! AjaxHelper::authorized( 'pluginname_dismiss_onboarding', 'manage_options' ) ) {
-			AjaxHelper::unauthorized( __( 'You are not authorized to dismiss the PluginName onboarding modal.', 'pluginname' ) );
+		if ( ! AjaxHelper::authorized( 'projectpress_dismiss_onboarding', 'manage_options' ) ) {
+			AjaxHelper::unauthorized( __( 'You are not authorized to dismiss the ProjectPress onboarding modal.', 'projectpress' ) );
 		}
 
 		Settings::register_group( 'setup', array( 'first_install_complete' => false ) );
@@ -234,26 +234,26 @@ final class Admin {
 		AjaxHelper::success( array( 'dismissed' => true ) );
 	}
 	/**
-	 * Render PluginName mods page.
+	 * Render ProjectPress mods page.
 	 *
-	 * This method is responsible for rendering the mods page of the PluginName plugin.
+	 * This method is responsible for rendering the mods page of the ProjectPress plugin.
 	 * It delegates the rendering to the ModManager instance.
 	 */
 	public function render_mods( string $tab = '', string $form = '' ): void {
-		LoggerHelper::write_log( 'PluginName mods render started.' );
+		LoggerHelper::write_log( 'ProjectPress mods render started.' );
 		$this->mod_manager->render( $tab, $form );
-		LoggerHelper::write_log( 'PluginName mods render complete.' );
+		LoggerHelper::write_log( 'ProjectPress mods render complete.' );
 	}
 	/**
 	 * Render the settings page.
 	 *
-	 * This method is responsible for rendering the settings page of the PluginName plugin.
+	 * This method is responsible for rendering the settings page of the ProjectPress plugin.
 	 * It delegates the rendering to the SettingsManager instance.
 	 */
 	public function render_settings(): void {
-		LoggerHelper::write_log( 'PluginName settings page render started.' );
+		LoggerHelper::write_log( 'ProjectPress settings page render started.' );
 		$this->settings_manager->render();
-		LoggerHelper::write_log( 'PluginName settings page render complete.' );
+		LoggerHelper::write_log( 'ProjectPress settings page render complete.' );
 	}
 	/**
 	 * Render the tools page.
@@ -261,9 +261,9 @@ final class Admin {
 	 * @return void
 	 */
 	public function render_tools(): void {
-		LoggerHelper::write_log( 'PluginName tools page render started.' );
+		LoggerHelper::write_log( 'ProjectPress tools page render started.' );
 		$this->tools_manager->render();
-		LoggerHelper::write_log( 'PluginName tools page render complete.' );
+		LoggerHelper::write_log( 'ProjectPress tools page render complete.' );
 	}
 	/**
 	 * Get the capability for a given key, with a fallback.

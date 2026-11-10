@@ -25,9 +25,9 @@ The main file should be named after the directory, declare a namespace, define a
 ## Contract and Providers
 
 ```php
-namespace PluginName\Includes\Plugins\MyPlugin;
+namespace ProjectPress\Includes\Plugins\MyPlugin;
 
-use PluginName\Includes\Plugins\PluginInterface;
+use ProjectPress\Includes\Plugins\PluginInterface;
 
 final class MyPlugin implements PluginInterface {
     public function get_slug(): string { return 'my-plugin'; }
@@ -35,7 +35,7 @@ final class MyPlugin implements PluginInterface {
     public function get_version(): string { return '1.0.0'; }
     public function get_author(): string { return 'Example Author'; }
     public function get_author_uri(): string { return 'https://example.com'; }
-    public function get_description(): string { return 'An example PluginName extension.'; }
+    public function get_description(): string { return 'An example ProjectPress extension.'; }
     public function get_uri(): string { return 'https://example.com/my-plugin'; }
     public function get_license(): string { return 'GPL-2.0-or-later'; }
     public function is_active(): bool { return true; }

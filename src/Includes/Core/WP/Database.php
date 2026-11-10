@@ -1,12 +1,12 @@
 <?php
 /**
- * Database class for managing custom PluginName database tables.
+ * Database class for managing custom ProjectPress database tables.
  *
- * @package PluginName\Includes\Core\WP
+ * @package ProjectPress\Includes\Core\WP
  */
-namespace PluginName\Includes\Core\WP;
+namespace ProjectPress\Includes\Core\WP;
 
-use PluginName\Includes\Core\Schema;
+use ProjectPress\Includes\Core\Schema;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -43,7 +43,7 @@ final class Database {
 	 * The callback receives the fully prefixed table name and charset/collation
 	 * string, and must return a dbDelta-compatible CREATE TABLE statement.
 	 *
-	 * @param string   $table  Unprefixed PluginName table suffix.
+	 * @param string   $table  Unprefixed ProjectPress table suffix.
 	 * @param callable $schema Schema callback.
 	 * @return bool Whether the table was registered.
 	 */
@@ -60,7 +60,7 @@ final class Database {
 	/**
 	 * Register an extension table schema for the next installation/update.
 	 *
-	 * @param string   $table  Unprefixed PluginName table suffix.
+	 * @param string   $table  Unprefixed ProjectPress table suffix.
 	 * @param callable $schema Schema callback.
 	 * @return bool Whether the table was registered.
 	 */
@@ -164,7 +164,7 @@ final class Database {
 	}
 
 	/**
-	 * Drop a PluginName table entirely.
+	 * Drop a ProjectPress table entirely.
 	 *
 	 * @param string $table Unprefixed table suffix.
 	 * @return bool True if the table was deleted.
@@ -190,7 +190,7 @@ final class Database {
 	}
 
 	/**
-	 * Install or update all PluginName Core & Plugin tables.
+	 * Install or update all ProjectPress Core & Plugin tables.
 	 *
 	 * @return void
 	 */
@@ -212,7 +212,7 @@ final class Database {
 		}
 
 		if ( function_exists( 'update_option' ) ) {
-			update_option( 'pluginname_db_version', defined( 'PLUGINNAME_VERSION' ) ? PLUGINNAME_VERSION : '1.0.0' );
+			update_option( 'projectpress_db_version', defined( 'PROJECTPRESS_VERSION' ) ? PROJECTPRESS_VERSION : '1.0.0' );
 		}
 	}
 
@@ -221,7 +221,7 @@ final class Database {
 	 *
 	 * This method intentionally avoids mutating data while the schema is
 	 * incomplete. Any migration work should be guarded by the presence of the
-	 * expected PluginName tables before inserts, updates, or row-level changes.
+	 * expected ProjectPress tables before inserts, updates, or row-level changes.
 	 *
 	 * @return void
 	 */
@@ -244,19 +244,19 @@ final class Database {
 		}
 
 		if ( function_exists( 'update_option' ) ) {
-			update_option( 'pluginname_db_version', defined( 'PLUGINNAME_VERSION' ) ? PLUGINNAME_VERSION : '1.0.0' );
+			update_option( 'projectpress_db_version', defined( 'PROJECTPRESS_VERSION' ) ? PROJECTPRESS_VERSION : '1.0.0' );
 		}
 	}
 
 	/**
-	 * Return a prefixed PluginName table name.
+	 * Return a prefixed ProjectPress table name.
 	 *
 	 * @param string $table Unprefixed table suffix.
 	 * @return string Full table name.
 	 */
 	public static function table_name( string $table ): string {
 		global $wpdb;
-		return $wpdb->prefix . 'pluginname_' . self::normalize_table_key( $table );
+		return $wpdb->prefix . 'projectpress_' . self::normalize_table_key( $table );
 	}
 }
 

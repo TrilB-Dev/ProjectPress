@@ -2,11 +2,11 @@
 /**
  * Language internationalization (i18n) for the TinyMCE plugin.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Plugins\TinyMCE\Includes
  * @since 1.0.0
  */
-namespace PluginName\Includes\Plugins\TinyMCE\Includes\Core;
+namespace ProjectPress\Includes\Plugins\TinyMCE\Includes\Core;
 
 final class I18n {
 	/**
@@ -14,9 +14,9 @@ final class I18n {
 	 */
 	public static function load_textdomain(): void {
 		load_plugin_textdomain(
-			'pluginname',
+			'projectpress',
 			false,
-			dirname( plugin_basename( PLUGINNAME_FILE ) ) . '/src/Includes/Plugins/TinyMCE/Language/'
+			dirname( plugin_basename( PROJECTPRESS_FILE ) ) . '/src/Includes/Plugins/TinyMCE/Language/'
 		);
 	}
 }

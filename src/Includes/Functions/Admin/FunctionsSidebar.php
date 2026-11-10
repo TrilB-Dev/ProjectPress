@@ -1,27 +1,27 @@
 <?php
 /**
- * PluginName menu registration and sidebar definitions.
+ * ProjectPress menu registration and sidebar definitions.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Functions\Admin
  * @since 1.0.0
  */
-namespace PluginName\Includes\Functions\Admin;
+namespace ProjectPress\Includes\Functions\Admin;
 
-use PluginName\Admin\Admin;
-use PluginName\Includes\Functions\Helpers\LoggerHelper;
-use PluginName\Includes\Functions\Helpers\AMHelper;
-use PluginName\Includes\Functions\Helpers\ASMHelper;
-use PluginName\Includes\Plugins\AdminMenuProviderInterface;
-use PluginName\Includes\Plugins\AdminSidebarProviderInterface;
-use PluginName\Includes\Plugins\Plugins;
+use ProjectPress\Admin\Admin;
+use ProjectPress\Includes\Functions\Helpers\LoggerHelper;
+use ProjectPress\Includes\Functions\Helpers\AMHelper;
+use ProjectPress\Includes\Functions\Helpers\ASMHelper;
+use ProjectPress\Includes\Plugins\AdminMenuProviderInterface;
+use ProjectPress\Includes\Plugins\AdminSidebarProviderInterface;
+use ProjectPress\Includes\Plugins\Plugins;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Owns PluginName menu data and registration.
+ * Owns ProjectPress menu data and registration.
  *
  * Rendering remains in Admin and Sidebar. This class builds menu data,
  * applies extension filters, and calls the WordPress admin API.
@@ -44,7 +44,7 @@ final class FunctionsSidebar {
 	}
 
 	/**
-	 * Return the built-in and filtered PluginName sidebar groups.
+	 * Return the built-in and filtered ProjectPress sidebar groups.
 	 *
 	 * @return array<string, array<string, mixed>>
 	 */
@@ -83,7 +83,7 @@ final class FunctionsSidebar {
 	}
 
 	/**
-	 * Get a PluginName sidebar page URL.
+	 * Get a ProjectPress sidebar page URL.
 	 *
 	 * @param string $slug Page slug, optionally followed by a query string.
 	 * @return string
@@ -102,41 +102,41 @@ final class FunctionsSidebar {
 	private static function core_wordpress_menus( Admin $admin ): array {
 		return [
 			[
-				'name'       => __( 'PluginName', 'pluginname' ),
-				'slug'       => 'pluginname',
+				'name'       => __( 'ProjectPress', 'projectpress' ),
+				'slug'       => 'projectpress',
 				'icon'       => 'dashicons-book-alt',
 				'parent'     => '',
 				'callback'   => [ $admin, 'render_dashboard' ],
-				'capability' => 'pluginname_admin_view',
+				'capability' => 'projectpress_admin_view',
 				'position'   => 30,
 			],
 			[
-				'name'       => __( 'Dashboard', 'pluginname' ),
-				'slug'       => 'pluginname',
-				'parent'     => 'pluginname',
+				'name'       => __( 'Dashboard', 'projectpress' ),
+				'slug'       => 'projectpress',
+				'parent'     => 'projectpress',
 				'callback'   => [ $admin, 'render_dashboard' ],
-				'capability' => 'pluginname_admin_view',
+				'capability' => 'projectpress_admin_view',
 			],
 			[
-				'name'       => __( 'Manage Mods', 'pluginname' ),
-				'slug'       => 'pluginname&group=mod-manager&tab=dashboard',
-				'parent'     => 'pluginname',
+				'name'       => __( 'Manage Mods', 'projectpress' ),
+				'slug'       => 'projectpress&group=mod-manager&tab=dashboard',
+				'parent'     => 'projectpress',
 				'callback'   => [ $admin, 'render_mods' ],
-				'capability' => 'pluginname_admin_view',
+				'capability' => 'projectpress_admin_view',
 			],
 			[
-				'name'       => __( 'Settings', 'pluginname' ),
-				'slug'       => 'pluginname&group=settings&tab=general',
-				'parent'     => 'pluginname',
+				'name'       => __( 'Settings', 'projectpress' ),
+				'slug'       => 'projectpress&group=settings&tab=general',
+				'parent'     => 'projectpress',
 				'callback'   => [ $admin, 'render_settings' ],
-				'capability' => 'pluginname_settings_general_view',
+				'capability' => 'projectpress_settings_general_view',
 			],
 			[
-				'name'       => __( 'Tools', 'pluginname' ),
-				'slug'       => 'pluginname&group=tools&tab=general',
-				'parent'     => 'pluginname',
+				'name'       => __( 'Tools', 'projectpress' ),
+				'slug'       => 'projectpress&group=tools&tab=general',
+				'parent'     => 'projectpress',
 				'callback'   => [ $admin, 'render_tools' ],
-				'capability' => 'pluginname_tools_debug',
+				'capability' => 'projectpress_tools_debug',
 			],
 		];
 	}
@@ -150,128 +150,128 @@ final class FunctionsSidebar {
 	private static function core_sidebar_groups(): array {
 		return [
 			'mod-manager' => [
-				'label' => __( 'Manage Mods', 'pluginname' ),
+				'label' => __( 'Manage Mods', 'projectpress' ),
 				'icon'  => 'fa-solid fa-file-lines',
 				'items' => [
 					'dashboard' => [
-						'label'      => __( 'Overview', 'pluginname' ),
+						'label'      => __( 'Overview', 'projectpress' ),
 						'icon'       => 'fa-solid fa-gauge',
-						'link'       => 'pluginname&group=mod-manager&tab=dashboard',
-						'capability' => 'pluginname_manager_dashboard',
+						'link'       => 'projectpress&group=mod-manager&tab=dashboard',
+						'capability' => 'projectpress_manager_dashboard',
 					],
 					'mods' => [
-						'label'      => __( 'Mods', 'pluginname' ),
+						'label'      => __( 'Mods', 'projectpress' ),
 						'icon'       => 'fa-solid fa-cubes',
-						'link'       => 'pluginname&group=mod-manager&tab=mods',
-						'capability' => 'pluginname_manager_mods_view',
+						'link'       => 'projectpress&group=mod-manager&tab=mods',
+						'capability' => 'projectpress_manager_mods_view',
 					],
 					'changelog' => [
-						'label'      => __( 'Change Logs', 'pluginname' ),
+						'label'      => __( 'Change Logs', 'projectpress' ),
 						'icon'       => 'fa-solid fa-file-lines',
-						'link'       => 'pluginname&group=mod-manager&tab=changelog',
-						'capability' => 'pluginname_manager_mods_view',
+						'link'       => 'projectpress&group=mod-manager&tab=changelog',
+						'capability' => 'projectpress_manager_mods_view',
 					],
 					'files' => [
-						'label'      => __( 'Files', 'pluginname' ),
+						'label'      => __( 'Files', 'projectpress' ),
 						'icon'       => 'fa-solid fa-file',
-						'link'       => 'pluginname&group=mod-manager&tab=files',
-						'capability' => 'pluginname_manager_mods_view',
+						'link'       => 'projectpress&group=mod-manager&tab=files',
+						'capability' => 'projectpress_manager_mods_view',
 					],
 					'groups' => [
-						'label'      => __( 'Groups', 'pluginname' ),
+						'label'      => __( 'Groups', 'projectpress' ),
 						'icon'       => 'fa-solid fa-layer-group',
-						'link'       => 'pluginname&group=mod-manager&tab=groups',
-						'capability' => 'pluginname_manager_groups_view',
+						'link'       => 'projectpress&group=mod-manager&tab=groups',
+						'capability' => 'projectpress_manager_groups_view',
 					],
 					'tags' => [
-						'label'      => __( 'Tags', 'pluginname' ),
+						'label'      => __( 'Tags', 'projectpress' ),
 						'icon'       => 'fa-solid fa-tag',
-						'link'       => 'pluginname&group=mod-manager&tab=tags',
-						'capability' => 'pluginname_manager_tags_view',
+						'link'       => 'projectpress&group=mod-manager&tab=tags',
+						'capability' => 'projectpress_manager_tags_view',
 					],
 					'new' => [
-						'label'      => __( 'New Mod', 'pluginname' ),
+						'label'      => __( 'New Mod', 'projectpress' ),
 						'icon'       => 'fa-solid fa-plus',
-						'link'       => 'pluginname&group=mod-manager&tab=new',
-						'capability' => 'pluginname_manager_mods_edit',
+						'link'       => 'projectpress&group=mod-manager&tab=new',
+						'capability' => 'projectpress_manager_mods_edit',
 					],
 				],
 			],
 			'settings' => [
-				'label' => __( 'Settings', 'pluginname' ),
+				'label' => __( 'Settings', 'projectpress' ),
 				'icon'  => 'fa-solid fa-gear',
 				'items' => [
 					'general' => [
-						'label'      => __( 'General', 'pluginname' ),
+						'label'      => __( 'General', 'projectpress' ),
 						'icon'       => 'fa-solid fa-sliders',
-						'link'       => 'pluginname&group=settings&tab=general',
-						'capability' => 'pluginname_settings_general_view',
+						'link'       => 'projectpress&group=settings&tab=general',
+						'capability' => 'projectpress_settings_general_view',
 					],
 					'layout' => [
-						'label'      => __( 'Layout', 'pluginname' ),
+						'label'      => __( 'Layout', 'projectpress' ),
 						'icon'       => 'fa-solid fa-table-columns',
-						'link'       => 'pluginname&group=settings&tab=layout',
-						'capability' => 'pluginname_settings_layout_view',
+						'link'       => 'projectpress&group=settings&tab=layout',
+						'capability' => 'projectpress_settings_layout_view',
 					],
 					'access' => [
-						'label'      => __( 'Access', 'pluginname' ),
+						'label'      => __( 'Access', 'projectpress' ),
 						'icon'       => 'fa-solid fa-user-shield',
-						'link'       => 'pluginname&group=settings&tab=access',
-						'capability' => 'pluginname_settings_access_view',
+						'link'       => 'projectpress&group=settings&tab=access',
+						'capability' => 'projectpress_settings_access_view',
 					],
 					'plugins' => [
-						'label'      => __( 'Plugins', 'pluginname' ),
+						'label'      => __( 'Plugins', 'projectpress' ),
 						'icon'       => 'fa-solid fa-puzzle-piece',
-						'link'       => 'pluginname&group=settings&tab=plugins',
-						'capability' => 'pluginname_settings_plugins_view',
+						'link'       => 'projectpress&group=settings&tab=plugins',
+						'capability' => 'projectpress_settings_plugins_view',
 					],
 					'third-party' => [
-						'label'      => __( '3rd Party', 'pluginname' ),
+						'label'      => __( '3rd Party', 'projectpress' ),
 						'icon'       => 'fa-solid fa-plug',
-						'link'       => 'pluginname&group=settings&tab=third-party',
-						'capability' => 'pluginname_settings_plugins_ext_view',
+						'link'       => 'projectpress&group=settings&tab=third-party',
+						'capability' => 'projectpress_settings_plugins_ext_view',
 					],
 				],
 			],
 			'tools' => [
-				'label' => __( 'Tools', 'pluginname' ),
+				'label' => __( 'Tools', 'projectpress' ),
 				'icon'  => 'fa-solid fa-toolbox',
 				'items' => [
 					'general' => [
-						'label'      => __( 'General', 'pluginname' ),
+						'label'      => __( 'General', 'projectpress' ),
 						'icon'       => 'fa-solid fa-sliders',
-						'link'       => 'pluginname&group=tools&tab=general',
-						'capability' => 'pluginname_tools_general',
+						'link'       => 'projectpress&group=tools&tab=general',
+						'capability' => 'projectpress_tools_general',
 					],
 					'debug' => [
-						'label'      => __( 'Debug', 'pluginname' ),
+						'label'      => __( 'Debug', 'projectpress' ),
 						'icon'       => 'fa-solid fa-bug-slash',
-						'link'       => 'pluginname&group=tools&tab=debug',
-						'capability' => 'pluginname_tools_debug',
+						'link'       => 'projectpress&group=tools&tab=debug',
+						'capability' => 'projectpress_tools_debug',
 					],
 					'import' => [
-						'label'      => __( 'Import', 'pluginname' ),
+						'label'      => __( 'Import', 'projectpress' ),
 						'icon'       => 'fa-solid fa-file-import',
-						'link'       => 'pluginname&group=tools&tab=import',
-						'capability' => 'pluginname_tools_import',
+						'link'       => 'projectpress&group=tools&tab=import',
+						'capability' => 'projectpress_tools_import',
 					],
 					'export' => [
-						'label'      => __( 'Export', 'pluginname' ),
+						'label'      => __( 'Export', 'projectpress' ),
 						'icon'       => 'fa-solid fa-file-export',
-						'link'       => 'pluginname&group=tools&tab=export',
-						'capability' => 'pluginname_tools_export',
+						'link'       => 'projectpress&group=tools&tab=export',
+						'capability' => 'projectpress_tools_export',
 					],
 					'reset' => [
-						'label'      => __( 'Reset', 'pluginname' ),
+						'label'      => __( 'Reset', 'projectpress' ),
 						'icon'       => 'fa-solid fa-rotate-left',
-						'link'       => 'pluginname&group=tools&tab=reset',
-						'capability' => 'pluginname_tools_reset',
+						'link'       => 'projectpress&group=tools&tab=reset',
+						'capability' => 'projectpress_tools_reset',
 					],
 					'analytics' => [
-						'label'      => __( 'Analytics', 'pluginname' ),
+						'label'      => __( 'Analytics', 'projectpress' ),
 						'icon'       => 'fa-solid fa-chart-line',
-						'link'       => 'pluginname&group=tools&tab=analytics',
-						'capability' => 'pluginname_tools_analytics',
+						'link'       => 'projectpress&group=tools&tab=analytics',
+						'capability' => 'projectpress_tools_analytics',
 					],
 				],
 			],
@@ -293,11 +293,11 @@ final class FunctionsSidebar {
 		$capability = self::resolve_menu_capability( sanitize_key( (string) ( $menu['capability'] ?? 'manage_options' ) ) );
 
 		if ( '' === $slug || '' === $name || ! is_callable( $callback ) ) {
-			LoggerHelper::write_log( sprintf( 'PluginName skipped menu registration for empty or invalid page: %s', $raw_slug ) );
+			LoggerHelper::write_log( sprintf( 'ProjectPress skipped menu registration for empty or invalid page: %s', $raw_slug ) );
 			return;
 		}
 
-		LoggerHelper::write_log( sprintf( 'PluginName registering admin menu: %s (slug=%s, parent=%s, capability=%s)', $name, $slug, $parent, $capability ) );
+		LoggerHelper::write_log( sprintf( 'ProjectPress registering admin menu: %s (slug=%s, parent=%s, capability=%s)', $name, $slug, $parent, $capability ) );
 
 		try {
 			if ( '' === $parent ) {
@@ -306,21 +306,21 @@ final class FunctionsSidebar {
 			}
 
 			if ( $slug === $parent ) {
-				LoggerHelper::write_log( sprintf( 'PluginName skipped submenu registration because slug matches parent: %s', $slug ) );
+				LoggerHelper::write_log( sprintf( 'ProjectPress skipped submenu registration because slug matches parent: %s', $slug ) );
 				return;
 			}
 
 			add_submenu_page( $parent, $name, $name, $capability, $slug, $callback, $menu['position'] ?? null );
 		} catch ( \Throwable $e ) {
-			LoggerHelper::write_log( sprintf( 'PluginName menu registration failed for %s (%s): %s', $name, $slug, $e->getMessage() ) );
+			LoggerHelper::write_log( sprintf( 'ProjectPress menu registration failed for %s (%s): %s', $name, $slug, $e->getMessage() ) );
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				wp_die( esc_html( $e->getMessage() ), __( 'PluginName menu registration error', 'pluginname' ), array( 'back_link' => true ) );
+				wp_die( esc_html( $e->getMessage() ), __( 'ProjectPress menu registration error', 'projectpress' ), array( 'back_link' => true ) );
 			}
 		}
 	}
 
 	/**
-	 * Get the WordPress menus provided by active PluginName plugins.
+	 * Get the WordPress menus provided by active ProjectPress plugins.
 	 *
 	 * @return array<int, array<string, mixed>> The WordPress menus.
 	 * @since 1.0.0
@@ -348,7 +348,7 @@ final class FunctionsSidebar {
 					}
 				}
 			} catch ( \Throwable $e ) {
-				LoggerHelper::write_log( sprintf( 'PluginName plugin %s failed to provide WordPress menus: %s', $plugin->get_slug(), $e->getMessage() ) );
+				LoggerHelper::write_log( sprintf( 'ProjectPress plugin %s failed to provide WordPress menus: %s', $plugin->get_slug(), $e->getMessage() ) );
 			}
 		}
 
@@ -410,7 +410,7 @@ final class FunctionsSidebar {
 	}
 
 	/**
-	 * Get the sidebar menus provided by active PluginName plugins.
+	 * Get the sidebar menus provided by active ProjectPress plugins.
 	 *
 	 * @return array<int, array<string, mixed>> The sidebar menus.
 	 * @since 1.0.0
@@ -442,7 +442,7 @@ final class FunctionsSidebar {
 					$menus[] = ASMHelper::define( $definition['label'] ?? '', self::sidebar_slug( $definition ), $definition['icon'] ?? '', $definition['parent'] ?? '', $definition['capability'] ?? '' );
 				}
 			} catch ( \Throwable $e ) {
-				LoggerHelper::write_log( sprintf( 'PluginName plugin %s failed to provide sidebar menus: %s', $plugin->get_slug(), $e->getMessage() ) );
+				LoggerHelper::write_log( sprintf( 'ProjectPress plugin %s failed to provide sidebar menus: %s', $plugin->get_slug(), $e->getMessage() ) );
 			}
 		}
 
@@ -560,7 +560,7 @@ final class FunctionsSidebar {
 	/**
 	 * Resolve the effective capability to use when registering a WordPress menu.
 	 *
-	 * Admins should remain able to see the PluginName menu while the custom
+	 * Admins should remain able to see the ProjectPress menu while the custom
 	 * role capability map catches up after activation or a role refresh.
 	 *
 	 * @param string $capability The capability to normalize.

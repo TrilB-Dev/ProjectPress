@@ -1,7 +1,7 @@
 /**
- * PluginName FontAwesome Icon Picker JavaScript
+ * ProjectPress FontAwesome Icon Picker JavaScript
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage FontAwesome
  * @since 1.0.0
  */
@@ -12,7 +12,7 @@
     /**
      * FontAwesome Icon Picker
      */
-    var PluginNameFAIconPicker = {
+    var ProjectPressFAIconPicker = {
 
         /**
          * Initialize the icon picker
@@ -28,28 +28,28 @@
             var self = this;
 
             // Open picker modal
-            $(document).on('click', '.pluginname-fa-picker-button', function(e) {
+            $(document).on('click', '.projectpress-fa-picker-button', function(e) {
                 e.preventDefault();
                 var pickerId = $(this).data('picker-id');
                 self.openPicker(pickerId);
             });
 
             // Close picker modal
-            $(document).on('click', '.pluginname-fa-picker-close, .pluginname-fa-picker-overlay, .pluginname-fa-picker-cancel', (e) => {
+            $(document).on('click', '.projectpress-fa-picker-close, .projectpress-fa-picker-overlay, .projectpress-fa-picker-cancel', (e) => {
                 e.preventDefault();
                 self.closePicker();
             });
 
             // Search icons
-            $(document).on('input', '.pluginname-fa-picker-search-input', () => {
+            $(document).on('input', '.projectpress-fa-picker-search-input', () => {
                 self.searchIcons();
             });
 
             // Filter by pack
-            $(document).on('change', '.pluginname-fa-picker-pack-filter', function() {
+            $(document).on('change', '.projectpress-fa-picker-pack-filter', function() {
                 var pack = $(this).val();
-                var $container = $(this).closest('.pluginname-fa-picker-modal');
-                var $styleFilter = $container.find('.pluginname-fa-picker-style-filter');
+                var $container = $(this).closest('.projectpress-fa-picker-modal');
+                var $styleFilter = $container.find('.projectpress-fa-picker-style-filter');
 
                 // Handle brands pack - it only has one style
                 if (pack === 'brands') {
@@ -64,23 +64,23 @@
             });
 
             // Filter by style
-            $(document).on('change', '.pluginname-fa-picker-style-filter', () => {
+            $(document).on('change', '.projectpress-fa-picker-style-filter', () => {
                 self.searchIcons();
             });
 
             // Select icon
-            $(document).on('click', '.pluginname-fa-picker-icon-item', function() {
+            $(document).on('click', '.projectpress-fa-picker-icon-item', function() {
                 self.selectIcon($(this));
                 self.confirmSelection();
             });
 
             // Confirm selection
-            $(document).on('click', '.pluginname-fa-picker-select', () => {
+            $(document).on('click', '.projectpress-fa-picker-select', () => {
                 self.confirmSelection();
             });
 
             // Load more icons (pagination)
-            $(document).on('click', '.pluginname-fa-picker-load-more', () => {
+            $(document).on('click', '.projectpress-fa-picker-load-more', () => {
                 self.loadMoreIcons();
             });
         },
@@ -96,14 +96,14 @@
             this.selectedIcon = null;
 
             var $container = $('#' + pickerId);
-            var $modal = $container.find('.pluginname-fa-picker-modal');
+            var $modal = $container.find('.projectpress-fa-picker-modal');
 
             // Show modal
             $modal.show();
 
             // Handle initial pack selection
-            var $packFilter = $modal.find('.pluginname-fa-picker-pack-filter');
-            var $styleFilter = $modal.find('.pluginname-fa-picker-style-filter');
+            var $packFilter = $modal.find('.projectpress-fa-picker-pack-filter');
+            var $styleFilter = $modal.find('.projectpress-fa-picker-style-filter');
             var pack = $packFilter.val();
 
             if (pack === 'brands') {
@@ -120,7 +120,7 @@
          * Close the icon picker modal
          */
         closePicker: function() {
-            $('.pluginname-fa-picker-modal').hide();
+            $('.projectpress-fa-picker-modal').hide();
             this.currentPickerId = null;
             this.selectedIcon = null;
         },
@@ -131,17 +131,17 @@
         searchIcons: function() {
             var self = this;
             var $container = $('#' + this.currentPickerId);
-            var $searchInput = $container.find('.pluginname-fa-picker-search-input');
-            var $packFilter = $container.find('.pluginname-fa-picker-pack-filter');
-            var $styleFilter = $container.find('.pluginname-fa-picker-style-filter');
-            var $results = $container.find('.pluginname-fa-picker-results');
+            var $searchInput = $container.find('.projectpress-fa-picker-search-input');
+            var $packFilter = $container.find('.projectpress-fa-picker-pack-filter');
+            var $styleFilter = $container.find('.projectpress-fa-picker-style-filter');
+            var $results = $container.find('.projectpress-fa-picker-results');
 
             var search = ($searchInput.val() || '').toLowerCase();
             var pack = $packFilter.val();
             var style = $styleFilter.val();
-            var catalog = (window.pluginname_fa_picker && window.pluginname_fa_picker.icons) || [];
+            var catalog = (window.projectpress_fa_picker && window.projectpress_fa_picker.icons) || [];
 
-            $results.html('<div class="pluginname-fa-picker-loading">' + pluginname_fa_picker.strings.loading + '</div>');
+            $results.html('<div class="projectpress-fa-picker-loading">' + projectpress_fa_picker.strings.loading + '</div>');
 
             var filtered = catalog.filter((icon) => {
                 var terms = [(icon.name || ''), (icon.label || ''), ...(icon.search_terms || [])];
@@ -169,21 +169,21 @@
         displayIcons: function(data, pack, style) {
             var self = this;
             var $container = $('#' + this.currentPickerId);
-            var $results = $container.find('.pluginname-fa-picker-results');
+            var $results = $container.find('.projectpress-fa-picker-results');
 
             if (!data.icons || data.icons.length === 0) {
-                $results.html('<div class="pluginname-fa-picker-no-results">' + pluginname_fa_picker.strings.no_icons_found + '</div>');
+                $results.html('<div class="projectpress-fa-picker-no-results">' + projectpress_fa_picker.strings.no_icons_found + '</div>');
                 return;
             }
 
-            var html = '<div class="pluginname-fa-picker-grid">';
+            var html = '<div class="projectpress-fa-picker-grid">';
 
             data.icons.forEach((icon) => {
                 var iconClass = data.prefix + ' fa-' + icon.name;
 
-                html += '<div class="pluginname-fa-picker-icon-item" data-icon-name="' + icon.name + '" data-icon-pack="' + pack + '" data-icon-style="' + style + '" data-icon-prefix="' + data.prefix + '">';
+                html += '<div class="projectpress-fa-picker-icon-item" data-icon-name="' + icon.name + '" data-icon-pack="' + pack + '" data-icon-style="' + style + '" data-icon-prefix="' + data.prefix + '">';
                 html += '<i class="' + iconClass + '"></i>';
-                html += '<span class="pluginname-fa-picker-icon-label">' + icon.label + '</span>';
+                html += '<span class="projectpress-fa-picker-icon-label">' + icon.label + '</span>';
                 html += '</div>';
             });
 
@@ -191,8 +191,8 @@
 
             // Add pagination if needed
             if (data.total_pages > 1 && data.page < data.total_pages) {
-                html += '<div class="pluginname-fa-picker-pagination">';
-                html += '<button class="btn btn-link pluginname-fa-picker-load-more" data-next-page="' + (data.page + 1) + '">' + 'Load More' + '</button>';
+                html += '<div class="projectpress-fa-picker-pagination">';
+                html += '<button class="btn btn-link projectpress-fa-picker-load-more" data-next-page="' + (data.page + 1) + '">' + 'Load More' + '</button>';
                 html += '</div>';
             }
 
@@ -208,7 +208,7 @@
             var $container = $('#' + this.currentPickerId);
 
             // Remove previous selection
-            $container.find('.pluginname-fa-picker-icon-item').removeClass('selected');
+            $container.find('.projectpress-fa-picker-icon-item').removeClass('selected');
 
             // Add selection to clicked item
             $iconItem.addClass('selected');
@@ -223,7 +223,7 @@
             };
 
             // Enable select button
-            $container.find('.pluginname-fa-picker-select').prop('disabled', false);
+            $container.find('.projectpress-fa-picker-select').prop('disabled', false);
         },
 
         /**
@@ -235,8 +235,8 @@
             }
 
             var $container = $('#' + this.currentPickerId);
-            var $input = $container.find('.pluginname-fa-picker-input');
-            var $preview = $container.find('.pluginname-fa-picker-preview');
+            var $input = $container.find('.projectpress-fa-picker-input');
+            var $preview = $container.find('.projectpress-fa-picker-preview');
 
             // Update hidden input
             $input.val(this.selectedIcon.class).trigger('change');
@@ -264,7 +264,7 @@
          */
         loadMoreIcons: function() {
             var $container = $('#' + this.currentPickerId);
-            var $loadMoreBtn = $container.find('.pluginname-fa-picker-load-more');
+            var $loadMoreBtn = $container.find('.projectpress-fa-picker-load-more');
 
             this.currentPage = parseInt($loadMoreBtn.data('next-page'));
 
@@ -278,11 +278,11 @@
 
     // Initialize when document is ready
     $(document).ready(() => {
-        PluginNameFAIconPicker.init();
+        ProjectPressFAIconPicker.init();
     });
 
     // Expose to global scope for potential external use
-    window.PluginNameFAIconPicker = PluginNameFAIconPicker;
+    window.ProjectPressFAIconPicker = ProjectPressFAIconPicker;
 
 })(jQuery);
 

@@ -2,13 +2,13 @@
 /**
  * CronJobHelper functions.
  *
- * Provides helper functions for managing PluginName cron jobs.
+ * Provides helper functions for managing ProjectPress cron jobs.
  *
- * @package PluginName\Includes\Functions\Helpers
+ * @package ProjectPress\Includes\Functions\Helpers
  */
-namespace PluginName\Includes\Functions\Helpers;
+namespace ProjectPress\Includes\Functions\Helpers;
 
-use PluginName\Includes\Core\CronJobs;
+use ProjectPress\Includes\Core\CronJobs;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

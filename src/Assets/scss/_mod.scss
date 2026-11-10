@@ -1,5 +1,5 @@
-// Custom PluginName styles and overrides.
-.pluginname-admin {
+// Custom ProjectPress styles and overrides.
+.projectpress-admin {
     .nav-tabs {
 		border-bottom-color: var(--bs-border-color);
 
@@ -13,12 +13,12 @@
 		}
 	}
 
-	.pluginname-mod-manager-form {
+	.projectpress-mod-manager-form {
 		width: 100%;
 		max-width: 100%;
 	}
 
-	.pluginname-mod-manager-form {
+	.projectpress-mod-manager-form {
 		.tab-content {
 			margin-top: 1rem;
 		}
@@ -28,7 +28,7 @@
 		}
 	}
 
-	.pluginname-mod-manager-tab-content {
+	.projectpress-mod-manager-tab-content {
 		transition: opacity 150ms ease;
 
 		&.is-loading {

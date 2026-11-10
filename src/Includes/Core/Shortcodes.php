@@ -1,19 +1,19 @@
 <?php
 /**
- * Core shortcode definitions for PluginName.
+ * Core shortcode definitions for ProjectPress.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Core
  * @since 1.0.0
  */
-namespace PluginName\Includes\Core;
+namespace ProjectPress\Includes\Core;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Register and process PluginName shortcode definitions.
+ * Register and process ProjectPress shortcode definitions.
  */
 final class Shortcodes {
 	/**
@@ -153,7 +153,7 @@ final class Shortcodes {
 	 * @return array<string, array<string, mixed>>
 	 */
 	public static function definitions(): array {
-		return apply_filters( 'pluginname_shortcode_definitions', self::$registered );
+		return apply_filters( 'projectpress_shortcode_definitions', self::$registered );
 	}
 
 	/**

@@ -5,7 +5,7 @@
  * @since 1.0.0
  */
 
-namespace PluginName\Includes\Functions\Helpers;
+namespace ProjectPress\Includes\Functions\Helpers;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -103,7 +103,7 @@ class AlertHelper {
 
 		ob_start();
 		?>
-		<div class="alert alert-<?php echo esc_attr( $alert ); ?> d-flex align-items-center alert-dismissible fade show" role="alert" data-pluginname-alert>
+		<div class="alert alert-<?php echo esc_attr( $alert ); ?> d-flex align-items-center alert-dismissible fade show" role="alert" data-projectpress-alert>
 			<i class="flex-shrink-0 me-2 fa-solid fa-<?php echo esc_attr( $icon ); ?>" aria-hidden="true"></i> <?php echo esc_html( $message ); ?>
 			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 		</div>

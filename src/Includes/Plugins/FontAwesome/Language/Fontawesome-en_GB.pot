@@ -1,12 +1,12 @@
 # Translation catalog for FontAwesome.
-# Copyright (C) 2026 PluginName contributors
-# This file is distributed under the same license as the PluginName package.
+# Copyright (C) 2026 ProjectPress contributors
+# This file is distributed under the same license as the ProjectPress package.
 msgid ""
 msgstr ""
-"Project-Id-Version: PluginName 1.0.0\n"
+"Project-Id-Version: ProjectPress 1.0.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Domain: pluginname\n"
+"X-Domain: projectpress\n"
 #: src/includes/Plugins/FontAwesome/Includes/Settings/Settings.php:48
 msgid "Base package"
 msgstr ""
@@ -28,7 +28,7 @@ msgid "Choose an Icon"
 msgstr ""
 
 #: src/includes/Plugins/FontAwesome/Includes/Settings/Settings.php:44
-msgid "Choose how PluginName loads Font Awesome icons."
+msgid "Choose how ProjectPress loads Font Awesome icons."
 msgstr ""
 
 #: src/includes/Plugins/FontAwesome/Includes/IconPicker.php:527
@@ -88,7 +88,7 @@ msgid "No icons found"
 msgstr ""
 
 #: src/includes/Plugins/FontAwesome/FontAwesome.php:83
-msgid "Provides Font Awesome loading, icon picking, and styling APIs for PluginName."
+msgid "Provides Font Awesome loading, icon picking, and styling APIs for ProjectPress."
 msgstr ""
 
 #: src/includes/Plugins/FontAwesome/Includes/IconPicker.php:567

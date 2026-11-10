@@ -23,15 +23,15 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const updateFontAwesomeFieldVisibility = () => {
-        root.querySelectorAll('.pluginname-plugin-settings-modal').forEach((modal) => {
+        root.querySelectorAll('.projectpress-plugin-settings-modal').forEach((modal) => {
             const form = modal.querySelector('form[data-plugin-settings-form]');
             if (!form) {
                 return;
             }
 
             const typeValue = getFieldValue(form, 'fontawesome_type');
-            const cdnField = form.querySelector('[data-pluginname-field-key="fontawesome_cdn_technology"]');
-            const kitField = form.querySelector('[data-pluginname-field-key="fontawesome_kit_id"]');
+            const cdnField = form.querySelector('[data-projectpress-field-key="fontawesome_cdn_technology"]');
+            const kitField = form.querySelector('[data-projectpress-field-key="fontawesome_kit_id"]');
 
             if (cdnField) {
                 const showCdn = typeValue === 'cdn';

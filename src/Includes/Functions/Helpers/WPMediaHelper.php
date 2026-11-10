@@ -6,11 +6,11 @@
  * modal so fields can accept either a saved image URL or attachment ID and
  * still render a live preview without jQuery.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Functions\Helpers
  * @since 1.0.0
  */
-namespace PluginName\Includes\Functions\Helpers;
+namespace ProjectPress\Includes\Functions\Helpers;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -27,7 +27,7 @@ final class WPMediaHelper {
 	 *     array(
 	 *         'name' => 'hero_image',
 	 *         'id' => 'hero_image',
-	 *         'button_text' => __( 'Choose Image', 'pluginname' ),
+	 *         'button_text' => __( 'Choose Image', 'projectpress' ),
 	 *         'class' => 'btn btn-primary',
 	 *     ),
 	 *     array(
@@ -46,7 +46,7 @@ final class WPMediaHelper {
 
 		$field_name        = (string) ( $button_config['name'] ?? 'media_value' );
 		$field_id          = (string) ( $button_config['id'] ?? sanitize_key( $field_name ) );
-		$button_label      = (string) ( $button_config['button_text'] ?? $button_config['text'] ?? __( 'Select Media', 'pluginname' ) );
+		$button_label      = (string) ( $button_config['button_text'] ?? $button_config['text'] ?? __( 'Select Media', 'projectpress' ) );
 		$return_value_mode = (string) ( $button_config['return_value'] ?? 'url' );
 		$value_type        = self::resolve_value_type( $field_value );
 		$resolved_value    = 'id' === $return_value_mode ? self::resolve_attachment_id( $field_value ) : self::resolve_image_url( $field_value );
@@ -54,7 +54,7 @@ final class WPMediaHelper {
 
 		$wrapper_class = self::classes(
 			array(
-				'pluginname-media-picker',
+				'projectpress-media-picker',
 				$button_config['wrapper_class'] ?? '',
 				$button_config['style'] ?? 'default',
 			)
@@ -62,7 +62,7 @@ final class WPMediaHelper {
 
 		$preview_class = self::classes(
 			array(
-				'pluginname-media-preview',
+				'projectpress-media-preview',
 				'border rounded bg-light p-2',
 				$image_preview_config['class'] ?? 'img-fluid rounded',
 				$image_preview_config['style'] ?? 'card',
@@ -74,14 +74,14 @@ final class WPMediaHelper {
 				'type' => 'button',
 				'class' => 'btn btn-primary',
 				'attributes' => array(
-					'data-pluginname-media-picker' => 'true',
+					'data-projectpress-media-picker' => 'true',
 					'data-media-field-name' => $field_name,
 					'data-media-field-id' => $field_id,
 					'data-media-target' => $field_name,
 					'data-media-type' => $button_config['media_type'] ?? 'image',
 					'data-return-value' => $return_value_mode,
-					'data-media-title' => $button_config['media_title'] ?? __( 'Select Media', 'pluginname' ),
-					'data-media-button-text' => $button_config['media_button_text'] ?? __( 'Use Media', 'pluginname' ),
+					'data-media-title' => $button_config['media_title'] ?? __( 'Select Media', 'projectpress' ),
+					'data-media-button-text' => $button_config['media_button_text'] ?? __( 'Use Media', 'projectpress' ),
 				),
 			),
 			$button_config
@@ -96,13 +96,13 @@ final class WPMediaHelper {
 		$remove_button = '';
 		if ( ! empty( $button_config['show_remove'] ) || ! empty( $image_preview_config['show_remove'] ) ) {
 			$remove_button = FormFieldHelper::button(
-				__( 'Remove', 'pluginname' ),
+				__( 'Remove', 'projectpress' ),
 				array(
 					'type' => 'button',
 					'class' => 'btn btn-outline-danger btn-sm d-none ms-2',
 					'attributes' => array(
-						'data-pluginname-media-remove' => 'true',
-						'aria-label' => __( 'Remove media', 'pluginname' ),
+						'data-projectpress-media-remove' => 'true',
+						'aria-label' => __( 'Remove media', 'projectpress' ),
 					),
 				)
 			);
@@ -112,8 +112,8 @@ final class WPMediaHelper {
 		$preview_src    = esc_url( $resolved_value );
 		$preview_alt    = esc_attr( (string) ( $image_preview_config['alt'] ?? $field_name ) );
 		$preview_markup = sprintf(
-			'<div class="%1$s%2$s" data-pluginname-media-preview-container="true">' .
-			'<img src="%3$s" alt="%4$s" class="%5$s" style="max-width:120px; max-height:120px; width:auto; height:auto; object-fit:cover;" data-pluginname-media-preview-image="true" />' .
+			'<div class="%1$s%2$s" data-projectpress-media-preview-container="true">' .
+			'<img src="%3$s" alt="%4$s" class="%5$s" style="max-width:120px; max-height:120px; width:auto; height:auto; object-fit:cover;" data-projectpress-media-preview-image="true" />' .
 			'</div>',
 			esc_attr( $preview_class ),
 			esc_attr( $preview_hidden ),
@@ -139,7 +139,7 @@ final class WPMediaHelper {
 		);
 
 		return sprintf(
-			'<div class="%1$s" data-pluginname-media-wrapper="true" data-media-id="%2$s">%3$s%4$s%5$s%6$s</div>',
+			'<div class="%1$s" data-projectpress-media-wrapper="true" data-media-id="%2$s">%3$s%4$s%5$s%6$s</div>',
 			esc_attr( $wrapper_class ),
 			esc_attr( $field_id ),
 			$hidden_input,
@@ -171,16 +171,16 @@ final class WPMediaHelper {
 			wp_enqueue_media();
 		}
 
-		if ( ! defined( 'PLUGINNAME_ASSETS_URL' ) ) {
+		if ( ! defined( 'PROJECTPRESS_ASSETS_URL' ) ) {
 			return;
 		}
 
-		$script_handle = 'pluginname-admin-wpmedia';
-		$script_src    = PLUGINNAME_ASSETS_URL . '/dist/js/admin.wpmedia.js';
+		$script_handle = 'projectpress-admin-wpmedia';
+		$script_src    = PROJECTPRESS_ASSETS_URL . '/dist/js/admin.wpmedia.js';
 
 		if ( function_exists( 'wp_script_is' ) && ! wp_script_is( $script_handle, 'registered' ) ) {
 			if ( function_exists( 'wp_register_script' ) ) {
-				wp_register_script( $script_handle, $script_src, array( 'media-editor' ), defined( 'PLUGINNAME_VERSION' ) ? PLUGINNAME_VERSION : false, true );
+				wp_register_script( $script_handle, $script_src, array( 'media-editor' ), defined( 'PROJECTPRESS_VERSION' ) ? PROJECTPRESS_VERSION : false, true );
 			}
 		}
 

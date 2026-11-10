@@ -1,5 +1,5 @@
 ---
-description: Validation and WordPress test environment workflow for PluginName
+description: Validation and WordPress test environment workflow for ProjectPress
 # applyTo: '**/*.{php,js,ts,scss}' # when provided, instructions are automatically added to matching files
 ---
 

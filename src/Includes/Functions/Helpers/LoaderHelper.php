@@ -1,13 +1,13 @@
 <?php
 /**
- * Higher-level helpers for the PluginName WordPress hook loader.
+ * Higher-level helpers for the ProjectPress WordPress hook loader.
  *
- * @package PluginName\Includes\Functions\Helpers
+ * @package ProjectPress\Includes\Functions\Helpers
  * @since 1.0.0
  */
-namespace PluginName\Includes\Functions\Helpers;
+namespace ProjectPress\Includes\Functions\Helpers;
 
-use PluginName\Includes\Core\WP\WPLoader;
+use ProjectPress\Includes\Core\WP\WPLoader;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

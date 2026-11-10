@@ -2,12 +2,12 @@
 /**
  * Reports admin page manager.
  *
- * @package PluginName\Admin\Manager\Reports
+ * @package ProjectPress\Admin\Manager\Reports
  */
-namespace PluginName\Admin\Manager\Reports;
+namespace ProjectPress\Admin\Manager\Reports;
 
-use PluginName\Admin\Manager\Manager;
-use PluginName\Assets\Assets;
+use ProjectPress\Admin\Manager\Manager;
+use ProjectPress\Assets\Assets;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -30,7 +30,7 @@ class ReportsManager extends Manager {
 	 * @return void
 	 */
 	public function register_assets( Assets $assets ): void {
-		$this->register_page_assets( $assets, array( 'pluginname-reports' ), 'reports' );
+		$this->register_page_assets( $assets, array( 'projectpress-reports' ), 'reports' );
 	}
 }
 

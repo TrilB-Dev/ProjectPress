@@ -2,16 +2,16 @@
 /**
  * DataTransfer class for exporting and importing plugin data.
  *
- * @package PluginName\Includes\Tools
+ * @package ProjectPress\Includes\Tools
  */
-namespace PluginName\Includes\Tools;
+namespace ProjectPress\Includes\Tools;
 
-use PluginName\Includes\Core\PostType;
-use PluginName\Includes\Core\Taxonomy;
-use PluginName\Includes\Functions\Helpers\SanitizationHelper;
-use PluginName\Includes\Functions\Helpers\PostHelper;
-use PluginName\Includes\Functions\Helpers\QueryHelper;
-use PluginName\Includes\Functions\Helpers\TaxonomyHelper;
+use ProjectPress\Includes\Core\PostType;
+use ProjectPress\Includes\Core\Taxonomy;
+use ProjectPress\Includes\Functions\Helpers\SanitizationHelper;
+use ProjectPress\Includes\Functions\Helpers\PostHelper;
+use ProjectPress\Includes\Functions\Helpers\QueryHelper;
+use ProjectPress\Includes\Functions\Helpers\TaxonomyHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -110,7 +110,7 @@ final class DataTransfer {
 			);
 		}
 		if ( absint( $data['version'] ?? 0 ) !== self::VERSION ) {
-			$errors[] = __( 'This PluginName export version is not supported.', 'wikipress' );
+			$errors[] = __( 'This ProjectPress export version is not supported.', 'wikipress' );
 		}
 		foreach ( array( 'wikis', 'pages', 'categories', 'tags' ) as $key ) {
 			if ( isset( $data[ $key ] ) && ! is_array( $data[ $key ] ) ) {

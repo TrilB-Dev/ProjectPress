@@ -2,13 +2,13 @@
 /**
  * TinyMCE Editor Plugin Helper Functions
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Plugins\TinyMCE\Includes\Functions\Helpers
  * @since 1.0.0
  */
-namespace PluginName\Includes\Plugins\TinyMCE\Includes\Functions\Helpers;
+namespace ProjectPress\Includes\Plugins\TinyMCE\Includes\Functions\Helpers;
 
-use PluginName\Includes\Plugins\TinyMCE\Includes\Settings\Settings;
+use ProjectPress\Includes\Plugins\TinyMCE\Includes\Settings\Settings;
 
 final class TinyMCEHelper {
 	/**
@@ -33,7 +33,7 @@ final class TinyMCEHelper {
 			$locale = get_user_locale();
 		}
 		$language_path     = '';
-		$language_dir      = dirname( PLUGINNAME_FILE ) . '/src/Includes/Plugins/TinyMCE/Assets/tinymce/langs';
+		$language_dir      = dirname( PROJECTPRESS_FILE ) . '/src/Includes/Plugins/TinyMCE/Assets/tinymce/langs';
 		$locale_candidates = array( $locale, str_replace( '-', '_', $locale ), str_replace( '_', '-', $locale ), strtolower( $locale ) );
 		$language_files    = glob( $language_dir . '/*.js' );
 		if ( false === $language_files ) {
@@ -49,7 +49,7 @@ final class TinyMCEHelper {
 		}
 		$language_url = '';
 		if ( file_exists( $language_path ) ) {
-			$language_url = PLUGINNAME_URL . 'src/Includes/Plugins/TinyMCE/Assets/tinymce/langs/' . basename( $language_path );
+			$language_url = PROJECTPRESS_URL . 'src/Includes/Plugins/TinyMCE/Assets/tinymce/langs/' . basename( $language_path );
 		}
 		$toolbar   = array( 'blocks' );
 		$toolbar[] = '|';
@@ -64,7 +64,7 @@ final class TinyMCEHelper {
 			$toolbar[] = 'link';
 		}
 		if ( $media_buttons ) {
-			$toolbar[] = 'pluginnamemedia';
+			$toolbar[] = 'projectpressmedia';
 		}
 		foreach ( array( 'image', 'media', 'table' ) as $button ) {
 			if ( in_array( $button, $plugins, true ) ) {
@@ -85,10 +85,10 @@ final class TinyMCEHelper {
 			'license_key'   => 'gpl',
 			'plugins'       => implode( ' ', $plugins ),
 			'toolbar'       => implode( ' ', $toolbar ),
-			'base_url'      => PLUGINNAME_URL . 'src/Includes/Plugins/TinyMCE/Assets/tinymce',
+			'base_url'      => PROJECTPRESS_URL . 'src/Includes/Plugins/TinyMCE/Assets/tinymce',
 			'skin'          => $ui_skin,
-			'skin_url'      => PLUGINNAME_URL . 'src/Includes/Plugins/TinyMCE/Assets/tinymce/skins/ui/' . $ui_skin,
-			'content_css'   => PLUGINNAME_URL . 'src/Includes/Plugins/TinyMCE/Assets/tinymce/skins/content/' . $content_skin . '/content.min.css',
+			'skin_url'      => PROJECTPRESS_URL . 'src/Includes/Plugins/TinyMCE/Assets/tinymce/skins/ui/' . $ui_skin,
+			'content_css'   => PROJECTPRESS_URL . 'src/Includes/Plugins/TinyMCE/Assets/tinymce/skins/content/' . $content_skin . '/content.min.css',
 			'media_buttons' => $media_buttons,
 		);
 		if ( $language_url ) {
@@ -96,11 +96,11 @@ final class TinyMCEHelper {
 			$settings['language_url'] = $language_url;
 		}
 
-		$settings = apply_filters( 'pluginname_tinymce_settings', array_merge( $settings, $options ), $editor_id );
+		$settings = apply_filters( 'projectpress_tinymce_settings', array_merge( $settings, $options ), $editor_id );
 
 		printf( '<label class="form-label" for="%1$s">%2$s</label>', esc_attr( $editor_id ), esc_html( $label ) );
-		printf( '<textarea class="form-control pluginname-tinymce" id="%1$s" name="%2$s" rows="%3$d">%4$s</textarea>', esc_attr( $editor_id ), esc_attr( $name ), $rows, esc_textarea( $value ) );
-		printf( '<script type="application/json" class="pluginname-tinymce-config" data-editor="%1$s">%2$s</script>', esc_attr( $editor_id ), wp_json_encode( $settings ) );
+		printf( '<textarea class="form-control projectpress-tinymce" id="%1$s" name="%2$s" rows="%3$d">%4$s</textarea>', esc_attr( $editor_id ), esc_attr( $name ), $rows, esc_textarea( $value ) );
+		printf( '<script type="application/json" class="projectpress-tinymce-config" data-editor="%1$s">%2$s</script>', esc_attr( $editor_id ), wp_json_encode( $settings ) );
 	}
 }
 

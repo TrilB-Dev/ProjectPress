@@ -1,4 +1,4 @@
-.pluginname-admin {
+.projectpress-admin {
 	.nav-tabs {
 		border-bottom-color: var(--bs-border-color);
 
@@ -12,13 +12,13 @@
 		}
 	}
 
-	.pluginname-settings-form,
-	.pluginname-import-form {
+	.projectpress-settings-form,
+	.projectpress-import-form {
 		width: 100%;
 		max-width: 100%;
 	}
 
-	.pluginname-settings-form {
+	.projectpress-settings-form {
 		.tab-content {
 			margin-top: 1rem;
 		}
@@ -28,7 +28,7 @@
 		}
 	}
 
-	.pluginname-settings-tab-content {
+	.projectpress-settings-tab-content {
 		transition: opacity 150ms ease;
 
 		&.is-loading {

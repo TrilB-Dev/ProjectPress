@@ -1,13 +1,13 @@
 <?php
 /**
- * Taxonomy query and term normalization helpers for PluginName.
+ * Taxonomy query and term normalization helpers for ProjectPress.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Functions\Helpers
  * @since 1.0.0
  */
 
-namespace PluginName\Includes\Functions\Helpers;
+namespace ProjectPress\Includes\Functions\Helpers;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

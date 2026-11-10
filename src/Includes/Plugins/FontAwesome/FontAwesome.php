@@ -1,25 +1,25 @@
 <?php
 /**
- * Font Awesome plugin integration for PluginName.
+ * Font Awesome plugin integration for ProjectPress.
  *
  * @package FontAwesome
- * @textdomain pluginname
+ * @textdomain projectpress
  * @domainpath Languages
- * @author PluginName Team
+ * @author ProjectPress Team
  */
 
-namespace PluginName\Includes\Plugins\FontAwesome;
+namespace ProjectPress\Includes\Plugins\FontAwesome;
 
-use PluginName\Includes\Plugins\AssetsProviderInterface;
-use PluginName\Includes\Plugins\I18nProviderInterface;
-use PluginName\Includes\Plugins\PluginInterface;
-use PluginName\Includes\Plugins\SettingsProviderInterface;
-use PluginName\Includes\Plugins\SettingsPageProviderInterface;
-use PluginName\Includes\Plugins\FontAwesome\Assets\Assets;
-use PluginName\Includes\Plugins\FontAwesome\Includes\IconPicker;
-use PluginName\Includes\Plugins\FontAwesome\Includes\Core\I18n;
-use PluginName\Includes\Plugins\FontAwesome\Includes\Includes;
-use PluginName\Includes\Core\WP\Activator;
+use ProjectPress\Includes\Plugins\AssetsProviderInterface;
+use ProjectPress\Includes\Plugins\I18nProviderInterface;
+use ProjectPress\Includes\Plugins\PluginInterface;
+use ProjectPress\Includes\Plugins\SettingsProviderInterface;
+use ProjectPress\Includes\Plugins\SettingsPageProviderInterface;
+use ProjectPress\Includes\Plugins\FontAwesome\Assets\Assets;
+use ProjectPress\Includes\Plugins\FontAwesome\Includes\IconPicker;
+use ProjectPress\Includes\Plugins\FontAwesome\Includes\Core\I18n;
+use ProjectPress\Includes\Plugins\FontAwesome\Includes\Includes;
+use ProjectPress\Includes\Core\WP\Activator;
 
 final class FontAwesome implements PluginInterface, SettingsProviderInterface, SettingsPageProviderInterface, AssetsProviderInterface, I18nProviderInterface {
     /**
@@ -45,7 +45,7 @@ final class FontAwesome implements PluginInterface, SettingsProviderInterface, S
      * @since 1.0.0
      */
     public function get_slug(): string {
-        return 'pluginname-fontawesome';
+        return 'projectpress-fontawesome';
     }
 
     /**
@@ -106,7 +106,7 @@ final class FontAwesome implements PluginInterface, SettingsProviderInterface, S
      * @since 1.0.0
      */
     public function get_description(): string {
-        return __( 'Provides FontAwesome CDN & Kit enqueueing in Admin, Frontend & Login Page, also adds an enhanced icon picker, and styling APIs for PluginName.', 'pluginname' );
+        return __( 'Provides FontAwesome CDN & Kit enqueueing in Admin, Frontend & Login Page, also adds an enhanced icon picker, and styling APIs for ProjectPress.', 'projectpress' );
     }
 
     /**
@@ -116,7 +116,7 @@ final class FontAwesome implements PluginInterface, SettingsProviderInterface, S
      * @since 1.0.0
      */
     public function get_uri(): string {
-        return 'https://trilb.dev/collection/web-extension/wordpress/pluginname';
+        return 'https://trilb.dev/collection/web-extension/wordpress/projectpress';
     }
 
     /**

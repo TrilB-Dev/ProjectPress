@@ -1,15 +1,15 @@
 <?php
 /**
- * AJAX request and response helpers for PluginName and extensions.
+ * AJAX request and response helpers for ProjectPress and extensions.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Functions\Helpers
  * @since 1.0.0
  */
-namespace PluginName\Includes\Functions\Helpers;
-use PluginName\Includes\Functions\Helpers\LoggerHelper;
-use PluginName\Includes\Functions\Helpers\AlertHelper;
-use PluginName\Includes\Functions\Helpers\LoaderHelper;
+namespace ProjectPress\Includes\Functions\Helpers;
+use ProjectPress\Includes\Functions\Helpers\LoggerHelper;
+use ProjectPress\Includes\Functions\Helpers\AlertHelper;
+use ProjectPress\Includes\Functions\Helpers\LoaderHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -35,14 +35,14 @@ final class AjaxHelper {
 	}
 
 	/**
-	 * Public entry point for preparing all PluginName REST and AJAX requests.
+	 * Public entry point for preparing all ProjectPress REST and AJAX requests.
 	 *
 	 * Call this from anywhere that needs a request payload, route, nonce, or
 	 * request-specific diagnostics. The helper owns URL building, payload
 	 * normalization, and common headers so callers only pass the values they need.
 	 *
 	 * @param string $request_type HTTP verb.
-	 * @param string $route        REST route relative to the pluginname/v1 namespace.
+	 * @param string $route        REST route relative to the projectpress/v1 namespace.
 	 * @param array  $data         Request payload.
 	 * @param array  $options      Extra runtime options.
 	 * @param array  $headers      Additional HTTP headers.
@@ -54,10 +54,10 @@ final class AjaxHelper {
 	}
 
 	/**
-	 * Prepare a PluginName REST/AJAX request payload.
+	 * Prepare a ProjectPress REST/AJAX request payload.
 	 *
 	 * @param string $request_type HTTP verb.
-	 * @param string $route        REST route relative to the pluginname/v1 namespace.
+	 * @param string $route        REST route relative to the projectpress/v1 namespace.
 	 * @param array  $data         Request payload.
 	 * @param array  $options      Extra runtime options.
 	 * @param array  $headers      Additional HTTP headers.
@@ -137,22 +137,22 @@ final class AjaxHelper {
 	}
 
 	/**
-	 * Build the base WordPress REST URL for PluginName.
+	 * Build the base WordPress REST URL for ProjectPress.
 	 *
 	 * @return string
 	 */
 	public static function rest_base_url(): string {
 		if ( function_exists( 'rest_url' ) ) {
-			return rtrim( rest_url( 'pluginname/v1/' ), '/' ) . '/';
+			return rtrim( rest_url( 'projectpress/v1/' ), '/' ) . '/';
 		}
 
 		return rtrim( trailingslashit( site_url( '/wp-json/' ) ), '/' ) . '/';
 	}
 
 	/**
-	 * Build the final REST URL from a PluginName route.
+	 * Build the final REST URL from a ProjectPress route.
 	 *
-	 * @param string $route Relative route, such as groups/my-group or pluginname/v1/groups/my-group.
+	 * @param string $route Relative route, such as groups/my-group or projectpress/v1/groups/my-group.
 	 * @return string
 	 */
 	public static function build_rest_url( string $route = '' ): string {
@@ -178,7 +178,7 @@ final class AjaxHelper {
 			return '';
 		}
 
-		$route = preg_replace( '#^/?pluginname/v1/?#i', '', $route );
+		$route = preg_replace( '#^/?projectpress/v1/?#i', '', $route );
 		$route = preg_replace( '#^/?wp-json/?#i', '', $route );
 		$route = trim( (string) $route, '/' );
 
@@ -186,7 +186,7 @@ final class AjaxHelper {
 	}
 
 	/**
-	 * Return the request nonce to use for PluginName REST calls.
+	 * Return the request nonce to use for ProjectPress REST calls.
 	 *
 	 * @return string
 	 */
@@ -195,7 +195,7 @@ final class AjaxHelper {
 	}
 
 	/**
-	 * Convert a data array into a sanitized payload for PluginName requests.
+	 * Convert a data array into a sanitized payload for ProjectPress requests.
 	 *
 	 * @param array $data Request data.
 	 * @return array<string,mixed>
@@ -249,7 +249,7 @@ final class AjaxHelper {
 			'tab'   => RequestHelper::get_key( 'tab', '' ),
 		);
 
-		$settings_page = 'pluginname' === $route['page'] && 'settings' === $route['group'];
+		$settings_page = 'projectpress' === $route['page'] && 'settings' === $route['group'];
 		$plugin_tab    = in_array( $route['tab'], array( 'plugins', 'third-party' ), true );
 
 		if ( $settings_page && $plugin_tab ) {
@@ -259,20 +259,20 @@ final class AjaxHelper {
 				'pluginNonce'         => wp_create_nonce( 'wp_rest' ),
 				'pluginSettingsNonce' => wp_create_nonce( 'wp_rest' ),
 			);
-			foreach ( array( 'pluginname-admin-settings', 'pluginname-admin-plugins' ) as $handle ) {
+			foreach ( array( 'projectpress-admin-settings', 'projectpress-admin-plugins' ) as $handle ) {
 				if ( wp_script_is( $handle, 'enqueued' ) ) {
-					LoaderHelper::localize_script( $handle, 'pluginnameSettingsTabs', $settings_config );
+					LoaderHelper::localize_script( $handle, 'projectpressSettingsTabs', $settings_config );
 				}
 			}
 		}
 
-		$mod_manager_handles = array( 'pluginname-admin-mods', 'pluginname-admin' );
-		if ( 'pluginname' === $route['page'] && in_array( $route['group'], array( 'manage-mod', 'mods' ), true ) ) {
+		$mod_manager_handles = array( 'projectpress-admin-mods', 'projectpress-admin' );
+		if ( 'projectpress' === $route['page'] && in_array( $route['group'], array( 'manage-mod', 'mods' ), true ) ) {
 			foreach ( $mod_manager_handles as $handle ) {
 				if ( wp_script_is( $handle, 'enqueued' ) ) {
 					LoaderHelper::localize_script(
 						$handle,
-						'pluginnameManager',
+						'projectpressManager',
 						self::script_config()
 					);
 				}
@@ -394,7 +394,7 @@ final class AjaxHelper {
 	}
 
 	/**
-	 * Register and enqueue the shared PluginName AJAX script.
+	 * Register and enqueue the shared ProjectPress AJAX script.
 	 *
 	 * @param string $handle Script handle.
 	 * @param string $src Script source URL.
@@ -402,17 +402,17 @@ final class AjaxHelper {
 	 * @param bool   $in_footer Whether to load in footer.
 	 * @return void
 	 */
-	public static function register_and_enqueue_script( string $handle = 'pluginname-admin-ajax', string $src = '', array $deps = array( 'pluginname-bootstrap' ), bool $in_footer = true ): void {
-		if ( ! defined( 'PLUGINNAME_ASSETS_URL' ) ) {
+	public static function register_and_enqueue_script( string $handle = 'projectpress-admin-ajax', string $src = '', array $deps = array( 'projectpress-bootstrap' ), bool $in_footer = true ): void {
+		if ( ! defined( 'PROJECTPRESS_ASSETS_URL' ) ) {
 			return;
 		}
 
 		if ( '' === $src ) {
-			$src = PLUGINNAME_ASSETS_URL . '/dist/js/admin.ajax.js';
+			$src = PROJECTPRESS_ASSETS_URL . '/dist/js/admin.ajax.js';
 		}
 
 		if ( ! wp_script_is( $handle, 'registered' ) ) {
-			wp_register_script( $handle, $src, $deps, defined( 'PLUGINNAME_VERSION' ) ? PLUGINNAME_VERSION : false, $in_footer );
+			wp_register_script( $handle, $src, $deps, defined( 'PROJECTPRESS_VERSION' ) ? PROJECTPRESS_VERSION : false, $in_footer );
 		}
 
 		wp_enqueue_script( $handle );

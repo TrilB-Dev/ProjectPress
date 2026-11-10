@@ -1,10 +1,10 @@
 <?php
 /**
- * Frontend class for the PluginName plugin.
+ * Frontend class for the ProjectPress plugin.
  *
- * @package PluginName\Public
+ * @package ProjectPress\Public
  */
-namespace PluginName\Public;
+namespace ProjectPress\Public;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

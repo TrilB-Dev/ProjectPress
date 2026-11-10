@@ -1,12 +1,12 @@
 <?php
 
-namespace PluginName\Includes\Plugins\FontAwesome\API;
+namespace ProjectPress\Includes\Plugins\FontAwesome\API;
 
-use PluginName\Includes\Plugins\FontAwesome\Includes\Settings\Settings;
+use ProjectPress\Includes\Plugins\FontAwesome\Includes\Settings\Settings;
 
 final class FontAwesomeAPI {
     public static function configure(): void {
-        // PluginName uses its own Font Awesome asset pipeline and icon picker.
+        // ProjectPress uses its own Font Awesome asset pipeline and icon picker.
         // The official WordPress FontAwesome plugin is not required.
     }
 

@@ -1,19 +1,19 @@
 
-.pluginname-admin {
+.projectpress-admin {
 
-	.pluginname-plugin-card {
-		.card-header { background: #fff; border-color: var(--pluginname-line); }
+	.projectpress-plugin-card {
+		.card-header { background: #fff; border-color: var(--projectpress-line); }
 		.card-body { display: flex; flex-direction: column; }
 	}
 
-	.pluginname-plugin-icon {
-		color: var(--pluginname-blue);
+	.projectpress-plugin-icon {
+		color: var(--projectpress-blue);
 		font-size: 2rem;
 		height: 2rem;
 		width: 2rem;
 	}
 
-	.pluginname-plugin-settings-modal {
+	.projectpress-plugin-settings-modal {
 		.modal-dialog { max-height: calc(100vh - 3.5rem); }
 		.modal-content { max-height: calc(100vh - 3.5rem); }
 		.modal-body { overflow-y: auto; }
@@ -28,7 +28,7 @@
 			}
 		}
 
-		.pluginname-plugin-settings-fields-box {
+		.projectpress-plugin-settings-fields-box {
 			display: grid;
 			gap: 1rem;
 			grid-template-columns: 1fr;
@@ -42,8 +42,8 @@
 			}
 		}
 
-		.pluginname-plugin-settings-field {
-			border-color: var(--pluginname-line);
+		.projectpress-plugin-settings-field {
+			border-color: var(--projectpress-line);
 			background: var(--bs-light);
 
 			.card-body { padding: 1rem; }
@@ -52,7 +52,7 @@
 			.form-text { margin-top: .35rem; }
 		}
 
-		.pluginname-plugin-settings-field-description {
+		.projectpress-plugin-settings-field-description {
 			margin-top: .75rem;
 			margin-bottom: 0;
 		}

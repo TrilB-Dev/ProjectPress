@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset name="PluginName">
-    <description>PluginName PHP coding standards.</description>
+<ruleset name="ProjectPress">
+    <description>ProjectPress PHP coding standards.</description>
 
     <config name="testVersion" value="7.2-" />
 
@@ -17,39 +17,39 @@
         <exclude name="WordPress.NamingConventions.ValidVariableName" />
         <properties>
             <property name="custom_capabilities" type="array">
-                <element value="pluginname_admin_view" />
-                <element value="pluginname_dashboard_view" />
-                <element value="pluginname_licence_view" />
-                <element value="pluginname_licence_issue" />
-                <element value="pluginname_licence_edit" />
-                <element value="pluginname_licence_revoke" />
-                <element value="pluginname_licence_delete" />
-                <element value="pluginname_licence_validate" />
-                <element value="pluginname_settings_general_view" />
-                <element value="pluginname_settings_general_edit" />
-                <element value="pluginname_settings_layout_edit" />
-                <element value="pluginname_settings_access_view" />
-                <element value="pluginname_settings_access_edit" />
-                <element value="pluginname_settings_security_view" />
-                <element value="pluginname_settings_security_edit" />
-                <element value="pluginname_tools_import" />
-                <element value="pluginname_tools_export" />
-                <element value="pluginname_tools_debug" />
-                <element value="pluginname_tools_reset" />
-                <element value="pluginname_paypal_view" />
-                <element value="pluginname_paypal_manage" />
-                <element value="pluginname_paypal_checkout" />
-                <element value="pluginname_paypal_subscriptions" />
-                <element value="pluginname_settings_plugins_view" />
-                <element value="pluginname_settings_plugins_int_view" />
-                <element value="pluginname_settings_plugins_int_edit" />
-                <element value="pluginname_settings_plugins_ext_view" />
-                <element value="pluginname_settings_plugins_ext_edit" />
-                <element value="pluginname_page_create" />
-                <element value="pluginname_page_edit" />
-                <element value="pluginname_page_edit_others" />
-                <element value="pluginname_page_edit_published" />
-                <element value="pluginname_page_publish" />
+                <element value="projectpress_admin_view" />
+                <element value="projectpress_dashboard_view" />
+                <element value="projectpress_licence_view" />
+                <element value="projectpress_licence_issue" />
+                <element value="projectpress_licence_edit" />
+                <element value="projectpress_licence_revoke" />
+                <element value="projectpress_licence_delete" />
+                <element value="projectpress_licence_validate" />
+                <element value="projectpress_settings_general_view" />
+                <element value="projectpress_settings_general_edit" />
+                <element value="projectpress_settings_layout_edit" />
+                <element value="projectpress_settings_access_view" />
+                <element value="projectpress_settings_access_edit" />
+                <element value="projectpress_settings_security_view" />
+                <element value="projectpress_settings_security_edit" />
+                <element value="projectpress_tools_import" />
+                <element value="projectpress_tools_export" />
+                <element value="projectpress_tools_debug" />
+                <element value="projectpress_tools_reset" />
+                <element value="projectpress_paypal_view" />
+                <element value="projectpress_paypal_manage" />
+                <element value="projectpress_paypal_checkout" />
+                <element value="projectpress_paypal_subscriptions" />
+                <element value="projectpress_settings_plugins_view" />
+                <element value="projectpress_settings_plugins_int_view" />
+                <element value="projectpress_settings_plugins_int_edit" />
+                <element value="projectpress_settings_plugins_ext_view" />
+                <element value="projectpress_settings_plugins_ext_edit" />
+                <element value="projectpress_page_create" />
+                <element value="projectpress_page_edit" />
+                <element value="projectpress_page_edit_others" />
+                <element value="projectpress_page_edit_published" />
+                <element value="projectpress_page_publish" />
             </property>
         </properties>
     </rule>

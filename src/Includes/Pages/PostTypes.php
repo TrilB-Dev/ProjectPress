@@ -2,13 +2,13 @@
 /**
  * PostTypes class for registering plugin post types.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Pages
  * @since 1.0.0
  */
-namespace PluginName\Includes\Pages;
+namespace ProjectPress\Includes\Pages;
 
-use PluginName\Includes\Core\PostType;
+use ProjectPress\Includes\Core\PostType;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -22,23 +22,23 @@ final class PostTypes {
 	 * @since 1.0.0
 	 */
 	public static function register(): void {
-		self::postname_posttype();
+		self::projects_posttype();
 	}
 
 	/**
-	 * Register the core PluginName mod post type.
+	 * Register the core ProjectPress mod post type.
 	 *
 	 * @return bool
 	 * @since 1.0.0
 	 */
-	public static function postname_posttype(): bool {
+	public static function projects_posttype(): bool {
 		return PostType::create(
-			'pluginname_posttype',
+			'projectpress_projects',
 			array(
-				'label'           => __( 'Mods', 'pluginname' ),
-				'description'     => __( 'Mod entries managed by PluginName.', 'pluginname' ),
+				'label'           => __( 'Projects', 'projectpress' ),
+				'description'     => __( 'Mod entries managed by ProjectPress.', 'projectpress' ),
 				'supports'        => array( 'title', 'editor', 'excerpt', 'thumbnail', 'revisions' ),
-				'taxonomies'      => array( 'pluginname_category', 'pluginname_tag' ),
+				'taxonomies'      => array( 'projectpress_category', 'projectpress_tag' ),
 				'public'          => true,
 				'show_ui'         => true,
 				'show_in_menu'    => true,
@@ -46,8 +46,9 @@ final class PostTypes {
 				'menu_icon'       => 'dashicons-archive',
 				'has_archive'     => true,
 				'show_in_rest'    => true,
-				'rewrite'         => array( 'slug' => 'mods' ),
+				'rewrite'         => array( 'slug' => 'project' ),
 				'capability_type' => 'post',
+				'hierarchical'    => true,
 				'map_meta_cap'    => true,
 			)
 		);

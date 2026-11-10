@@ -1,12 +1,12 @@
 <?php
 /**
- * Core WordPress menu registry for PluginName.
+ * Core WordPress menu registry for ProjectPress.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Core
  * @since 1.0.0
  */
-namespace PluginName\Includes\Core;
+namespace ProjectPress\Includes\Core;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

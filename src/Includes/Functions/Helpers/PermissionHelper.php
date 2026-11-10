@@ -1,13 +1,13 @@
 <?php
 /**
- * Capability and authentication helpers for PluginName and extensions.
+ * Capability and authentication helpers for ProjectPress and extensions.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Functions\Helpers
  * @since 1.0.0
  */
 
-namespace PluginName\Includes\Functions\Helpers;
+namespace ProjectPress\Includes\Functions\Helpers;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

@@ -1,6 +1,6 @@
 # FaHelper
 
-FaHelper is the dedicated Font Awesome rendering utility for PluginName. It generates consistent HTML for icons using the official Font Awesome CSS class conventions and supports styling, transforms, animations, accessibility attributes, and custom inline styling without requiring callers to build repetitive markup by hand.
+FaHelper is the dedicated Font Awesome rendering utility for ProjectPress. It generates consistent HTML for icons using the official Font Awesome CSS class conventions and supports styling, transforms, animations, accessibility attributes, and custom inline styling without requiring callers to build repetitive markup by hand.
 
 ## Primary implementation
 

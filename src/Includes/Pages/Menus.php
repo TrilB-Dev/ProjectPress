@@ -2,13 +2,13 @@
 /**
  * Menus class for registering plugin menus.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Pages
  * @since 1.0.0
  */
-namespace PluginName\Includes\Pages;
+namespace ProjectPress\Includes\Pages;
 
-use PluginName\Includes\Core\Menus as CoreMenus;
+use ProjectPress\Includes\Core\Menus as CoreMenus;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -34,7 +34,7 @@ final class Menus {
 	public static function primary_navigation(): bool {
 		return CoreMenus::get_instance()->register_location( 
             'primary', 
-            __( 'Primary Navigation', 'pluginname' ), 
+            __( 'Primary Navigation', 'projectpress' ), 
             true 
         ) instanceof CoreMenus;
 	}

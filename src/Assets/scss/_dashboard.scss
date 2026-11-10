@@ -1,24 +1,24 @@
-.pluginname-admin {
-	.pluginname-summary-card,
-	.pluginname-resource-card {
+.projectpress-admin {
+	.projectpress-summary-card,
+	.projectpress-resource-card {
 		background: #fff;
-		border: 1px solid var(--pluginname-line);
+		border: 1px solid var(--projectpress-line);
 		border-radius: 0.75rem;
 		box-shadow: 0 0.5rem 1.5rem rgba(16, 42, 67, 0.06);
-		color: var(--pluginname-ink);
+		color: var(--projectpress-ink);
 		display: flex;
 		text-decoration: none;
 		transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
 
 		&:hover,
 		&:focus-visible {
-			border-color: var(--pluginname-blue);
+			border-color: var(--projectpress-blue);
 			transform: translateY(-2px);
 			box-shadow: var(--bs-box-shadow) !important;
 		}
 	}
 
-	.pluginname-summary-card {
+	.projectpress-summary-card {
 		align-items: center;
 		gap: 0.75rem;
 		padding: 1.25rem;
@@ -26,11 +26,11 @@
 		strong { line-height: 1; margin-left: auto; }
 	}
 
-	.pluginname-summary-icon {
+	.projectpress-summary-icon {
 		align-items: center;
 		background: #e8f0ff;
 		border-radius: 0.5rem;
-		color: var(--pluginname-blue);
+		color: var(--projectpress-blue);
 		display: inline-flex;
 		font-size: 1.25rem;
 		height: 2.5rem;
@@ -38,40 +38,40 @@
 		width: 2.5rem;
 	}
 
-	.pluginname-welcome-card {
+	.projectpress-welcome-card {
 		background: linear-gradient(125deg, #e8f0ff 0%, #fff 72%);
-		border-left: 4px solid var(--pluginname-blue) !important;
+		border-left: 4px solid var(--projectpress-blue) !important;
 	}
 
-	.pluginname-recent-card .list-group-item-action {
+	.projectpress-recent-card .list-group-item-action {
 		transition: background-color 140ms ease, padding-left 140ms ease;
 
 		&:hover,
 		&:focus-visible { background: #f2f6ff; padding-left: 1.6rem !important; }
 	}
 
-	.pluginname-resource-card {
+	.projectpress-resource-card {
 		align-items: flex-start;
 		flex-direction: column;
 		gap: 0.55rem;
 		padding: 1.25rem;
 
-		.dashicons { color: var(--pluginname-blue); font-size: 1.35rem; height: 1.35rem; width: 1.35rem; }
+		.dashicons { color: var(--projectpress-blue); font-size: 1.35rem; height: 1.35rem; width: 1.35rem; }
 	}
 
-	.pluginname-count-ready {
-		animation: pluginname-count-ready 420ms ease-out both;
+	.projectpress-count-ready {
+		animation: projectpress-count-ready 420ms ease-out both;
 	}
 }
 
-@keyframes pluginname-count-ready {
+@keyframes projectpress-count-ready {
 	from { opacity: 0; transform: translateY(4px); }
 	to { opacity: 1; transform: translateY(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.pluginname-admin .pluginname-summary-card,
-	.pluginname-admin .pluginname-resource-card,
-	.pluginname-admin .pluginname-recent-card .list-group-item-action { transition: none; }
+	.projectpress-admin .projectpress-summary-card,
+	.projectpress-admin .projectpress-resource-card,
+	.projectpress-admin .projectpress-recent-card .list-group-item-action { transition: none; }
 }
 

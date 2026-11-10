@@ -1,5 +1,5 @@
 ---
-description: Core repository layout and architecture rules for PluginName
+description: Core repository layout and architecture rules for ProjectPress
 # applyTo: 'src/**/*.php' # when provided, instructions are automatically added to matching files
 ---
 
@@ -15,7 +15,7 @@ The repository is organized into a core application and provider-based internal 
 - `src/Includes/Functions/` contains reusable functions and helpers.
 - `src/Includes/Settings/` contains core settings storage and management services.
 - `src/Includes/Plugins/` contains internal plugins, provider interfaces, and the plugin discovery/initialization service.
-- `src/languages/` contains PluginName core translation catalogs and compiled language files.
+- `src/languages/` contains ProjectPress core translation catalogs and compiled language files.
 - `src/Public/` contains core frontend behavior.
 - `Test/` contains automated tests and test fixtures.
 - `Docs/` contains the public architecture, API, helper, settings, and integration documentation.
@@ -24,7 +24,7 @@ Use the repository's existing casing: `src/Includes/` is authoritative, not `src
 
 ## Core Boundary
 
-- Keep feature-specific behavior out of PluginName core. Core must not contain conditions, selectors, settings keys, labels, capabilities, or business rules for a particular plugin.
+- Keep feature-specific behavior out of ProjectPress core. Core must not contain conditions, selectors, settings keys, labels, capabilities, or business rules for a particular plugin.
 - Do not add plugin-specific branches to shared classes such as admin renderers, settings managers, asset managers, API services, or shared helpers.
 - If a plugin needs behavior that core cannot currently express, first implement it inside the plugin using its own `Admin/`, `Assets/`, `Includes/`, templates, helpers, services, and hooks.
 - Decide whether to change core using this decision gate:
@@ -37,13 +37,13 @@ Use the repository's existing casing: `src/Includes/` is authoritative, not `src
 
 ## Internal Plugins
 
-- Internal plugins live under `src/Includes/Plugins/<PluginName>/` and are initialized by `Plugins.php` through the contracts in `PluginsInterface.php`.
-- Separately installed plugins register through `pluginname_register_plugin` and follow the same ownership rules. They must not require core changes that reference their slug or class.
-- Do not bypass the plugin loader with direct feature requires from `PluginName.php`, `Plugin.php`, or core bootstrap code.
+- Internal plugins live under `src/Includes/Plugins/<ProjectPress>/` and are initialized by `Plugins.php` through the contracts in `PluginsInterface.php`.
+- Separately installed plugins register through `projectpress_register_plugin` and follow the same ownership rules. They must not require core changes that reference their slug or class.
+- Do not bypass the plugin loader with direct feature requires from `ProjectPress.php`, `Plugin.php`, or core bootstrap code.
 - Treat each internal plugin as a self-contained extension with its own bootstrap, assets, includes, settings, translations, capabilities, and frontend/admin behavior where needed. A plugin may use this structure:
 
 ```text
-PluginName/
+ProjectPress/
 |- Admin/                         (optional)
 |- Assets/
 |  |- dist/
@@ -56,7 +56,7 @@ PluginName/
 |  |- Settings/                   (optional)
 |  `- Includes.php                (optional)
 |- Language/ or Languages/
-`- PluginName.php
+`- ProjectPress.php
 ```
 
 - A plugin owns its settings defaults, settings sanitization, business rules, templates, JavaScript, Sass, translations, REST routes, admin pages, capabilities, and feature-specific helpers.

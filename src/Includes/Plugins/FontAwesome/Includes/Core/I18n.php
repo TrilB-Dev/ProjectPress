@@ -4,18 +4,18 @@
  * 
  * 
  * 
- * @package PluginName\Includes\Plugins\FontAwesome\Includes
+ * @package ProjectPress\Includes\Plugins\FontAwesome\Includes
  * @since 1.0.0
  */
 
-namespace PluginName\Includes\Plugins\FontAwesome\Includes\Core;
+namespace ProjectPress\Includes\Plugins\FontAwesome\Includes\Core;
 
 final class I18n {
     public static function load_textdomain(): void {
         load_plugin_textdomain(
-            'pluginname',
+            'projectpress',
             false,
-            dirname( plugin_basename( PLUGINNAME_PLUGINS ) ) . '/FontAwesome/Language/'
+            dirname( plugin_basename( PROJECTPRESS_PLUGINS ) ) . '/FontAwesome/Language/'
         );
     }
 }

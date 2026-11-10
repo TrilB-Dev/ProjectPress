@@ -4,7 +4,7 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const sourceDirectory = path.join(root, 'src');
 const languageDirectory = path.join(root, 'src', 'Languages');
-const output = path.join(languageDirectory, 'PluginName.pot');
+const output = path.join(languageDirectory, 'ProjectPress.pot');
 const ignoredDirectories = new Set(['vendor', 'node_modules', 'dist', 'build', 'Languages']);
 const sourceExtensions = new Set(['.php', '.js', '.json']);
 
@@ -83,15 +83,15 @@ function writeCatalog() {
 
   const sorted = [...entries.values()].sort((a, b) => a.singular.localeCompare(b.singular));
   const header = [
-    '# Translation catalog for PluginName',
-    '# Copyright (C) 2026 PluginName contributors',
+    '# Translation catalog for ProjectPress',
+    '# Copyright (C) 2026 ProjectPress contributors',
     '# This file is distributed under the same license as the plugin.',
     'msgid ""',
     'msgstr ""',
-    '"Project-Id-Version: PluginName 1.0.0\\n"',
+    '"Project-Id-Version: ProjectPress 1.0.0\\n"',
     '"Content-Type: text/plain; charset=UTF-8\\n"',
     '"Content-Transfer-Encoding: 8bit\\n"',
-    '"X-Domain: pluginname\\n"',
+    '"X-Domain: projectpress\\n"',
     '',
   ];
 

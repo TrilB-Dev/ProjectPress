@@ -6,17 +6,17 @@
  *
  * @since 1.0.0
  *
- * @package    PluginName
- * @subpackage PluginName/Includes/Core/WP
+ * @package    ProjectPress
+ * @subpackage ProjectPress/Includes/Core/WP
  */
-namespace PluginName\Includes\Core\WP;
+namespace ProjectPress\Includes\Core\WP;
 
-use PluginName\Includes\Core\Capabilities;
-use PluginName\Includes\Core\Roles;
-use PluginName\Includes\ModManagement\GroupsManager;
-use PluginName\Includes\Plugins\Plugins;
-use PluginName\Includes\Settings\SettingsManager;
-use PluginName\Includes\Settings\Settings;
+use ProjectPress\Includes\Core\Capabilities;
+use ProjectPress\Includes\Core\Roles;
+use ProjectPress\Includes\ModManagement\GroupsManager;
+use ProjectPress\Includes\Plugins\Plugins;
+use ProjectPress\Includes\Settings\SettingsManager;
+use ProjectPress\Includes\Settings\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -41,7 +41,7 @@ final class Activator {
 	}
 
 	/**
-	 * Run PluginName and extension activation tasks.
+	 * Run ProjectPress and extension activation tasks.
 	 *
 	 * @param array<int, callable>|null $callbacks Optional callbacks for this run.
 	 * @return void

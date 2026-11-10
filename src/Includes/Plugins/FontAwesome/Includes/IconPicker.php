@@ -4,19 +4,19 @@
  *
  * Provides functionality for browsing and selecting FontAwesome icons
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\FontAwesome
  * @since 1.0.0
  */
 
-namespace PluginName\Includes\Plugins\FontAwesome\Includes;
+namespace ProjectPress\Includes\Plugins\FontAwesome\Includes;
 
 use Exception;
-use PluginName\Includes\Functions\Helpers\AjaxHelper;
-use PluginName\Includes\Functions\Helpers\LoggerHelper;
-use PluginName\Includes\Functions\Helpers\LoaderHelper;
-use PluginName\Includes\Functions\Helpers\RequestHelper;
-use PluginName\Includes\Functions\Helpers\FormFieldHelper;
+use ProjectPress\Includes\Functions\Helpers\AjaxHelper;
+use ProjectPress\Includes\Functions\Helpers\LoggerHelper;
+use ProjectPress\Includes\Functions\Helpers\LoaderHelper;
+use ProjectPress\Includes\Functions\Helpers\RequestHelper;
+use ProjectPress\Includes\Functions\Helpers\FormFieldHelper;
 
 /**
  * Class IconPicker
@@ -72,8 +72,8 @@ class IconPicker {
         // Only initialize WordPress hooks if WordPress functions are available
         if ( function_exists( 'add_action' ) ) {
             $this->loader->register_component( $this, [
-                [ 'type' => 'action', 'hook' => 'wp_ajax_pluginname_fontawesome_search_icons', 'callback' => 'ajax_search_icons' ],
-                [ 'type' => 'action', 'hook' => 'wp_ajax_pluginname_fontawesome_get_icon_data', 'callback' => 'ajax_get_icon_data' ],
+                [ 'type' => 'action', 'hook' => 'wp_ajax_projectpress_fontawesome_search_icons', 'callback' => 'ajax_search_icons' ],
+                [ 'type' => 'action', 'hook' => 'wp_ajax_projectpress_fontawesome_get_icon_data', 'callback' => 'ajax_get_icon_data' ],
             ] )->run();
         }
     }
@@ -82,7 +82,7 @@ class IconPicker {
      * AJAX handler for searching icons.
      */
     public function ajax_search_icons() {
-        if ( ! AjaxHelper::has_valid_nonce( 'pluginname_fontawesome_picker' ) ) {
+        if ( ! AjaxHelper::has_valid_nonce( 'projectpress_fontawesome_picker' ) ) {
             AjaxHelper::unauthorized( 'Security check failed.' );
         }
 
@@ -101,7 +101,7 @@ class IconPicker {
      * AJAX handler for getting icon data.
      */
     public function ajax_get_icon_data() {
-        if ( ! AjaxHelper::has_valid_nonce( 'pluginname_fontawesome_picker' ) ) {
+        if ( ! AjaxHelper::has_valid_nonce( 'projectpress_fontawesome_picker' ) ) {
             AjaxHelper::unauthorized( 'Security check failed.' );
         }
 
@@ -238,7 +238,7 @@ class IconPicker {
     /**
      * Get available icons from the in-repo fallback catalog.
      *
-     * PluginName does not depend on the official WordPress FontAwesome plugin,
+     * ProjectPress does not depend on the official WordPress FontAwesome plugin,
      * so the picker resolves icons from a bundled local catalog instead.
      *
      * @param string $pack Icon pack.
@@ -268,8 +268,8 @@ class IconPicker {
         $args = wp_parse_args( $args, array(
             'id' => uniqid( 'fa-picker-' ),
             'input_id' => '',
-            'class' => 'pluginname-fa-picker',
-            'button_text' => __( 'Choose Icon', 'pluginname' ),
+            'class' => 'projectpress-fa-picker',
+            'button_text' => __( 'Choose Icon', 'projectpress' ),
             'preview_size' => '24px',
         ) );
 
@@ -281,49 +281,49 @@ class IconPicker {
 
         ob_start();
         ?>
-        <div class="pluginname-fa-picker-container" id="<?php echo esc_attr( $args['id'] ); ?>">
-                 <?php echo wp_kses_post( FormFieldHelper::input( $input_name, $selected_icon, [ 'type' => 'hidden', 'id' => $args['input_id'], 'class' => 'pluginname-fa-picker-input' ] ) ); ?>
+        <div class="projectpress-fa-picker-container" id="<?php echo esc_attr( $args['id'] ); ?>">
+                 <?php echo wp_kses_post( FormFieldHelper::input( $input_name, $selected_icon, [ 'type' => 'hidden', 'id' => $args['input_id'], 'class' => 'projectpress-fa-picker-input' ] ) ); ?>
 
                 <button type="button"
-                    class="btn btn-secondary pluginname-fa-picker-button"
+                    class="btn btn-secondary projectpress-fa-picker-button"
                     data-picker-id="<?php echo esc_attr( $args['id'] ); ?>">
-                <span class="pluginname-fa-picker-preview">
+                <span class="projectpress-fa-picker-preview">
                     <?php if ( $selected_data ) : ?>
                         <i class="<?php echo esc_attr( $selected_data['class'] ); ?>"
                            style="font-size: <?php echo esc_attr( $args['preview_size'] ); ?>"></i>
                     <?php endif; ?>
                 </span>
-                <span class="pluginname-fa-picker-text">
+                <span class="projectpress-fa-picker-text">
                     <?php echo esc_html( $args['button_text'] ); ?>
                 </span>
             </button>
 
-            <div class="pluginname-fa-picker-modal" style="display: none;">
-                <div class="pluginname-fa-picker-overlay"></div>
-                <div class="pluginname-fa-picker-dialog">
-                    <div class="pluginname-fa-picker-header">
-                        <h3><?php _e( 'Choose an Icon', 'pluginname' ); ?></h3>
-                        <button type="button" class="pluginname-fa-picker-close">&times;</button>
+            <div class="projectpress-fa-picker-modal" style="display: none;">
+                <div class="projectpress-fa-picker-overlay"></div>
+                <div class="projectpress-fa-picker-dialog">
+                    <div class="projectpress-fa-picker-header">
+                        <h3><?php _e( 'Choose an Icon', 'projectpress' ); ?></h3>
+                        <button type="button" class="projectpress-fa-picker-close">&times;</button>
                     </div>
 
-                    <div class="pluginname-fa-picker-search">
-                        <?php echo wp_kses_post( FormFieldHelper::input( 'pluginname_fa_search', '', [ 'type' => 'search', 'class' => 'pluginname-fa-picker-search-input', 'placeholder' => __( 'Search icons...', 'pluginname' ) ] ) ); ?>
-                        <?php echo wp_kses_post( FormFieldHelper::bootstrap_select( 'pluginname_fa_pack', [ 'data' => [ 'classic' => __( 'Classic', 'pluginname' ), 'duotone' => __( 'Duotone', 'pluginname' ), 'sharp' => __( 'Sharp', 'pluginname' ), 'sharp-duotone' => __( 'Sharp Duotone', 'pluginname' ), 'brands' => __( 'Brands', 'pluginname' ) ], 'selected' => 'classic', 'class' => 'pluginname-fa-picker-pack-filter' ] ) ); ?>
-                        <?php echo wp_kses_post( FormFieldHelper::bootstrap_select( 'pluginname_fa_style', [ 'data' => [ 'solid' => __( 'Solid', 'pluginname' ), 'regular' => __( 'Regular', 'pluginname' ), 'light' => __( 'Light', 'pluginname' ), 'thin' => __( 'Thin', 'pluginname' ) ], 'selected' => 'solid', 'class' => 'pluginname-fa-picker-style-filter' ] ) ); ?>
+                    <div class="projectpress-fa-picker-search">
+                        <?php echo wp_kses_post( FormFieldHelper::input( 'projectpress_fa_search', '', [ 'type' => 'search', 'class' => 'projectpress-fa-picker-search-input', 'placeholder' => __( 'Search icons...', 'projectpress' ) ] ) ); ?>
+                        <?php echo wp_kses_post( FormFieldHelper::bootstrap_select( 'projectpress_fa_pack', [ 'data' => [ 'classic' => __( 'Classic', 'projectpress' ), 'duotone' => __( 'Duotone', 'projectpress' ), 'sharp' => __( 'Sharp', 'projectpress' ), 'sharp-duotone' => __( 'Sharp Duotone', 'projectpress' ), 'brands' => __( 'Brands', 'projectpress' ) ], 'selected' => 'classic', 'class' => 'projectpress-fa-picker-pack-filter' ] ) ); ?>
+                        <?php echo wp_kses_post( FormFieldHelper::bootstrap_select( 'projectpress_fa_style', [ 'data' => [ 'solid' => __( 'Solid', 'projectpress' ), 'regular' => __( 'Regular', 'projectpress' ), 'light' => __( 'Light', 'projectpress' ), 'thin' => __( 'Thin', 'projectpress' ) ], 'selected' => 'solid', 'class' => 'projectpress-fa-picker-style-filter' ] ) ); ?>
                     </div>
 
-                    <div class="pluginname-fa-picker-results">
-                        <div class="pluginname-fa-picker-loading">
-                            <?php _e( 'Loading icons...', 'pluginname' ); ?>
+                    <div class="projectpress-fa-picker-results">
+                        <div class="projectpress-fa-picker-loading">
+                            <?php _e( 'Loading icons...', 'projectpress' ); ?>
                         </div>
                     </div>
 
-                    <div class="pluginname-fa-picker-footer">
-                        <button type="button" class="btn btn-secondary pluginname-fa-picker-cancel">
-                            <?php _e( 'Cancel', 'pluginname' ); ?>
+                    <div class="projectpress-fa-picker-footer">
+                        <button type="button" class="btn btn-secondary projectpress-fa-picker-cancel">
+                            <?php _e( 'Cancel', 'projectpress' ); ?>
                         </button>
-                        <button type="button" class="btn btn-primary pluginname-fa-picker-select" disabled>
-                            <?php _e( 'Select Icon', 'pluginname' ); ?>
+                        <button type="button" class="btn btn-primary projectpress-fa-picker-select" disabled>
+                            <?php _e( 'Select Icon', 'projectpress' ); ?>
                         </button>
                     </div>
                 </div>

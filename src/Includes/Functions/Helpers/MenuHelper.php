@@ -1,12 +1,12 @@
 <?php
 /**
- * Helper wrapper around PluginName core menu registration.
+ * Helper wrapper around ProjectPress core menu registration.
  *
- * @package PluginName\Includes\Functions\Helpers
+ * @package ProjectPress\Includes\Functions\Helpers
  */
-namespace PluginName\Includes\Functions\Helpers;
+namespace ProjectPress\Includes\Functions\Helpers;
 
-use PluginName\Includes\Core\Menus;
+use ProjectPress\Includes\Core\Menus;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

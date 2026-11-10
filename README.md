@@ -1,11 +1,11 @@
-# PluginName
+# ProjectPress
 
-PluginName is a reusable WordPress plugin template by TrilB.Dev. It provides a starting point for plugins with modular services, settings, REST routes, admin pages, frontend behavior, compiled assets, and optional internal or external extensions. Replace the placeholder names and remove the modules your plugin does not need.
+ProjectPress is a reusable WordPress plugin template by TrilB.Dev. It provides a starting point for plugins with modular services, settings, REST routes, admin pages, frontend behavior, compiled assets, and optional internal or external extensions. Replace the placeholder names and remove the modules your plugin does not need.
 
 ## Requirements
 
 - WordPress with REST API support
-- PHP version supported by the current PluginName codebase and its Composer dependencies
+- PHP version supported by the current ProjectPress codebase and its Composer dependencies
 - Node.js and npm only when rebuilding frontend assets
 
 Install PHP dependencies with Composer and build the frontend assets with:
@@ -52,9 +52,9 @@ src/
 
 ## Extension Model
 
-A PluginName extension implements `PluginInterface`, returns a unique slug, and exposes metadata and an `init()` method. Optional capability interfaces add settings, assets, admin pages, REST routes, frontend behavior, database tables, shortcodes, or translations.
+A ProjectPress extension implements `PluginInterface`, returns a unique slug, and exposes metadata and an `init()` method. Optional capability interfaces add settings, assets, admin pages, REST routes, frontend behavior, database tables, shortcodes, or translations.
 
-Internal extensions are discovered from the configured PluginName plugin directory. A normal WordPress plugin can register an extension by hooking `pluginname_register_plugin` and calling `Plugins::register_plugin()`.
+Internal extensions are discovered from the configured ProjectPress plugin directory. A normal WordPress plugin can register an extension by hooking `projectpress_register_plugin` and calling `Plugins::register_plugin()`.
 
 See [INTERNAL_PLUGINS.md](Docs/INTERNAL_PLUGINS.md) and [WORDPRESS_PLUGINS.md](Docs/WORDPRESS_PLUGINS.md) for complete examples.
 
@@ -70,7 +70,7 @@ Check the package scripts and PHPUnit configuration before relying on a test com
 
 ## License
 
-PluginName is distributed under the license declared by the project and its individual dependencies. Confirm the applicable license before redistributing a packaged build.
+ProjectPress is distributed under the license declared by the project and its individual dependencies. Confirm the applicable license before redistributing a packaged build.
 
 
 

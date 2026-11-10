@@ -2,14 +2,14 @@
 /**
  * TinyMCE Editor Plugin Includes
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Plugins\TinyMCE\Includes
  * @since 1.0.0
  */
 
-namespace PluginName\Includes\Plugins\TinyMCE\Includes;
+namespace ProjectPress\Includes\Plugins\TinyMCE\Includes;
 
-use PluginName\Includes\Plugins\TinyMCE\Includes\Settings\Settings;
+use ProjectPress\Includes\Plugins\TinyMCE\Includes\Settings\Settings;
 
 final class Includes {
 	/**

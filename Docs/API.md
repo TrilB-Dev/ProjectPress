@@ -5,7 +5,7 @@ Add REST routes only when the plugin needs an HTTP interface. Register them on `
 Use a unique namespace made from the plugin slug and a version, for example:
 
 ```text
-/wp-json/pluginname/v1
+/wp-json/projectpress/v1
 ```
 
 ## Permissions
@@ -76,7 +76,7 @@ Use HTTP 201 for successful creation, 200 for reads and updates, and 204 when a 
 Keep domain operations in services that can be called by both REST callbacks and other plugin code. Do not make internal code issue HTTP requests to its own routes:
 
 ```php
-use PluginName\API\ResourceService;
+use ProjectPress\API\ResourceService;
 
 $items = ResourceService::list([
     'posts_per_page' => 10,
@@ -91,7 +91,7 @@ The service name and methods are examples. Keep response formatting in a reusabl
 
 ## Extension Hooks
 
-Define narrowly scoped, documented hooks when another plugin needs to change a payload or observe a domain event. Use the plugin slug as the prefix, for example `pluginname_resource_payload` or `pluginname_resource_saved`. Apply authorization before exposing data, and document whether hooks run before or after persistence.
+Define narrowly scoped, documented hooks when another plugin needs to change a payload or observe a domain event. Use the plugin slug as the prefix, for example `projectpress_resource_payload` or `projectpress_resource_saved`. Apply authorization before exposing data, and document whether hooks run before or after persistence.
 
 ## Adding Routes
 

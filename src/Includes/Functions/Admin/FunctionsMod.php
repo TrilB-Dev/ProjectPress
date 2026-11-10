@@ -2,27 +2,27 @@
 /**
  * Admin functions for native Mod management.
  *
- * @package PluginName
+ * @package ProjectPress
  */
 
-namespace PluginName\Includes\Functions\Admin;
+namespace ProjectPress\Includes\Functions\Admin;
 
-use PluginName\Includes\Core\Schema;
-use PluginName\Includes\Functions\Helpers\AlertHelper;
-use PluginName\Includes\Functions\Helpers\LoaderHelper;
-use PluginName\Includes\Functions\Helpers\LoggerHelper;
-use PluginName\Includes\Functions\Helpers\PermalinkHelper;
-use PluginName\Includes\Functions\Helpers\SanitizationHelper;
-use PluginName\Includes\Functions\Helpers\RequestHelper;
-use PluginName\Includes\Functions\Helpers\DBHelper;
-use PluginName\Includes\Functions\Helpers\FormFieldHelper;
-use PluginName\Includes\Functions\Helpers\WPMediaHelper;
-use PluginName\Includes\ModManagement\GroupsManager;
-use PluginName\Includes\ModManagement\ModsManager;
-use PluginName\Includes\ModManagement\ChangelogManager;
-use PluginName\Includes\ModManagement\FileManager;
-use PluginName\Includes\Plugins\FontAwesome\Includes\IconPicker;
-use PluginName\Includes\Plugins\FontAwesome\Includes\Functions\Helpers\FAHelper;
+use ProjectPress\Includes\Core\Schema;
+use ProjectPress\Includes\Functions\Helpers\AlertHelper;
+use ProjectPress\Includes\Functions\Helpers\LoaderHelper;
+use ProjectPress\Includes\Functions\Helpers\LoggerHelper;
+use ProjectPress\Includes\Functions\Helpers\PermalinkHelper;
+use ProjectPress\Includes\Functions\Helpers\SanitizationHelper;
+use ProjectPress\Includes\Functions\Helpers\RequestHelper;
+use ProjectPress\Includes\Functions\Helpers\DBHelper;
+use ProjectPress\Includes\Functions\Helpers\FormFieldHelper;
+use ProjectPress\Includes\Functions\Helpers\WPMediaHelper;
+use ProjectPress\Includes\ModManagement\GroupsManager;
+use ProjectPress\Includes\ModManagement\ModsManager;
+use ProjectPress\Includes\ModManagement\ChangelogManager;
+use ProjectPress\Includes\ModManagement\FileManager;
+use ProjectPress\Includes\Plugins\FontAwesome\Includes\IconPicker;
+use ProjectPress\Includes\Plugins\FontAwesome\Includes\Functions\Helpers\FAHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -43,49 +43,49 @@ final class FunctionsMod {
 			array(
 				array(
 					'type'     => 'action',
-					'hook'     => 'admin_post_pluginname_save_group',
+					'hook'     => 'admin_post_projectpress_save_group',
 					'callback' => 'save_group',
 				),
 				array(
 					'type'     => 'action',
-					'hook'     => 'admin_post_pluginname_save_group_entry',
+					'hook'     => 'admin_post_projectpress_save_group_entry',
 					'callback' => 'save_group_entry',
 				),
 				array(
 					'type'     => 'action',
-					'hook'     => 'admin_post_pluginname_save_tags',
+					'hook'     => 'admin_post_projectpress_save_tags',
 					'callback' => 'save_tags',
 				),
 				array(
 					'type'     => 'action',
-					'hook'     => 'admin_post_pluginname_save_files',
+					'hook'     => 'admin_post_projectpress_save_files',
 					'callback' => 'save_files',
 				),
 				array(
 					'type'     => 'action',
-					'hook'     => 'admin_post_pluginname_save_file_type',
+					'hook'     => 'admin_post_projectpress_save_file_type',
 					'callback' => 'save_file_type',
 				),
 				array(
 					'type'     => 'action',
-					'hook'     => 'admin_post_pluginname_save_changelog',
+					'hook'     => 'admin_post_projectpress_save_changelog',
 					'callback' => 'save_changelog',
 				),
 				array(
 					'type'     => 'action',
-					'hook'     => 'admin_post_pluginname_save_changelog_category',
+					'hook'     => 'admin_post_projectpress_save_changelog_category',
 					'callback' => 'save_changelog_category',
 				),
 				array(
 					'type'     => 'action',
-					'hook'     => 'admin_post_pluginname_save_mod',
+					'hook'     => 'admin_post_projectpress_save_mod',
 					'callback' => 'save_mod',
 				),
 			)
 		)->run();
 	}
     /**
-     * Save a PluginName form submission.
+     * Save a ProjectPress form submission.
      *
      * @return void
      * @since 1.0.0
@@ -96,28 +96,28 @@ final class FunctionsMod {
 			return;
 		}
 
-		if ( in_array( $action, array( 'pluginname_save_group' ), true ) ) {
+		if ( in_array( $action, array( 'projectpress_save_group' ), true ) ) {
 			$this->save_group();
 		}
-		if ( in_array( $action, array( 'pluginname_save_group_entry' ), true ) ) {
+		if ( in_array( $action, array( 'projectpress_save_group_entry' ), true ) ) {
 			$this->save_group_entry();
 		}
-		if ( 'pluginname_save_tags' === $action ) {
+		if ( 'projectpress_save_tags' === $action ) {
 			$this->save_tags();
 		}
-		if ( 'pluginname_save_files' === $action ) {
+		if ( 'projectpress_save_files' === $action ) {
 			$this->save_files();
 		}
-		if ( 'pluginname_save_file_type' === $action ) {
+		if ( 'projectpress_save_file_type' === $action ) {
 			$this->save_file_type();
 		}
-		if ( 'pluginname_save_changelog' === $action ) {
+		if ( 'projectpress_save_changelog' === $action ) {
 			$this->save_changelog();
 		}
-		if ( 'pluginname_save_changelog_category' === $action ) {
+		if ( 'projectpress_save_changelog_category' === $action ) {
 			$this->save_changelog_category();
 		}
-		if ( 'pluginname_save_mod' === $action ) {
+		if ( 'projectpress_save_mod' === $action ) {
 			$this->save_mod();
 		}
 	}
@@ -143,22 +143,22 @@ final class FunctionsMod {
 			return '';
 		}
 
-		$action = isset( $_POST['pluginname_action'] )
-			? sanitize_key( wp_unslash( $_POST['pluginname_action'] ) )
+		$action = isset( $_POST['projectpress_action'] )
+			? sanitize_key( wp_unslash( $_POST['projectpress_action'] ) )
 			: ( isset( $_POST['action'] ) ? sanitize_key( wp_unslash( $_POST['action'] ) ) : '' );
 
-		if ( ! in_array( $action, array( 'save_mod', 'pluginname_save_mod' ), true ) ) {
+		if ( ! in_array( $action, array( 'save_mod', 'projectpress_save_mod' ), true ) ) {
 			return '';
 		}
 
-		if ( ! current_user_can( 'pluginname_create' ) && ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'projectpress_create' ) && ! current_user_can( 'manage_options' ) ) {
 			return AlertHelper::get_admin_notice(
-				__( 'You are not allowed to create Mods.', 'pluginname' ),
+				__( 'You are not allowed to create Mods.', 'projectpress' ),
 				'error'
 			);
 		}
 
-		$this->validate_save_nonce( 'pluginname_save_mod', 'pluginname_mod_nonce' );
+		$this->validate_save_nonce( 'projectpress_save_mod', 'projectpress_mod_nonce' );
 
 		$title = isset( $_POST['post_title'] ) ? SanitizationHelper::text( wp_unslash( $_POST['post_title'] ) ) : '';
 		$content = isset( $_POST['post_content'] ) ? wp_kses_post( wp_unslash( $_POST['post_content'] ) ) : '';
@@ -172,7 +172,7 @@ final class FunctionsMod {
 
 		if ( '' === $title ) {
 			return AlertHelper::get_admin_notice(
-				__( 'A Mod title is required.', 'pluginname' ),
+				__( 'A Mod title is required.', 'projectpress' ),
 				'error'
 			);
 		}
@@ -182,7 +182,7 @@ final class FunctionsMod {
 			'post_content' => $content,
 			'post_status'  => $status,
 			'post_author'  => $author,
-			'post_type'    => 'pluginname_mod',
+			'post_type'    => 'projectpress_mod',
 		);
 		if ( $mod_id > 0 ) {
 			$post_args['ID'] = $mod_id;
@@ -198,7 +198,7 @@ final class FunctionsMod {
 
 		if ( is_wp_error( $post_id ) ) {
 			return AlertHelper::get_admin_notice(
-				__( 'The Mod could not be saved.', 'pluginname' ),
+				__( 'The Mod could not be saved.', 'projectpress' ),
 				'error'
 			);
 		}
@@ -209,18 +209,18 @@ final class FunctionsMod {
 
 		$mod_type_value = isset( $_POST['mod_type'] ) ? absint( wp_unslash( $_POST['mod_type'] ) ) : 0;
 		if ( $mod_type_value > 0 && function_exists( 'wp_set_post_terms' ) ) {
-			wp_set_post_terms( $post_id, array( $mod_type_value ), 'pluginname_type', false );
+			wp_set_post_terms( $post_id, array( $mod_type_value ), 'projectpress_type', false );
 		}
 
 		$mod_status_value = isset( $_POST['mod_status'] ) ? absint( wp_unslash( $_POST['mod_status'] ) ) : 0;
 		if ( $mod_status_value > 0 && function_exists( 'wp_set_post_terms' ) ) {
-			wp_set_post_terms( $post_id, array( $mod_status_value ), 'pluginname_mod_status', false );
+			wp_set_post_terms( $post_id, array( $mod_status_value ), 'projectpress_mod_status', false );
 		}
 
 		$group_taxonomies = ( new GroupsManager() )->get_group_definitions();
 		if ( ! empty( $group_taxonomies ) ) {
 			foreach ( $group_taxonomies as $taxonomy_key => $group_definition ) {
-				if ( 'pluginname_type' === $taxonomy_key ) {
+				if ( 'projectpress_type' === $taxonomy_key ) {
 					continue;
 				}
 
@@ -242,7 +242,7 @@ final class FunctionsMod {
 		}
 
 		return AlertHelper::get_admin_notice(
-			__( 'Mod saved successfully.', 'pluginname' ),
+			__( 'Mod saved successfully.', 'projectpress' ),
 			'success'
 		);
 	}
@@ -253,24 +253,24 @@ final class FunctionsMod {
      * @since 1.0.0
      */
     public function save_group(): void {
-        if ( ! current_user_can( 'pluginname_manager_groups_edit' ) && ! current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'You are not allowed to manage PluginName groups.', 'pluginname' ) );
+        if ( ! current_user_can( 'projectpress_manager_groups_edit' ) && ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'You are not allowed to manage ProjectPress groups.', 'projectpress' ) );
         }
 
-        check_admin_referer( 'pluginname_save_group', 'pluginname_group_nonce' );
+        check_admin_referer( 'projectpress_save_group', 'projectpress_group_nonce' );
 
         $group_name = RequestHelper::text( $_POST, 'group_name', '' );
         $taxonomy   = RequestHelper::key( $_POST, 'group_slug', SanitizationHelper::slug( $group_name, '' ) );
         $group_key  = GroupsManager::get_group_key( $taxonomy );
 
         if ( '' === $group_name ) {
-            LoggerHelper::write_log( 'PluginName group save rejected: missing group name.' );
-            $this->redirect_mod_group_result( false, __( 'A group name is required.', 'pluginname' ) );
+            LoggerHelper::write_log( 'ProjectPress group save rejected: missing group name.' );
+            $this->redirect_mod_group_result( false, __( 'A group name is required.', 'projectpress' ) );
         }
 
         if ( '' === $taxonomy ) {
-            LoggerHelper::write_log( 'PluginName group save rejected: invalid taxonomy.' );
-            $this->redirect_mod_group_result( false, __( 'A valid group slug is required.', 'pluginname' ) );
+            LoggerHelper::write_log( 'ProjectPress group save rejected: invalid taxonomy.' );
+            $this->redirect_mod_group_result( false, __( 'A valid group slug is required.', 'projectpress' ) );
         }
 
         if ( ! DBHelper::table_exists( 'groups' ) ) {
@@ -284,8 +284,8 @@ final class FunctionsMod {
 
         if ( false === $group_id ) {
             $failure_reason = $this->get_group_save_failure_reason();
-            LoggerHelper::write_log( 'PluginName group save failed while persisting row for taxonomy: ' . $taxonomy . '. Reason: ' . $failure_reason );
-            $this->redirect_mod_group_result( false, sprintf( __( 'The group could not be saved to PluginName. %s', 'pluginname' ), $failure_reason ) );
+            LoggerHelper::write_log( 'ProjectPress group save failed while persisting row for taxonomy: ' . $taxonomy . '. Reason: ' . $failure_reason );
+            $this->redirect_mod_group_result( false, sprintf( __( 'The group could not be saved to ProjectPress. %s', 'projectpress' ), $failure_reason ) );
         }
 
         $group_payload['id'] = $group_id;
@@ -303,21 +303,21 @@ final class FunctionsMod {
                 'show_ui'       => true,
                 'public'        => true,
                 'show_in_rest'  => true,
-                'post_type'     => array( 'pluginname_mod' ),
+                'post_type'     => array( 'projectpress_mod' ),
             )
         );
 
         if ( ! $created ) {
-            LoggerHelper::write_log( 'PluginName group save failed for taxonomy: ' . $taxonomy );
-            $this->redirect_mod_group_result( false, __( 'The group could not be created.', 'pluginname' ) );
+            LoggerHelper::write_log( 'ProjectPress group save failed for taxonomy: ' . $taxonomy );
+            $this->redirect_mod_group_result( false, __( 'The group could not be created.', 'projectpress' ) );
         }
 
-        LoggerHelper::write_log( 'PluginName group saved successfully: ' . $taxonomy . ' (row_id=' . $group_id . ')' );
-        $this->redirect_mod_group_result( true, __( 'Group saved successfully.', 'pluginname' ) );
+        LoggerHelper::write_log( 'ProjectPress group saved successfully: ' . $taxonomy . ' (row_id=' . $group_id . ')' );
+        $this->redirect_mod_group_result( true, __( 'Group saved successfully.', 'projectpress' ) );
     }
 
     /**
-     * Delete a custom PluginName group record.
+     * Delete a custom ProjectPress group record.
      *
      * The default Mod Type group is reserved and remains editable, but cannot be removed.
      *
@@ -325,11 +325,11 @@ final class FunctionsMod {
      * @since 1.0.0
      */
     public function delete_group(): void {
-        if ( ! current_user_can( 'pluginname_manager_groups_edit' ) && ! current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'You are not allowed to manage PluginName groups.', 'pluginname' ) );
+        if ( ! current_user_can( 'projectpress_manager_groups_edit' ) && ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'You are not allowed to manage ProjectPress groups.', 'projectpress' ) );
         }
 
-        check_admin_referer( 'pluginname_delete_group', 'pluginname_group_nonce' );
+        check_admin_referer( 'projectpress_delete_group', 'projectpress_group_nonce' );
 
         $group_id = RequestHelper::integer( $_POST, 'group_id', 0 );
         $edit_key = RequestHelper::value( $_POST, 'group_edit_key', '' );
@@ -348,22 +348,22 @@ final class FunctionsMod {
         }
 
         if ( empty( $group_row ) ) {
-            $this->redirect_mod_group_result( false, __( 'The selected group could not be found.', 'pluginname' ) );
+            $this->redirect_mod_group_result( false, __( 'The selected group could not be found.', 'projectpress' ) );
         }
 
         $group_slug = trim( (string) ( $group_row['group_slug'] ?? '' ) );
         $group_key  = trim( (string) ( $group_row['group_key'] ?? GroupsManager::get_group_key( $group_slug ) ) );
-        if ( 'pluginname_type' === $group_key || 'type' === $group_slug || 'pluginname_type' === GroupsManager::get_group_key( $group_slug ) ) {
-            $this->redirect_mod_group_result( false, __( 'The Mod Type group cannot be deleted.', 'pluginname' ) );
+        if ( 'projectpress_type' === $group_key || 'type' === $group_slug || 'projectpress_type' === GroupsManager::get_group_key( $group_slug ) ) {
+            $this->redirect_mod_group_result( false, __( 'The Mod Type group cannot be deleted.', 'projectpress' ) );
         }
 
         $deleted = DBHelper::delete( 'groups', array( 'id' => (int) ( $group_row['id'] ?? 0 ) ) );
 
         if ( ! $deleted ) {
-            $this->redirect_mod_group_result( false, __( 'The group could not be deleted.', 'pluginname' ) );
+            $this->redirect_mod_group_result( false, __( 'The group could not be deleted.', 'projectpress' ) );
         }
 
-        $this->redirect_mod_group_result( true, __( 'Group deleted successfully.', 'pluginname' ) );
+        $this->redirect_mod_group_result( true, __( 'Group deleted successfully.', 'projectpress' ) );
     }
 
     /**
@@ -893,7 +893,7 @@ final class FunctionsMod {
         return null;
     }
     /**
-     * Persist the custom groups row to the PluginName DB table.
+     * Persist the custom groups row to the ProjectPress DB table.
      *
      * @param array<string, mixed> $group_payload Row payload.
      * @return int|false
@@ -975,7 +975,7 @@ final class FunctionsMod {
         return $inserted;
     }
     /**
-     * Resolve an existing PluginName group row by the canonical key or slug.
+     * Resolve an existing ProjectPress group row by the canonical key or slug.
      *
      * @param string $edit_key Raw value from the edit form.
      * @param string $fallback_slug Group slug fallback.
@@ -1031,7 +1031,7 @@ final class FunctionsMod {
             return trim( (string) $wpdb->last_error );
         }
 
-        return __( 'The database update failed while saving the group record.', 'pluginname' );
+        return __( 'The database update failed while saving the group record.', 'projectpress' );
     }
     /**
      * Save a group entry.
@@ -1040,23 +1040,23 @@ final class FunctionsMod {
      * @since 1.0.0
      */
 	public function save_group_entry(): void {
-        if ( ! current_user_can( 'pluginname_manager_groups_edit' ) && ! current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'You are not allowed to manage PluginName taxonomy entries.', 'pluginname' ) );
+        if ( ! current_user_can( 'projectpress_manager_groups_edit' ) && ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'You are not allowed to manage ProjectPress taxonomy entries.', 'projectpress' ) );
         }
 
-        check_admin_referer( 'pluginname_save_group_entry', 'pluginname_group_entry_nonce' );
+        check_admin_referer( 'projectpress_save_group_entry', 'projectpress_group_entry_nonce' );
 
         $taxonomy = RequestHelper::key( $_POST, 'group_slug', '' );
         $name     = RequestHelper::text( $_POST, 'entry_name', '' );
 
         if ( '' === $taxonomy || ! taxonomy_exists( $taxonomy ) ) {
-            LoggerHelper::write_log( 'PluginName group entry save rejected: invalid taxonomy ' . $taxonomy );
-            $this->redirect_mod_group_result( false, __( 'The selected taxonomy is invalid.', 'pluginname' ) );
+            LoggerHelper::write_log( 'ProjectPress group entry save rejected: invalid taxonomy ' . $taxonomy );
+            $this->redirect_mod_group_result( false, __( 'The selected taxonomy is invalid.', 'projectpress' ) );
         }
 
         if ( '' === $name ) {
-            LoggerHelper::write_log( 'PluginName group entry save rejected: missing entry name.' );
-            $this->redirect_mod_group_result( false, __( 'An entry name is required.', 'pluginname' ) );
+            LoggerHelper::write_log( 'ProjectPress group entry save rejected: missing entry name.' );
+            $this->redirect_mod_group_result( false, __( 'An entry name is required.', 'projectpress' ) );
         }
 
         $term_id    = RequestHelper::integer( $_POST, 'group_entry_id', 0 );
@@ -1077,7 +1077,7 @@ final class FunctionsMod {
         }
 
         if ( is_wp_error( $result ) ) {
-            LoggerHelper::write_log( 'PluginName group entry save failed for taxonomy ' . $taxonomy . ': ' . $result->get_error_message() );
+            LoggerHelper::write_log( 'ProjectPress group entry save failed for taxonomy ' . $taxonomy . ': ' . $result->get_error_message() );
             $this->redirect_mod_group_result( false, $result->get_error_message() );
         }
 
@@ -1089,7 +1089,7 @@ final class FunctionsMod {
         if ( $saved_term_id > 0 ) {
             $group_row = DBHelper::get_row( 'groups', array( 'group_key' => sanitize_key( (string) $taxonomy ) ) );
             if ( empty( $group_row ) ) {
-                $group_row = DBHelper::get_row( 'groups', array( 'group_slug' => sanitize_key( str_replace( 'pluginname_', '', $taxonomy ) ) ) );
+                $group_row = DBHelper::get_row( 'groups', array( 'group_slug' => sanitize_key( str_replace( 'projectpress_', '', $taxonomy ) ) ) );
             }
             $group_fields = array();
             if ( ! empty( $group_row['group_fields'] ) ) {
@@ -1189,7 +1189,7 @@ final class FunctionsMod {
             }
         }
 
-        $this->redirect_mod_group_result( true, __( 'Entry saved successfully.', 'pluginname' ) );
+        $this->redirect_mod_group_result( true, __( 'Entry saved successfully.', 'projectpress' ) );
     }
 
     /**
@@ -1199,16 +1199,16 @@ final class FunctionsMod {
      * @since 1.0.0
      */
     public function delete_group_entry(): void {
-        if ( ! current_user_can( 'pluginname_manager_groups_edit' ) && ! current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'You are not allowed to manage PluginName taxonomy entries.', 'pluginname' ) );
+        if ( ! current_user_can( 'projectpress_manager_groups_edit' ) && ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'You are not allowed to manage ProjectPress taxonomy entries.', 'projectpress' ) );
         }
 
-        check_admin_referer( 'pluginname_delete_group_entry', 'pluginname_group_entry_nonce' );
+        check_admin_referer( 'projectpress_delete_group_entry', 'projectpress_group_entry_nonce' );
 
         $taxonomy = RequestHelper::key( $_POST, 'group_slug', '' );
         if ( '' === $taxonomy || ! taxonomy_exists( $taxonomy ) ) {
-            LoggerHelper::write_log( 'PluginName group entry delete rejected: invalid taxonomy.' );
-            $this->redirect_mod_group_result( false, __( 'The selected entry could not be deleted.', 'pluginname' ) );
+            LoggerHelper::write_log( 'ProjectPress group entry delete rejected: invalid taxonomy.' );
+            $this->redirect_mod_group_result( false, __( 'The selected entry could not be deleted.', 'projectpress' ) );
         }
 
         $requested_ids = RequestHelper::value( $_POST, 'group_entry_ids', array() );
@@ -1230,8 +1230,8 @@ final class FunctionsMod {
 
         $valid_ids = array_values( array_unique( array_filter( $term_ids, static fn( $id ) => $id > 0 ) ) );
         if ( empty( $valid_ids ) ) {
-            LoggerHelper::write_log( 'PluginName group entry delete rejected: invalid taxonomy or term id.' );
-            $this->redirect_mod_group_result( false, __( 'The selected entry could not be deleted.', 'pluginname' ) );
+            LoggerHelper::write_log( 'ProjectPress group entry delete rejected: invalid taxonomy or term id.' );
+            $this->redirect_mod_group_result( false, __( 'The selected entry could not be deleted.', 'projectpress' ) );
         }
 
         $failed_ids = array();
@@ -1239,16 +1239,16 @@ final class FunctionsMod {
             $deleted = wp_delete_term( $term_id, $taxonomy );
             if ( is_wp_error( $deleted ) ) {
                 $failed_ids[] = $term_id;
-                LoggerHelper::write_log( 'PluginName group entry delete failed for taxonomy ' . $taxonomy . ' and term ' . $term_id . ': ' . $deleted->get_error_message() );
+                LoggerHelper::write_log( 'ProjectPress group entry delete failed for taxonomy ' . $taxonomy . ' and term ' . $term_id . ': ' . $deleted->get_error_message() );
             }
         }
 
         if ( count( $failed_ids ) === count( $valid_ids ) ) {
-            $this->redirect_mod_group_result( false, __( 'The selected entries could not be deleted.', 'pluginname' ) );
+            $this->redirect_mod_group_result( false, __( 'The selected entries could not be deleted.', 'projectpress' ) );
         }
 
-        LoggerHelper::write_log( 'PluginName group entries deleted successfully for taxonomy ' . $taxonomy . ' (ids=' . implode( ',', $valid_ids ) . ')' );
-        $this->redirect_mod_group_result( true, __( 'Entry deleted successfully.', 'pluginname' ) );
+        LoggerHelper::write_log( 'ProjectPress group entries deleted successfully for taxonomy ' . $taxonomy . ' (ids=' . implode( ',', $valid_ids ) . ')' );
+        $this->redirect_mod_group_result( true, __( 'Entry deleted successfully.', 'projectpress' ) );
     }
      /**
      * Render a group custom field.
@@ -1442,7 +1442,7 @@ final class FunctionsMod {
                         'class' => 'form-control w-100',
                         'placeholder' => $custom_field['name'] ?? $field_slug,
                         'attributes' => array(
-                            'data-pluginname-field-key' => $field_slug,
+                            'data-projectpress-field-key' => $field_slug,
                         ),
                     )
                 )
@@ -1461,7 +1461,7 @@ final class FunctionsMod {
                         'rows' => absint( $custom_field['rows'] ?? 4 ),
                         'placeholder' => $custom_field['name'] ?? $field_slug,
                         'attributes' => array(
-                            'data-pluginname-field-key' => $field_slug,
+                            'data-projectpress-field-key' => $field_slug,
                         ),
                     )
                 )
@@ -1480,7 +1480,7 @@ final class FunctionsMod {
                         'class' => 'form-control w-100',
                         'placeholder' => $custom_field['name'] ?? $field_slug,
                         'attributes' => array(
-                            'data-pluginname-field-key' => $field_slug,
+                            'data-projectpress-field-key' => $field_slug,
                         ),
                     )
                 )
@@ -1498,7 +1498,7 @@ final class FunctionsMod {
                         'type' => 'color',
                         'class' => 'form-control form-control-color w-100',
                         'attributes' => array(
-                            'data-pluginname-field-key' => $field_slug,
+                            'data-projectpress-field-key' => $field_slug,
                         ),
                     )
                 )
@@ -1517,7 +1517,7 @@ final class FunctionsMod {
                     array(
                         'checked' => ! empty( $switch_value ) && ( true === (string) $switch_value || true === $switch_value || 'true' === strtolower( (string) $switch_value ) || 'on' === strtolower( (string) $switch_value ) || 'yes' === strtolower( (string) $switch_value ) ),
                         'attributes' => array(
-                            'data-pluginname-field-key' => $field_slug,
+                            'data-projectpress-field-key' => $field_slug,
                         ),
                     )
                 )
@@ -1537,7 +1537,7 @@ final class FunctionsMod {
                     array(
                         'type' => 'radio',
                         'attributes' => array(
-                            'data-pluginname-field-key' => $field_slug,
+                            'data-projectpress-field-key' => $field_slug,
                         ),
                     )
                 )
@@ -1557,7 +1557,7 @@ final class FunctionsMod {
                         'selected' => $selected_value,
                         'class' => 'w-100',
                         'attributes' => array(
-                            'data-pluginname-field-key' => $field_slug,
+                            'data-projectpress-field-key' => $field_slug,
                         ),
                     )
                 )
@@ -1621,7 +1621,7 @@ final class FunctionsMod {
                 foreach ( $allowed_modes as $mode ) {
                     $mode_choices[] = array(
                         'value' => $mode,
-                        'label' => 'image' === $mode ? __( 'Image', 'pluginname' ) : ( 'icon' === $mode ? __( 'Icon', 'pluginname' ) : __( 'URL', 'pluginname' ) ),
+                        'label' => 'image' === $mode ? __( 'Image', 'projectpress' ) : ( 'icon' === $mode ? __( 'Icon', 'projectpress' ) : __( 'URL', 'projectpress' ) ),
                         'input_attributes' => array(
                             'data-input-name' => $field_slug,
                         ),
@@ -1634,7 +1634,7 @@ final class FunctionsMod {
                     $selected_mode,
                     array(
                         'type' => 'radio',
-                        'class' => 'pluginname-image-picker-mode-group mb-2',
+                        'class' => 'projectpress-image-picker-mode-group mb-2',
                         'button_class' => 'btn-outline-primary',
                     )
                 );
@@ -1644,15 +1644,15 @@ final class FunctionsMod {
             if ( in_array( 'image', $allowed_modes, true ) ) {
                 $image_value = is_array( $image_values['image'] ) ? (string) ( $image_values['image'][0] ?? '' ) : (string) ( $image_values['image'] ?? '' );
                 $image_block .= sprintf(
-                    '<div class="pluginname-image-entry-mode pluginname-image-entry-mode-image" data-image-mode="image"%1$s>%2$s</div>',
+                    '<div class="projectpress-image-entry-mode projectpress-image-entry-mode-image" data-image-mode="image"%1$s>%2$s</div>',
                     'image' === $selected_mode ? '' : ' style="display:none;"',
                     WPMediaHelper::create(
                         $image_value,
                         array(
                             'name' => sanitize_key( $field_slug . '_image' ),
                             'id' => sanitize_key( $field_slug . '_image' ),
-                            'button_text' => __( 'Select Image', 'pluginname' ),
-                            'class' => 'btn btn-secondary pluginname-image-select',
+                            'button_text' => __( 'Select Image', 'projectpress' ),
+                            'class' => 'btn btn-secondary projectpress-image-select',
                             'show_remove' => true,
                             'media_type' => 'image',
                             'return_value' => 'url',
@@ -1671,14 +1671,14 @@ final class FunctionsMod {
             if ( in_array( 'icon', $allowed_modes, true ) ) {
                 $icon_value = is_array( $image_values['icon'] ) ? (string) ( $image_values['icon'][0] ?? '' ) : (string) ( $image_values['icon'] ?? '' );
                 $image_block .= sprintf(
-                    '<div class="pluginname-image-entry-mode pluginname-image-entry-mode-icon" data-image-mode="icon"%1$s>%2$s</div>',
+                    '<div class="projectpress-image-entry-mode projectpress-image-entry-mode-icon" data-image-mode="icon"%1$s>%2$s</div>',
                     'icon' === $selected_mode ? '' : ' style="display:none;"',
                     IconPicker::get_instance()->render_picker(
                         sanitize_key( $field_slug . '_icon' ),
                         $icon_value,
                         array(
                             'id' => sanitize_key( $field_slug . '-picker' ),
-                            'button_text' => __( 'Choose Icon', 'pluginname' ),
+                            'button_text' => __( 'Choose Icon', 'projectpress' ),
                         )
                     )
                 );
@@ -1692,19 +1692,19 @@ final class FunctionsMod {
                     $url_value,
                     array(
                         'type' => 'url',
-                        'class' => 'form-control pluginname-image-url-input w-100',
-                        'placeholder' => __( 'https://example.com/image.jpg', 'pluginname' ),
+                        'class' => 'form-control projectpress-image-url-input w-100',
+                        'placeholder' => __( 'https://example.com/image.jpg', 'projectpress' ),
                     )
                 );
                 $url_preview = sprintf(
-                    '<div class="pluginname-image-preview%1$s"><img src="%2$s" alt="%3$s" class="img-fluid rounded" style="max-height:120px;" /></div>',
+                    '<div class="projectpress-image-preview%1$s"><img src="%2$s" alt="%3$s" class="img-fluid rounded" style="max-height:120px;" /></div>',
                     empty( $url_value ) || ! filter_var( $url_value, FILTER_VALIDATE_URL ) ? ' d-none' : '',
                     esc_url( $url_value ),
                     esc_attr( $custom_field['name'] ?? $field_slug )
                 );
 
                 $image_block .= sprintf(
-                    '<div class="pluginname-image-entry-mode pluginname-image-entry-mode-url" data-image-mode="url"%1$s>%2$s%3$s</div>',
+                    '<div class="projectpress-image-entry-mode projectpress-image-entry-mode-url" data-image-mode="url"%1$s>%2$s%3$s</div>',
                     $url_mode_display,
                     $url_field,
                     $url_preview
@@ -1712,7 +1712,7 @@ final class FunctionsMod {
             }
 
             $image_field_html = sprintf(
-                '<div class="pluginname-image-field mb-2">%1$s%2$s</div>',
+                '<div class="projectpress-image-field mb-2">%1$s%2$s</div>',
                 $mode_html,
                 $image_block
             );
@@ -1747,10 +1747,10 @@ final class FunctionsMod {
     public static function repeatable_option_row(string $type): string {
         ob_start();
         ?>
-        <div class="pluginname-option-repeater" data-option-type="<?php echo esc_attr( $type ); ?>">
+        <div class="projectpress-option-repeater" data-option-type="<?php echo esc_attr( $type ); ?>">
             <div class="d-flex justify-content-end mb-2">
                 <?php echo FormFieldHelper::button(
-                    FAHelper::faicon( 'plus', array( 'class' => 'fa-svg-symbol' ) ).' '.esc_html__( 'Add Option', 'pluginname' ),
+                    FAHelper::faicon( 'plus', array( 'class' => 'fa-svg-symbol' ) ).' '.esc_html__( 'Add Option', 'projectpress' ),
                     array(
                         'type' => 'button',
                         'class' => 'btn btn-outline-secondary btn-sm',
@@ -1763,8 +1763,8 @@ final class FunctionsMod {
                     )
                 ); ?>
             </div>
-            <div class="pluginname-option-repeater-items">
-                <div class="pluginname-option-row-template d-none" data-option-type="<?php echo esc_attr( $type ); ?>">
+            <div class="projectpress-option-repeater-items">
+                <div class="projectpress-option-row-template d-none" data-option-type="<?php echo esc_attr( $type ); ?>">
                     <div class="row g-2 align-items-center">
                         <div class="col-md-5">
                             <?php echo FormFieldHelper::text_input(
@@ -1772,7 +1772,7 @@ final class FunctionsMod {
                                 '',
                                 array(
                                     'class' => 'form-control w-100',
-                                    'placeholder' => esc_attr__( 'Label', 'pluginname' ),
+                                    'placeholder' => esc_attr__( 'Label', 'projectpress' ),
                                     'attributes' => array(
                                         'data-option-role' => 'label',
                                     ),
@@ -1785,7 +1785,7 @@ final class FunctionsMod {
                                 '',
                                 array(
                                     'class' => 'form-control w-100',
-                                    'placeholder' => esc_attr__( 'Option', 'pluginname' ),
+                                    'placeholder' => esc_attr__( 'Option', 'projectpress' ),
                                     'attributes' => array(
                                         'data-option-role' => 'value',
                                     ),
@@ -1937,12 +1937,12 @@ final class FunctionsMod {
      * @since 1.0.0
      */
     public function save_tags(): void {
-        if ( ! current_user_can( 'pluginname_manager_tags_edit' ) && ! current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'You are not allowed to manage PluginName tags.', 'pluginname' ) );
+        if ( ! current_user_can( 'projectpress_manager_tags_edit' ) && ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'You are not allowed to manage ProjectPress tags.', 'projectpress' ) );
         }
 
-        check_admin_referer( 'pluginname_save_tags' );
-        $this->redirect_mod_action_result( 'groups', __( 'Tags saved successfully.', 'pluginname' ), true );
+        check_admin_referer( 'projectpress_save_tags' );
+        $this->redirect_mod_action_result( 'groups', __( 'Tags saved successfully.', 'projectpress' ), true );
     }
 
     /**
@@ -1952,12 +1952,12 @@ final class FunctionsMod {
      * @since 1.0.0
      */
     public function save_file(): void {
-        if ( ! current_user_can( 'pluginname_manager_files_edit' ) && ! current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'You are not allowed to manage PluginName files.', 'pluginname' ) );
+        if ( ! current_user_can( 'projectpress_manager_files_edit' ) && ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'You are not allowed to manage ProjectPress files.', 'projectpress' ) );
         }
 
-        check_admin_referer( 'pluginname_save_files' );
-        $this->redirect_mod_action_result( 'files', __( 'Files saved successfully.', 'pluginname' ), true );
+        check_admin_referer( 'projectpress_save_files' );
+        $this->redirect_mod_action_result( 'files', __( 'Files saved successfully.', 'projectpress' ), true );
     }
     /**
      * Handle a file delete request.
@@ -1966,12 +1966,12 @@ final class FunctionsMod {
      * @since 1.0.0
      */
     public function delete_file(): void {
-        if ( ! current_user_can( 'pluginname_manager_files_edit' ) && ! current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'You are not allowed to manage PluginName files.', 'pluginname' ) );
+        if ( ! current_user_can( 'projectpress_manager_files_edit' ) && ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'You are not allowed to manage ProjectPress files.', 'projectpress' ) );
         }
 
-        check_admin_referer( 'pluginname_delete_file' );
-        $this->redirect_mod_action_result( 'files', __( 'File deleted successfully.', 'pluginname' ), true );
+        check_admin_referer( 'projectpress_delete_file' );
+        $this->redirect_mod_action_result( 'files', __( 'File deleted successfully.', 'projectpress' ), true );
     }
     /**
      * Handle a file type save request.
@@ -1980,31 +1980,31 @@ final class FunctionsMod {
      * @since 1.0.0
      */
     public function save_file_type(): void {
-        if ( ! current_user_can( 'pluginname_manager_files_edit' ) && ! current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'You are not allowed to manage PluginName file types.', 'pluginname' ) );
+        if ( ! current_user_can( 'projectpress_manager_files_edit' ) && ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'You are not allowed to manage ProjectPress file types.', 'projectpress' ) );
         }
 
-        check_admin_referer( 'pluginname_save_file_type', 'pluginname_file_type_nonce' );
+        check_admin_referer( 'projectpress_save_file_type', 'projectpress_file_type_nonce' );
 
-        $taxonomy = RequestHelper::key( $_POST, 'file_type_slug', 'pluginname_file_type' );
+        $taxonomy = RequestHelper::key( $_POST, 'file_type_slug', 'projectpress_file_type' );
         if ( '' === $taxonomy ) {
-            $taxonomy = 'pluginname_file_type';
+            $taxonomy = 'projectpress_file_type';
         }
 
         $payload = array(
-            'term_id'     => absint( $_POST['pluginname-file-types-term-id'] ?? 0 ),
-            'name'        => RequestHelper::text( $_POST, 'pluginname-file-types-name', '' ),
-            'slug'        => RequestHelper::slug( $_POST, 'pluginname-file-types-slug', '' ),
-            'description' => RequestHelper::text( $_POST, 'pluginname-file-types-description', '' ),
-            'image'       => RequestHelper::text( $_POST, 'pluginname-file-types-image', '' ),
+            'term_id'     => absint( $_POST['projectpress-file-types-term-id'] ?? 0 ),
+            'name'        => RequestHelper::text( $_POST, 'projectpress-file-types-name', '' ),
+            'slug'        => RequestHelper::slug( $_POST, 'projectpress-file-types-slug', '' ),
+            'description' => RequestHelper::text( $_POST, 'projectpress-file-types-description', '' ),
+            'image'       => RequestHelper::text( $_POST, 'projectpress-file-types-image', '' ),
         );
 
         $saved_term_id = $this->persist_taxonomy_term( $taxonomy, $payload );
         if ( $saved_term_id <= 0 ) {
-            $this->redirect_mod_action_result( 'files', __( 'Unable to save the selected file type.', 'pluginname' ), false );
+            $this->redirect_mod_action_result( 'files', __( 'Unable to save the selected file type.', 'projectpress' ), false );
         }
 
-        $this->redirect_mod_action_result( 'files', __( 'File type saved successfully.', 'pluginname' ), true );
+        $this->redirect_mod_action_result( 'files', __( 'File type saved successfully.', 'projectpress' ), true );
     }
     /**
      * Handle a file type delete request.
@@ -2013,13 +2013,13 @@ final class FunctionsMod {
      * @since 1.0.0
      */
     public function delete_file_type(): void {
-        if ( ! current_user_can( 'pluginname_manager_files_edit' ) && ! current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'You are not allowed to manage PluginName file types.', 'pluginname' ) );
+        if ( ! current_user_can( 'projectpress_manager_files_edit' ) && ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'You are not allowed to manage ProjectPress file types.', 'projectpress' ) );
         }
 
-        check_admin_referer( 'pluginname_delete_file_type', 'pluginname_file_type_nonce' );
+        check_admin_referer( 'projectpress_delete_file_type', 'projectpress_file_type_nonce' );
 
-        $taxonomy = RequestHelper::key( $_POST, 'file_type_slug', 'pluginname_file_type' );
+        $taxonomy = RequestHelper::key( $_POST, 'file_type_slug', 'projectpress_file_type' );
         $requested_ids = RequestHelper::value( $_POST, 'file_type_ids', array() );
         if ( ! is_array( $requested_ids ) ) {
             $requested_ids = array( $requested_ids );
@@ -2038,14 +2038,14 @@ final class FunctionsMod {
         );
 
         if ( empty( $term_ids ) ) {
-            $this->redirect_mod_action_result( 'files', __( 'No file type was selected to delete.', 'pluginname' ), false );
+            $this->redirect_mod_action_result( 'files', __( 'No file type was selected to delete.', 'projectpress' ), false );
         }
 
         foreach ( $term_ids as $term_id ) {
             wp_delete_term( $term_id, $taxonomy );
         }
 
-        $this->redirect_mod_action_result( 'files', __( 'File type deleted successfully.', 'pluginname' ), true );
+        $this->redirect_mod_action_result( 'files', __( 'File type deleted successfully.', 'projectpress' ), true );
     }
     /**
      * Handle a file host save request.
@@ -2054,32 +2054,32 @@ final class FunctionsMod {
      * @since 1.0.0
      */
     public function save_file_host(): void {
-        if ( ! current_user_can( 'pluginname_manager_files_edit' ) && ! current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'You are not allowed to manage PluginName file hosts.', 'pluginname' ) );
+        if ( ! current_user_can( 'projectpress_manager_files_edit' ) && ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'You are not allowed to manage ProjectPress file hosts.', 'projectpress' ) );
         }
 
-        check_admin_referer( 'pluginname_save_file_host', 'pluginname_file_host_nonce' );
+        check_admin_referer( 'projectpress_save_file_host', 'projectpress_file_host_nonce' );
 
-        $taxonomy = RequestHelper::key( $_POST, 'file_host_slug', 'pluginname_file_hosts' );
+        $taxonomy = RequestHelper::key( $_POST, 'file_host_slug', 'projectpress_file_hosts' );
         if ( '' === $taxonomy ) {
-            $taxonomy = 'pluginname_file_hosts';
+            $taxonomy = 'projectpress_file_hosts';
         }
 
         $payload = array(
-            'term_id'     => absint( $_POST['pluginname-file-hosts-term-id'] ?? 0 ),
-            'name'        => RequestHelper::text( $_POST, 'pluginname-file-hosts-name', '' ),
-            'slug'        => RequestHelper::slug( $_POST, 'pluginname-file-hosts-slug', '' ),
-            'description' => RequestHelper::text( $_POST, 'pluginname-file-hosts-description', '' ),
-            'image'       => RequestHelper::text( $_POST, 'pluginname-file-hosts-logo', '' ),
-            'url'         => RequestHelper::text( $_POST, 'pluginname-file-hosts-url', '' ),
+            'term_id'     => absint( $_POST['projectpress-file-hosts-term-id'] ?? 0 ),
+            'name'        => RequestHelper::text( $_POST, 'projectpress-file-hosts-name', '' ),
+            'slug'        => RequestHelper::slug( $_POST, 'projectpress-file-hosts-slug', '' ),
+            'description' => RequestHelper::text( $_POST, 'projectpress-file-hosts-description', '' ),
+            'image'       => RequestHelper::text( $_POST, 'projectpress-file-hosts-logo', '' ),
+            'url'         => RequestHelper::text( $_POST, 'projectpress-file-hosts-url', '' ),
         );
 
         $saved_term_id = $this->persist_taxonomy_term( $taxonomy, $payload );
         if ( $saved_term_id <= 0 ) {
-            $this->redirect_mod_action_result( 'files', __( 'Unable to save the selected file host.', 'pluginname' ), false );
+            $this->redirect_mod_action_result( 'files', __( 'Unable to save the selected file host.', 'projectpress' ), false );
         }
 
-        $this->redirect_mod_action_result( 'files', __( 'File host saved successfully.', 'pluginname' ), true );
+        $this->redirect_mod_action_result( 'files', __( 'File host saved successfully.', 'projectpress' ), true );
     }
     /**
      * Handle a file host delete request.
@@ -2088,13 +2088,13 @@ final class FunctionsMod {
      * @since 1.0.0
      */
     public function delete_file_host(): void {
-        if ( ! current_user_can( 'pluginname_manager_files_edit' ) && ! current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'You are not allowed to manage PluginName file hosts.', 'pluginname' ) );
+        if ( ! current_user_can( 'projectpress_manager_files_edit' ) && ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'You are not allowed to manage ProjectPress file hosts.', 'projectpress' ) );
         }
 
-        check_admin_referer( 'pluginname_delete_file_host', 'pluginname_file_host_nonce' );
+        check_admin_referer( 'projectpress_delete_file_host', 'projectpress_file_host_nonce' );
 
-        $taxonomy = RequestHelper::key( $_POST, 'file_host_slug', 'pluginname_file_hosts' );
+        $taxonomy = RequestHelper::key( $_POST, 'file_host_slug', 'projectpress_file_hosts' );
         $requested_ids = RequestHelper::value( $_POST, 'file_host_ids', array() );
         if ( ! is_array( $requested_ids ) ) {
             $requested_ids = array( $requested_ids );
@@ -2113,14 +2113,14 @@ final class FunctionsMod {
         );
 
         if ( empty( $term_ids ) ) {
-            $this->redirect_mod_action_result( 'files', __( 'No file host was selected to delete.', 'pluginname' ), false );
+            $this->redirect_mod_action_result( 'files', __( 'No file host was selected to delete.', 'projectpress' ), false );
         }
 
         foreach ( $term_ids as $term_id ) {
             wp_delete_term( $term_id, $taxonomy );
         }
 
-        $this->redirect_mod_action_result( 'files', __( 'File host deleted successfully.', 'pluginname' ), true );
+        $this->redirect_mod_action_result( 'files', __( 'File host deleted successfully.', 'projectpress' ), true );
     }
     /**
      * Handle a licence save request.
@@ -2129,12 +2129,12 @@ final class FunctionsMod {
      * @since 1.0.0
      */
     public function save_licence(): void {
-        if ( ! current_user_can( 'pluginname_manager_licences_edit' ) && ! current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'You are not allowed to manage PluginName licences.', 'pluginname' ) );
+        if ( ! current_user_can( 'projectpress_manager_licences_edit' ) && ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'You are not allowed to manage ProjectPress licences.', 'projectpress' ) );
         }
 
-        check_admin_referer( 'pluginname_save_licence' );
-        $this->redirect_mod_action_result( 'licences', __( 'Licence saved successfully.', 'pluginname' ), true );
+        check_admin_referer( 'projectpress_save_licence' );
+        $this->redirect_mod_action_result( 'licences', __( 'Licence saved successfully.', 'projectpress' ), true );
     }
     /**
      * Handle a licence delete request.
@@ -2143,12 +2143,12 @@ final class FunctionsMod {
      * @since 1.0.0
      */
     public function delete_licence(): void {
-        if ( ! current_user_can( 'pluginname_manager_licences_edit' ) && ! current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'You are not allowed to manage PluginName licences.', 'pluginname' ) );
+        if ( ! current_user_can( 'projectpress_manager_licences_edit' ) && ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'You are not allowed to manage ProjectPress licences.', 'projectpress' ) );
         }
 
-        check_admin_referer( 'pluginname_delete_licence' );
-        $this->redirect_mod_action_result( 'licences', __( 'Licence deleted successfully.', 'pluginname' ), true );
+        check_admin_referer( 'projectpress_delete_licence' );
+        $this->redirect_mod_action_result( 'licences', __( 'Licence deleted successfully.', 'projectpress' ), true );
     }
     /**
      * Handle a changelog save request.
@@ -2157,23 +2157,23 @@ final class FunctionsMod {
      * @since 1.0.0
      */
     public function save_changelog(): void {
-        if ( ! current_user_can( 'pluginname_manager_changelog_edit' ) && ! current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'You are not allowed to manage PluginName changelogs.', 'pluginname' ) );
+        if ( ! current_user_can( 'projectpress_manager_changelog_edit' ) && ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'You are not allowed to manage ProjectPress changelogs.', 'projectpress' ) );
         }
 
-        check_admin_referer( 'pluginname_save_changelog', 'pluginname_changelog_nonce' );
+        check_admin_referer( 'projectpress_save_changelog', 'projectpress_changelog_nonce' );
 
-        $post_id = absint( RequestHelper::value( $_POST, 'pluginname-changelog-id', 0 ) );
-        $version  = RequestHelper::text( $_POST, 'pluginname-changelog-version', '' );
+        $post_id = absint( RequestHelper::value( $_POST, 'projectpress-changelog-id', 0 ) );
+        $version  = RequestHelper::text( $_POST, 'projectpress-changelog-version', '' );
         if ( '' === $version ) {
-            $version = __( 'Untitled changelog', 'pluginname' );
+            $version = __( 'Untitled changelog', 'projectpress' );
         }
 
-        $date = RequestHelper::text( $_POST, 'pluginname-changelog-date', '' );
-        $notes = RequestHelper::text( $_POST, 'pluginname-changelog-notes', '' );
+        $date = RequestHelper::text( $_POST, 'projectpress-changelog-date', '' );
+        $notes = RequestHelper::text( $_POST, 'projectpress-changelog-notes', '' );
 
         $post_data = array(
-            'post_type'    => 'pluginname_changelog',
+            'post_type'    => 'projectpress_changelog',
             'post_status'  => 'publish',
             'post_title'   => $version,
             'post_content' => $notes,
@@ -2197,10 +2197,10 @@ final class FunctionsMod {
         }
 
         if ( is_wp_error( $saved_post_id ) || 0 === absint( $saved_post_id ) ) {
-            $this->redirect_mod_action_result( 'changelog', __( 'Unable to save the selected changelog entry.', 'pluginname' ), false );
+            $this->redirect_mod_action_result( 'changelog', __( 'Unable to save the selected changelog entry.', 'projectpress' ), false );
         }
 
-        $category_ids = RequestHelper::value( $_POST, 'pluginname-changelog-category', array() );
+        $category_ids = RequestHelper::value( $_POST, 'projectpress-changelog-category', array() );
         if ( ! is_array( $category_ids ) ) {
             $category_ids = array( $category_ids );
         }
@@ -2217,11 +2217,11 @@ final class FunctionsMod {
             )
         );
 
-        if ( taxonomy_exists( 'pluginname_changelog_category' ) && function_exists( 'wp_set_object_terms' ) ) {
-            wp_set_object_terms( (int) $saved_post_id, $category_ids, 'pluginname_changelog_category', false );
+        if ( taxonomy_exists( 'projectpress_changelog_category' ) && function_exists( 'wp_set_object_terms' ) ) {
+            wp_set_object_terms( (int) $saved_post_id, $category_ids, 'projectpress_changelog_category', false );
         }
 
-        $this->redirect_mod_action_result( 'changelog', __( 'Changelog saved successfully.', 'pluginname' ), true );
+        $this->redirect_mod_action_result( 'changelog', __( 'Changelog saved successfully.', 'projectpress' ), true );
     }
 
     /**
@@ -2231,11 +2231,11 @@ final class FunctionsMod {
      * @since 1.0.0
      */
     public function delete_changelog(): void {
-        if ( ! current_user_can( 'pluginname_manager_changelog_edit' ) && ! current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'You are not allowed to manage PluginName changelogs.', 'pluginname' ) );
+        if ( ! current_user_can( 'projectpress_manager_changelog_edit' ) && ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'You are not allowed to manage ProjectPress changelogs.', 'projectpress' ) );
         }
 
-        check_admin_referer( 'pluginname_delete_changelog', 'pluginname_changelog_nonce' );
+        check_admin_referer( 'projectpress_delete_changelog', 'projectpress_changelog_nonce' );
 
         $requested_ids = RequestHelper::value( $_POST, 'changelog_ids', array() );
         if ( ! is_array( $requested_ids ) ) {
@@ -2255,7 +2255,7 @@ final class FunctionsMod {
         );
 
         if ( empty( $post_ids ) ) {
-            $this->redirect_mod_action_result( 'changelog', __( 'No changelog entry was selected to delete.', 'pluginname' ), false );
+            $this->redirect_mod_action_result( 'changelog', __( 'No changelog entry was selected to delete.', 'projectpress' ), false );
         }
 
         foreach ( $post_ids as $post_id ) {
@@ -2264,7 +2264,7 @@ final class FunctionsMod {
             }
         }
 
-        $this->redirect_mod_action_result( 'changelog', __( 'Changelog deleted successfully.', 'pluginname' ), true );
+        $this->redirect_mod_action_result( 'changelog', __( 'Changelog deleted successfully.', 'projectpress' ), true );
     }
 
     /**
@@ -2274,31 +2274,31 @@ final class FunctionsMod {
      * @since 1.0.0
      */
     public function save_changelog_category(): void {
-        if ( ! current_user_can( 'pluginname_manager_changelog_edit' ) && ! current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'You are not allowed to manage PluginName changelog categories.', 'pluginname' ) );
+        if ( ! current_user_can( 'projectpress_manager_changelog_edit' ) && ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'You are not allowed to manage ProjectPress changelog categories.', 'projectpress' ) );
         }
 
-        check_admin_referer( 'pluginname_save_changelog_category', 'pluginname_changelog_category_nonce' );
+        check_admin_referer( 'projectpress_save_changelog_category', 'projectpress_changelog_category_nonce' );
 
-        $taxonomy = RequestHelper::key( $_POST, 'changelog_category_slug', 'pluginname_changelog_category' );
+        $taxonomy = RequestHelper::key( $_POST, 'changelog_category_slug', 'projectpress_changelog_category' );
         if ( '' === $taxonomy ) {
-            $taxonomy = 'pluginname_changelog_category';
+            $taxonomy = 'projectpress_changelog_category';
         }
 
         $payload = array(
-            'term_id'        => absint( RequestHelper::value( $_POST, 'pluginname-changelog-category-term-id', 0 ) ),
-            'name'           => RequestHelper::text( $_POST, 'pluginname-changelog-category-name', '' ),
-            'slug'           => RequestHelper::slug( $_POST, 'pluginname-changelog-category-slug', '' ),
-            'description'    => RequestHelper::text( $_POST, 'pluginname-changelog-category-description', '' ),
-            'category_color' => RequestHelper::text( $_POST, 'pluginname-changelog-category-color', '#ffffff' ),
+            'term_id'        => absint( RequestHelper::value( $_POST, 'projectpress-changelog-category-term-id', 0 ) ),
+            'name'           => RequestHelper::text( $_POST, 'projectpress-changelog-category-name', '' ),
+            'slug'           => RequestHelper::slug( $_POST, 'projectpress-changelog-category-slug', '' ),
+            'description'    => RequestHelper::text( $_POST, 'projectpress-changelog-category-description', '' ),
+            'category_color' => RequestHelper::text( $_POST, 'projectpress-changelog-category-color', '#ffffff' ),
         );
 
         $saved_term_id = $this->persist_taxonomy_term( $taxonomy, $payload );
         if ( $saved_term_id <= 0 ) {
-            $this->redirect_mod_action_result( 'changelog', __( 'Unable to save the selected changelog category.', 'pluginname' ), false );
+            $this->redirect_mod_action_result( 'changelog', __( 'Unable to save the selected changelog category.', 'projectpress' ), false );
         }
 
-        $this->redirect_mod_action_result( 'changelog', __( 'Changelog category saved successfully.', 'pluginname' ), true );
+        $this->redirect_mod_action_result( 'changelog', __( 'Changelog category saved successfully.', 'projectpress' ), true );
     }
 
     /**
@@ -2308,13 +2308,13 @@ final class FunctionsMod {
      * @since 1.0.0
      */
     public function delete_changelog_category(): void {
-        if ( ! current_user_can( 'pluginname_manager_changelog_edit' ) && ! current_user_can( 'manage_options' ) ) {
-            wp_die( esc_html__( 'You are not allowed to manage PluginName changelog categories.', 'pluginname' ) );
+        if ( ! current_user_can( 'projectpress_manager_changelog_edit' ) && ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'You are not allowed to manage ProjectPress changelog categories.', 'projectpress' ) );
         }
 
-        check_admin_referer( 'pluginname_delete_changelog_category', 'pluginname_changelog_category_nonce' );
+        check_admin_referer( 'projectpress_delete_changelog_category', 'projectpress_changelog_category_nonce' );
 
-        $taxonomy = RequestHelper::key( $_POST, 'changelog_category_slug', 'pluginname_changelog_category' );
+        $taxonomy = RequestHelper::key( $_POST, 'changelog_category_slug', 'projectpress_changelog_category' );
         $requested_ids = RequestHelper::value( $_POST, 'changelog_category_ids', array() );
         if ( ! is_array( $requested_ids ) ) {
             $requested_ids = array( $requested_ids );
@@ -2333,14 +2333,14 @@ final class FunctionsMod {
         );
 
         if ( empty( $term_ids ) ) {
-            $this->redirect_mod_action_result( 'changelog', __( 'No changelog category was selected to delete.', 'pluginname' ), false );
+            $this->redirect_mod_action_result( 'changelog', __( 'No changelog category was selected to delete.', 'projectpress' ), false );
         }
 
         foreach ( $term_ids as $term_id ) {
             wp_delete_term( $term_id, $taxonomy );
         }
 
-        $this->redirect_mod_action_result( 'changelog', __( 'Changelog category deleted successfully.', 'pluginname' ), true );
+        $this->redirect_mod_action_result( 'changelog', __( 'Changelog category deleted successfully.', 'projectpress' ), true );
     }
 
     /**
@@ -2353,9 +2353,9 @@ final class FunctionsMod {
      * @since 1.0.0
      */
     public static function set_admin_notice_flash( string $message, bool $success = true ): void {
-        $key = 'pluginname_admin_notice_' . get_current_user_id();
+        $key = 'projectpress_admin_notice_' . get_current_user_id();
         $notice = array(
-            'message' => '' !== trim( $message ) ? trim( $message ) : ( $success ? __( 'The PluginName action was completed successfully.', 'pluginname' ) : __( 'The PluginName action could not be completed.', 'pluginname' ) ),
+            'message' => '' !== trim( $message ) ? trim( $message ) : ( $success ? __( 'The ProjectPress action was completed successfully.', 'projectpress' ) : __( 'The ProjectPress action could not be completed.', 'projectpress' ) ),
             'type' => $success ? 'success' : 'error',
         );
 
@@ -2368,7 +2368,7 @@ final class FunctionsMod {
      * @since 1.0.0
      */
     public static function consume_admin_notice_flash(): array {
-        $key = 'pluginname_admin_notice_' . get_current_user_id();
+        $key = 'projectpress_admin_notice_' . get_current_user_id();
         $notice = get_transient( $key );
 
         delete_transient( $key );
@@ -2403,7 +2403,7 @@ final class FunctionsMod {
      */
     private function redirect_mod_action_result( string $tab, string $message = '', bool $success = true ): void {
         $query = array(
-            'page' => 'pluginname',
+            'page' => 'projectpress',
             'group' => 'mod-manager',
             'tab' => $tab,
         );

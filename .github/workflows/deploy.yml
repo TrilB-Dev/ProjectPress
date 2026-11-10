@@ -1,4 +1,4 @@
-name: Build PluginName Deploy Branch
+name: Build ProjectPress Deploy Branch
 
 on:
   push:

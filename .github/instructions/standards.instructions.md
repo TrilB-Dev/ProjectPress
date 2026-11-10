@@ -1,5 +1,5 @@
 ---
-description: PHP and WordPress coding standards for PluginName
+description: PHP and WordPress coding standards for ProjectPress
 # applyTo: '**/*.php' # when provided, instructions are automatically added to matching files
 ---
 

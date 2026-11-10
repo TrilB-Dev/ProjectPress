@@ -1,12 +1,12 @@
 <?php
 /**
- * Reports dashboard UI for the PluginName plugin.
+ * Reports dashboard UI for the ProjectPress plugin.
  *
- * @package PluginName\Admin\Manager\Reports
+ * @package ProjectPress\Admin\Manager\Reports
  */
-namespace PluginName\Admin\Manager\Reports;
+namespace ProjectPress\Admin\Manager\Reports;
 
-use PluginName\Includes\Analytics\Analytics;
+use ProjectPress\Includes\Analytics\Analytics;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -19,7 +19,7 @@ final class ReportsDashboard extends ReportsManager {
 	 * @return void
 	 */
 	public function render_page_content(): void {
-		$this->header( __( 'Reports', 'pluginname' ) );
+		$this->header( __( 'Reports', 'projectpress' ) );
 		$login_summary = Analytics::get_summary( array( 'event' => 'user_login' ) );
 		$signup_summary = Analytics::get_summary( array( 'event' => 'user_register' ) );
 		$view_summary = Analytics::get_summary( array( 'event' => 'page_view' ) );
@@ -28,7 +28,7 @@ final class ReportsDashboard extends ReportsManager {
 			<div class="col-md-6 col-xl-3">
 				<div class="card shadow-sm h-100">
 					<div class="card-body">
-						<h2 class="h6 text-muted"><?php esc_html_e( 'Logins', 'pluginname' ); ?></h2>
+						<h2 class="h6 text-muted"><?php esc_html_e( 'Logins', 'projectpress' ); ?></h2>
 						<p class="display-6 mb-0"><?php echo esc_html( (string) ( $login_summary['count'] ?? 0 ) ); ?></p>
 					</div>
 				</div>
@@ -36,7 +36,7 @@ final class ReportsDashboard extends ReportsManager {
 			<div class="col-md-6 col-xl-3">
 				<div class="card shadow-sm h-100">
 					<div class="card-body">
-						<h2 class="h6 text-muted"><?php esc_html_e( 'Registrations', 'pluginname' ); ?></h2>
+						<h2 class="h6 text-muted"><?php esc_html_e( 'Registrations', 'projectpress' ); ?></h2>
 						<p class="display-6 mb-0"><?php echo esc_html( (string) ( $signup_summary['count'] ?? 0 ) ); ?></p>
 					</div>
 				</div>
@@ -44,7 +44,7 @@ final class ReportsDashboard extends ReportsManager {
 			<div class="col-md-6 col-xl-3">
 				<div class="card shadow-sm h-100">
 					<div class="card-body">
-						<h2 class="h6 text-muted"><?php esc_html_e( 'Page views', 'pluginname' ); ?></h2>
+						<h2 class="h6 text-muted"><?php esc_html_e( 'Page views', 'projectpress' ); ?></h2>
 						<p class="display-6 mb-0"><?php echo esc_html( (string) ( $view_summary['count'] ?? 0 ) ); ?></p>
 					</div>
 				</div>
@@ -52,8 +52,8 @@ final class ReportsDashboard extends ReportsManager {
 			<div class="col-md-6 col-xl-3">
 				<div class="card shadow-sm h-100">
 					<div class="card-body">
-						<h2 class="h6 text-muted"><?php esc_html_e( 'Last activity', 'pluginname' ); ?></h2>
-						<p class="display-6 mb-0"><?php echo esc_html( $login_summary['last_seen'] ?? $signup_summary['last_seen'] ?? $view_summary['last_seen'] ?? __( 'No activity yet', 'pluginname' ) ); ?></p>
+						<h2 class="h6 text-muted"><?php esc_html_e( 'Last activity', 'projectpress' ); ?></h2>
+						<p class="display-6 mb-0"><?php echo esc_html( $login_summary['last_seen'] ?? $signup_summary['last_seen'] ?? $view_summary['last_seen'] ?? __( 'No activity yet', 'projectpress' ) ); ?></p>
 					</div>
 				</div>
 			</div>

@@ -1,6 +1,6 @@
 <?php
 /**
- * PluginName - Functions
+ * ProjectPress - Functions
  *
  * Shared utilities used by Wiki services, pages, and REST routes.
  *
@@ -9,17 +9,17 @@
  * @since 1.0.0
  */
 
-namespace PluginName\Includes\Functions;
+namespace ProjectPress\Includes\Functions;
 
-use PluginName\Includes\Functions\Helpers\PostHelper;
-use PluginName\Includes\Functions\Helpers\SanitizationHelper;
+use ProjectPress\Includes\Functions\Helpers\PostHelper;
+use ProjectPress\Includes\Functions\Helpers\SanitizationHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 /**
- * Backwards-compatible facade for common PluginName utility operations.
+ * Backwards-compatible facade for common ProjectPress utility operations.
  *
  * New code may use the focused helper classes directly. This facade remains
  * useful to extensions that need one stable entry point for Wiki payloads.

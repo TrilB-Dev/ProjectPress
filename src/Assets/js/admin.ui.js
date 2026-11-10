@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const root = document;
 
-  const onboardingModal = root.getElementById('pluginname-onboarding-modal');
+  const onboardingModal = root.getElementById('projectpress-onboarding-modal');
   if (onboardingModal) {
     const modal = window.bootstrap?.Modal.getOrCreateInstance(onboardingModal);
     const steps = [...onboardingModal.querySelectorAll('[data-step]')];
@@ -24,10 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const dismissOnboarding = () => {
-      const config = window.pluginnameOnboarding || {};
+      const config = window.projectpressOnboarding || {};
       const ajaxUrl = config.ajaxUrl || window.ajaxurl || '/wp-admin/admin-ajax.php';
       const formData = new URLSearchParams({
-        action: 'pluginname_dismiss_onboarding',
+        action: 'projectpress_dismiss_onboarding',
         nonce: config.nonce || '',
       });
 

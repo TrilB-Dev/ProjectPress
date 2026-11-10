@@ -1,11 +1,11 @@
 <?php
 /**
- * PluginName encryption helpers.
+ * ProjectPress encryption helpers.
  *
- * @package PluginName
+ * @package ProjectPress
  */
 
-namespace PluginName\Includes\Functions\Helpers;
+namespace ProjectPress\Includes\Functions\Helpers;
 
 use Defuse\Crypto\Crypto;
 use Defuse\Crypto\Key;
@@ -16,12 +16,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class EncryptionHelper {
 	/**
-	 * Add the PluginName encryption key to wp-config.php when it is not defined.
+	 * Add the ProjectPress encryption key to wp-config.php when it is not defined.
 	 *
 	 * @return bool True when the key already exists or was added successfully.
 	 */
 	public static function ensure_configured(): bool {
-		if ( defined( 'PLUGINNAME_ENCRYPTION_KEY' ) ) {
+		if ( defined( 'PROJECTPRESS_ENCRYPTION_KEY' ) ) {
 			return self::has_runtime_key();
 		}
 
@@ -29,7 +29,7 @@ final class EncryptionHelper {
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations -- wp-config.php is the bootstrap config file and must be written atomically.
 		if ( null === $config_path || ! is_readable( $config_path ) || ! is_writable( $config_path ) ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- This is only used when the config file cannot be updated safely.
-			error_log( 'PluginName: wp-config.php was not found or is not writable; encryption key was not created.' );
+			error_log( 'ProjectPress: wp-config.php was not found or is not writable; encryption key was not created.' );
 			return false;
 		}
 
@@ -37,11 +37,11 @@ final class EncryptionHelper {
 		$config_content = file_get_contents( $config_path );
 		if ( false === $config_content ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- This is only used when the config file cannot be updated safely.
-			error_log( 'PluginName: could not read wp-config.php; encryption key was not created.' );
+			error_log( 'ProjectPress: could not read wp-config.php; encryption key was not created.' );
 			return false;
 		}
 
-		if ( preg_match( '/define\s*\(\s*[\'\"]PLUGINNAME_ENCRYPTION_KEY[\'\"]\s*,/i', $config_content ) ) {
+		if ( preg_match( '/define\s*\(\s*[\'\"]PROJECTPRESS_ENCRYPTION_KEY[\'\"]\s*,/i', $config_content ) ) {
 			return true;
 		}
 
@@ -49,11 +49,11 @@ final class EncryptionHelper {
 			$key = Key::createNewRandomKey()->saveToAsciiSafeString();
 		} catch ( \Throwable $exception ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- This is only used when key generation fails at runtime.
-			error_log( 'PluginName: failed to generate the encryption key: ' . $exception->getMessage() );
+			error_log( 'ProjectPress: failed to generate the encryption key: ' . $exception->getMessage() );
 			return false;
 		}
 
-		$new_line        = "define( 'PLUGINNAME_ENCRYPTION_KEY', '" . addslashes( $key ) . "' );" . PHP_EOL;
+		$new_line        = "define( 'PROJECTPRESS_ENCRYPTION_KEY', '" . addslashes( $key ) . "' );" . PHP_EOL;
 		$marker          = "/* That's all, stop editing!";
 		$marker_position = strpos( $config_content, $marker );
 
@@ -64,7 +64,7 @@ final class EncryptionHelper {
 			$settings_position = strpos( $config_content, $settings_load );
 			if ( false === $settings_position ) {
 				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- This is only used when the config file cannot be updated safely.
-				error_log( 'PluginName: could not find a safe insertion point in wp-config.php.' );
+				error_log( 'ProjectPress: could not find a safe insertion point in wp-config.php.' );
 				return false;
 			}
 			$updated_content = substr_replace( $config_content, $new_line, $settings_position, 0 );
@@ -78,7 +78,7 @@ final class EncryptionHelper {
 				fclose( $handle );
 			}
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- This is only used when the config file cannot be updated safely.
-			error_log( 'PluginName: could not lock wp-config.php; encryption key was not created.' );
+			error_log( 'ProjectPress: could not lock wp-config.php; encryption key was not created.' );
 			return false;
 		}
 
@@ -91,12 +91,12 @@ final class EncryptionHelper {
 
 		if ( ! $success ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- This is only used when the config file cannot be updated safely.
-			error_log( 'PluginName: could not write the encryption key to wp-config.php.' );
+			error_log( 'ProjectPress: could not write the encryption key to wp-config.php.' );
 			return false;
 		}
 
-		if ( ! defined( 'PLUGINNAME_ENCRYPTION_KEY' ) ) {
-			define( 'PLUGINNAME_ENCRYPTION_KEY', $key );
+		if ( ! defined( 'PROJECTPRESS_ENCRYPTION_KEY' ) ) {
+			define( 'PROJECTPRESS_ENCRYPTION_KEY', $key );
 		}
 
 		return true;
@@ -191,11 +191,11 @@ final class EncryptionHelper {
 	 * @return string|null The runtime encryption key or null if not defined.
 	 */
 	private static function runtime_key(): ?string {
-		if ( ! defined( 'PLUGINNAME_ENCRYPTION_KEY' ) ) {
+		if ( ! defined( 'PROJECTPRESS_ENCRYPTION_KEY' ) ) {
 			return null;
 		}
 
-		return (string) constant( 'PLUGINNAME_ENCRYPTION_KEY' );
+		return (string) constant( 'PROJECTPRESS_ENCRYPTION_KEY' );
 	}
 	/**
 	 * Load a key from an ASCII-safe string.

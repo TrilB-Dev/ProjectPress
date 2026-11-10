@@ -1,13 +1,13 @@
 <?php
 /**
- * Settings for the Font Awesome PluginName plugin.
+ * Settings for the Font Awesome ProjectPress plugin.
  * 
- * @package    PluginName
- * @subpackage PluginName/includes
+ * @package    ProjectPress
+ * @subpackage ProjectPress/includes
  */
-namespace PluginName\Includes\Plugins\FontAwesome\Includes\Settings;
-use PluginName\Includes\Settings\Settings as BaseSettings;
-use PluginName\Includes\Functions\Helpers\SanitizationHelper;
+namespace ProjectPress\Includes\Plugins\FontAwesome\Includes\Settings;
+use ProjectPress\Includes\Settings\Settings as BaseSettings;
+use ProjectPress\Includes\Functions\Helpers\SanitizationHelper;
 
 final class Settings {
     /**
@@ -75,35 +75,35 @@ final class Settings {
     public function get_settings_page(): array {
         return [
             'slug' => 'fontawesome',
-            'label' => __( 'FontAwesome', 'pluginname' ),
-            'title' => __( 'FontAwesome integration', 'pluginname' ),
+            'label' => __( 'FontAwesome', 'projectpress' ),
+            'title' => __( 'FontAwesome integration', 'projectpress' ),
             'layout' => 'table',
             'fields' => [
                 [
                     'key' => 'fontawesome_type',
-                    'label' => __( 'FontAwesome Type', 'pluginname' ),
-                    'description' => __( 'Select how fontawesome is called in PluginName.', 'pluginname' ),
-                    'tooltip' => __( 'Choose between using the CDN or a Kit for FontAwesome.', 'pluginname' ),
+                    'label' => __( 'FontAwesome Type', 'projectpress' ),
+                    'description' => __( 'Select how fontawesome is called in ProjectPress.', 'projectpress' ),
+                    'tooltip' => __( 'Choose between using the CDN or a Kit for FontAwesome.', 'projectpress' ),
                     'tooltip_type' => 'info',
                     'type' => 'select',
                     'class' => 'w-100',
                     'options' => [
-                        'cdn' => __( 'CDN', 'pluginname' ),
-                        'kit' => __( 'Kit', 'pluginname' ),
+                        'cdn' => __( 'CDN', 'projectpress' ),
+                        'kit' => __( 'Kit', 'projectpress' ),
                     ],
                     'default' => 'cdn',
                 ],
                 [
                     'key' => 'fontawesome_cdn_technology',
-                    'label' => __( 'FontAwesome CDN Technology', 'pluginname' ),
-                    'description' => __( 'Select the technology used for the Font Awesome CDN.', 'pluginname' ),
-                    'tooltip' => __( 'Choose between different CDN technologies for loading Font Awesome.', 'pluginname' ),
+                    'label' => __( 'FontAwesome CDN Technology', 'projectpress' ),
+                    'description' => __( 'Select the technology used for the Font Awesome CDN.', 'projectpress' ),
+                    'tooltip' => __( 'Choose between different CDN technologies for loading Font Awesome.', 'projectpress' ),
                     'tooltip_type' => 'info',
                     'type' => 'select',
                     'class' => 'w-100',
                     'options' => [
-                        'svg' => __( 'SVG', 'pluginname' ),
-                        'webfont' => __( 'Web Font', 'pluginname' ),
+                        'svg' => __( 'SVG', 'projectpress' ),
+                        'webfont' => __( 'Web Font', 'projectpress' ),
                     ],
                     'default' => 'webfont',
                     'visible_when' => [
@@ -116,9 +116,9 @@ final class Settings {
                 ],
                 [
                     'key' => 'fontawesome_kit_id',
-                    'label' => __( 'FontAwesome Kit ID', 'pluginname' ),
-                    'description' => __( 'Enter the ID of your Font Awesome Kit if you selected "Kit" as the type.', 'pluginname' ),
-                    'tooltip' => __( 'The FontAwesome Kit ID is required when using the Kit type.', 'pluginname' ),
+                    'label' => __( 'FontAwesome Kit ID', 'projectpress' ),
+                    'description' => __( 'Enter the ID of your Font Awesome Kit if you selected "Kit" as the type.', 'projectpress' ),
+                    'tooltip' => __( 'The FontAwesome Kit ID is required when using the Kit type.', 'projectpress' ),
                     'tooltip_type' => 'info',
                     'type' => 'text',
                     'class' => 'w-100',
@@ -132,9 +132,9 @@ final class Settings {
                 ],
                 [
                     'key' => 'fontawesome_enable_icon_picker',
-                    'label' => __( 'Enable icon picker', 'pluginname' ),
-                    'description' => __( 'Enable the bundled Font Awesome icon picker inside PluginName admin interfaces.', 'pluginname' ),
-                    'tooltip' => __( 'PluginName includes its own icon picker and fallback icon catalog, so no WordPress FontAwesome plugin is required.', 'pluginname' ),
+                    'label' => __( 'Enable icon picker', 'projectpress' ),
+                    'description' => __( 'Enable the bundled Font Awesome icon picker inside ProjectPress admin interfaces.', 'projectpress' ),
+                    'tooltip' => __( 'ProjectPress includes its own icon picker and fallback icon catalog, so no WordPress FontAwesome plugin is required.', 'projectpress' ),
                     'tooltip_type' => 'info',
                     'type' => 'switch',
                     'default' => true,

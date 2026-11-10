@@ -4,7 +4,7 @@
  *
  * @since 1.0.0
  */
-namespace PluginName\Includes\Functions\Helpers;
+namespace ProjectPress\Includes\Functions\Helpers;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -25,7 +25,7 @@ final class ImageHelper {
 		}
 
 		if ( 'core' === strtolower( trim( $type ) ) ) {
-			return PLUGINNAME_ASSETS_URL . '/images/' . $file;
+			return PROJECTPRESS_ASSETS_URL . '/images/' . $file;
 		}
 
 		$plugin_directory = self::get_plugin_directory( $type );
@@ -33,7 +33,7 @@ final class ImageHelper {
 			return '';
 		}
 
-		return PLUGINNAME_PLUGINS_URL . '/' . $plugin_directory . '/Assets/images/' . $file;
+		return PROJECTPRESS_PLUGINS_URL . '/' . $plugin_directory . '/Assets/images/' . $file;
 	}
 
 	/**
@@ -44,12 +44,12 @@ final class ImageHelper {
 	 */
 	private static function get_plugin_directory( string $plugin_slug ): string {
 		$plugin_slug = strtolower( preg_replace( '/[^a-zA-Z0-9_-]/', '', $plugin_slug ) ?? '' );
-		if ( '' === $plugin_slug || ! defined( 'PLUGINNAME_PLUGINS' ) || ! is_dir( PLUGINNAME_PLUGINS ) ) {
+		if ( '' === $plugin_slug || ! defined( 'PROJECTPRESS_PLUGINS' ) || ! is_dir( PROJECTPRESS_PLUGINS ) ) {
 			return '';
 		}
 
 		$plugin_slug_variants = array( $plugin_slug );
-		if ( str_starts_with( $plugin_slug, 'pluginname-' ) ) {
+		if ( str_starts_with( $plugin_slug, 'projectpress-' ) ) {
 			$plugin_slug_variants[] = substr( $plugin_slug, 14 );
 		}
 		if ( str_starts_with( $plugin_slug, 'mspress-' ) ) {
@@ -59,13 +59,13 @@ final class ImageHelper {
 			$plugin_slug_variants[] = substr( $plugin_slug, 0, -7 );
 		}
 
-		$directories = scandir( PLUGINNAME_PLUGINS );
+		$directories = scandir( PROJECTPRESS_PLUGINS );
 		if ( false === $directories ) {
 			return '';
 		}
 
 		foreach ( $directories as $directory ) {
-			if ( '.' !== $directory && '..' !== $directory && is_dir( PLUGINNAME_PLUGINS . '/' . $directory ) && in_array( strtolower( $directory ), $plugin_slug_variants, true ) ) {
+			if ( '.' !== $directory && '..' !== $directory && is_dir( PROJECTPRESS_PLUGINS . '/' . $directory ) && in_array( strtolower( $directory ), $plugin_slug_variants, true ) ) {
 				return $directory;
 			}
 		}

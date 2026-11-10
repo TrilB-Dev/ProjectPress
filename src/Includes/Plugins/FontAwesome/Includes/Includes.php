@@ -3,9 +3,9 @@
  * 
  * @since 1.0.0
  */
-namespace PluginName\Includes\Plugins\FontAwesome\Includes;
+namespace ProjectPress\Includes\Plugins\FontAwesome\Includes;
 
-use PluginName\Includes\Plugins\FontAwesome\Includes\Settings\Settings;
+use ProjectPress\Includes\Plugins\FontAwesome\Includes\Settings\Settings;
 /**
  * The core plugin class.
  *

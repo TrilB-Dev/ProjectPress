@@ -2,13 +2,13 @@
 /**
  * CronJobs class for registering plugin cron jobs.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Pages
  * @since 1.0.0
  */
-namespace PluginName\Includes\Pages;
+namespace ProjectPress\Includes\Pages;
 
-use PluginName\Includes\Core\CronJobs as CronJobCore;
+use ProjectPress\Includes\Core\CronJobs as CronJobCore;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -22,23 +22,23 @@ final class CronJobs {
 	 * @since 1.0.0
 	 */
 	public static function register(): void {
-		self::pluginname_cleanup();
+		self::projectpress_cleanup();
 	}
 
 	/**
-	 * Register the built-in PluginName cleanup cron job.
+	 * Register the built-in ProjectPress cleanup cron job.
 	 *
 	 * @return bool
 	 * @since 1.0.0
 	 */
-	public static function pluginname_cleanup(): bool {
+	public static function projectpress_cleanup(): bool {
 		return CronJobCore::create(
 			'core',
-			'pluginname_cleanup',
+			'projectpress_cleanup',
 			'daily',
 			array(),
 			array( self::class, 'cleanup' ),
-			__( 'Daily PluginName cleanup task.', 'pluginname' )
+			__( 'Daily ProjectPress cleanup task.', 'projectpress' )
 		);
 	}
 
@@ -48,7 +48,7 @@ final class CronJobs {
 	 * @return void
 	 */
 	public static function cleanup(): void {
-		do_action( 'pluginname_daily_cleanup' );
+		do_action( 'projectpress_daily_cleanup' );
 	}
 }
 

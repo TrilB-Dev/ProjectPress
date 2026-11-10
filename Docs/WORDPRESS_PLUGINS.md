@@ -1,19 +1,19 @@
 # WordPress Plugin Integration
 
-A separately installed WordPress plugin can extend PluginName without being placed in the internal extension directory. The bridge is the `pluginname_register_plugin` action.
+A separately installed WordPress plugin can extend ProjectPress without being placed in the internal extension directory. The bridge is the `projectpress_register_plugin` action.
 
 ## Register an Extension
 
 ```php
 <?php
 /**
- * Plugin Name: My PluginName Extension
+ * Plugin Name: My ProjectPress Extension
  */
 
-use PluginName\Includes\Plugins\Plugins;
-use PluginName\Includes\Plugins\PluginInterface;
+use ProjectPress\Includes\Plugins\Plugins;
+use ProjectPress\Includes\Plugins\PluginInterface;
 
-add_action('pluginname_register_plugin', static function (Plugins $plugins): void {
+add_action('projectpress_register_plugin', static function (Plugins $plugins): void {
     $plugins->register_plugin_instance(new MyPluginExtension());
 });
 
@@ -23,7 +23,7 @@ final class MyPluginExtension implements PluginInterface {
     public function get_version(): string { return '1.0.0'; }
     public function get_author(): string { return 'Example Author'; }
     public function get_author_uri(): string { return 'https://example.com'; }
-    public function get_description(): string { return 'Adds a PluginName integration.'; }
+    public function get_description(): string { return 'Adds a ProjectPress integration.'; }
     public function get_uri(): string { return 'https://example.com'; }
     public function get_license(): string { return 'GPL-2.0-or-later'; }
     public function is_active(): bool { return true; }
@@ -53,7 +53,7 @@ final class MyPluginExtension implements PluginInterface, RestRouteProviderInter
 }
 ```
 
-Use `PermissionHelper` for protected routes and import `Response` from `PluginName\API` when using the host response envelope. Shortcode callbacks must return rendered output.
+Use `PermissionHelper` for protected routes and import `Response` from `ProjectPress\API` when using the host response envelope. Shortcode callbacks must return rendered output.
 
 ## Admin Integration
 
@@ -63,19 +63,19 @@ Implement `AdminMenuProviderInterface` for extension-owned menu entries. Parent 
 
 The host calls the registration action according to its lifecycle. If the host is unavailable, the external plugin should remain inactive rather than causing a fatal error. Use `class_exists()` or an activation dependency check when appropriate.
 
-Implement settings providers for defaults and generated settings pages. Read through `PluginName\Includes\Settings\Settings` and sanitize all submitted values before storing them. External extensions own their translation catalogs and language files.
+Implement settings providers for defaults and generated settings pages. Read through `ProjectPress\Includes\Settings\Settings` and sanitize all submitted values before storing them. External extensions own their translation catalogs and language files.
 
 Register page-specific assets through the shared `Assets` service or filters documented by the host. Keep source assets in the external plugin and load them only on pages that need them.
 
 ## Checklist
 
-1. Declare PluginName as a dependency or check for its classes.
+1. Declare ProjectPress as a dependency or check for its classes.
 2. Load the extension class before the registration hook runs.
-3. Register on `pluginname_register_plugin`.
+3. Register on `projectpress_register_plugin`.
 4. Use a unique slug and REST namespace.
 5. Implement only the provider interfaces needed.
 6. Use host helpers for sanitization, permissions, URLs, and responses.
-7. Test activation with PluginName active and inactive.
+7. Test activation with ProjectPress active and inactive.
 
 
 

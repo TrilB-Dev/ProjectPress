@@ -1,14 +1,14 @@
 <?php
 /**
- * Post identity and PluginName post-type helpers.
+ * Post identity and ProjectPress post-type helpers.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Functions\Helpers
  * @since 1.0.0
  */
 
-namespace PluginName\Includes\Functions\Helpers;
-use PluginName\Includes\Functions\Helpers\QueryHelper;
+namespace ProjectPress\Includes\Functions\Helpers;
+use ProjectPress\Includes\Functions\Helpers\QueryHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

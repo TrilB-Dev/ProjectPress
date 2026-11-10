@@ -1,20 +1,20 @@
 <?php
 /**
- * Plugin-related admin functions for PluginName.
+ * Plugin-related admin functions for ProjectPress.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Functions\Admin
  * @since 1.0.0
  */
-namespace PluginName\Includes\Functions\Admin;
+namespace ProjectPress\Includes\Functions\Admin;
 
-use PluginName\Includes\Functions\Helpers\AjaxHelper;
-use PluginName\Includes\Functions\Helpers\AlertHelper;
-use PluginName\Includes\Functions\Helpers\LoggerHelper;
-use PluginName\Includes\Plugins\PluginInterface;
-use PluginName\Includes\Plugins\Plugins;
-use PluginName\Includes\Plugins\SettingsPageProviderInterface;
-use PluginName\Includes\Settings\Settings;
+use ProjectPress\Includes\Functions\Helpers\AjaxHelper;
+use ProjectPress\Includes\Functions\Helpers\AlertHelper;
+use ProjectPress\Includes\Functions\Helpers\LoggerHelper;
+use ProjectPress\Includes\Plugins\PluginInterface;
+use ProjectPress\Includes\Plugins\Plugins;
+use ProjectPress\Includes\Plugins\SettingsPageProviderInterface;
+use ProjectPress\Includes\Settings\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -22,13 +22,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class FunctionsPlugins {
     /**
-     * Toggle the enabled state of a PluginName plugin.
+     * Toggle the enabled state of a ProjectPress plugin.
      *
      * @return void
      */
     public function toggle_plugin(): void {
-        if ( ! AjaxHelper::authorized( 'pluginname_plugin_toggle', 'pluginname_settings_plugins_int_edit' ) ) {
-            AjaxHelper::unauthorized( __( 'You are not authorized to manage PluginName plugins.', 'pluginname' ) );
+        if ( ! AjaxHelper::authorized( 'projectpress_plugin_toggle', 'projectpress_settings_plugins_int_edit' ) ) {
+            AjaxHelper::unauthorized( __( 'You are not authorized to manage ProjectPress plugins.', 'projectpress' ) );
         }
 
         $slug = $this->resolve_plugin_slug( wp_unslash( $_POST['slug'] ?? '' ) );
@@ -36,14 +36,14 @@ final class FunctionsPlugins {
         $plugin = Plugins::get_instance()->get_registered_plugins()[ $slug ] ?? null;
 
         if ( ! $plugin instanceof PluginInterface ) {
-            AjaxHelper::error( [ 'message' => __( 'The requested PluginName plugin was not found.', 'pluginname' ) ], 404 );
+            AjaxHelper::error( [ 'message' => __( 'The requested ProjectPress plugin was not found.', 'projectpress' ) ], 404 );
         }
 		if ( ! $this->is_internal_plugin( $plugin ) ) {
-			AjaxHelper::unauthorized( __( 'You are not authorized to manage external PluginName plugins.', 'pluginname' ) );
+			AjaxHelper::unauthorized( __( 'You are not authorized to manage external ProjectPress plugins.', 'projectpress' ) );
 		}
 
         if ( ! Plugins::get_instance()->set_plugin_enabled( $slug, $enabled ) ) {
-            AjaxHelper::error( [ 'message' => __( 'The PluginName plugin state could not be saved.', 'pluginname' ) ], 500 );
+            AjaxHelper::error( [ 'message' => __( 'The ProjectPress plugin state could not be saved.', 'projectpress' ) ], 500 );
         }
 
         AjaxHelper::success( [ 'slug' => $slug, 'enabled' => $enabled ] );
@@ -62,21 +62,21 @@ final class FunctionsPlugins {
 
         if ( ! $plugin instanceof PluginInterface ) {
             return new \WP_REST_Response(
-                array( 'message' => __( 'The requested PluginName plugin was not found.', 'pluginname' ) ),
+                array( 'message' => __( 'The requested ProjectPress plugin was not found.', 'projectpress' ) ),
                 404
             );
         }
 
         if ( ! $this->is_internal_plugin( $plugin ) ) {
             return new \WP_REST_Response(
-                array( 'message' => __( 'You are not authorized to manage external PluginName plugins.', 'pluginname' ) ),
+                array( 'message' => __( 'You are not authorized to manage external ProjectPress plugins.', 'projectpress' ) ),
                 403
             );
         }
 
         if ( ! Plugins::get_instance()->set_plugin_enabled( $slug, $enabled ) ) {
             return new \WP_REST_Response(
-                array( 'message' => __( 'The PluginName plugin state could not be saved.', 'pluginname' ) ),
+                array( 'message' => __( 'The ProjectPress plugin state could not be saved.', 'projectpress' ) ),
                 500
             );
         }
@@ -90,32 +90,32 @@ final class FunctionsPlugins {
     }
 
     /**
-     * Save settings submitted from a PluginName plugin modal.
+     * Save settings submitted from a ProjectPress plugin modal.
      *
      * @return void
      */
     public function save_plugin_settings(): void {
         try {
-            LoggerHelper::write_log( 'PluginName plugin settings save started.' );
+            LoggerHelper::write_log( 'ProjectPress plugin settings save started.' );
 
             $slug = $this->resolve_plugin_slug( wp_unslash( $_POST['slug'] ?? $_POST['plugin_slug'] ?? '' ) );
-            LoggerHelper::write_log( sprintf( 'PluginName plugin settings save slug: %s', $slug ) );
+            LoggerHelper::write_log( sprintf( 'ProjectPress plugin settings save slug: %s', $slug ) );
 
             if ( '' === $slug ) {
-                $message = __( 'The PluginName plugin slug is missing.', 'pluginname' );
-                LoggerHelper::write_log( 'PluginName plugin settings save failed: missing slug.' );
+                $message = __( 'The ProjectPress plugin slug is missing.', 'projectpress' );
+                LoggerHelper::write_log( 'ProjectPress plugin settings save failed: missing slug.' );
                 AjaxHelper::error( [ 'message' => $message, 'alert' => AlertHelper::get_admin_notice( $message, 'error' ) ], 400 );
             }
 
             $plugin = Plugins::get_instance()->get_registered_plugins()[ $slug ] ?? null;
             if ( ! $plugin instanceof PluginInterface || ! $plugin instanceof SettingsPageProviderInterface ) {
-                $message = __( 'The requested PluginName plugin settings were not found.', 'pluginname' );
-                LoggerHelper::write_log( sprintf( 'PluginName plugin settings save failed: plugin not found for slug %s.', $slug ) );
+                $message = __( 'The requested ProjectPress plugin settings were not found.', 'projectpress' );
+                LoggerHelper::write_log( sprintf( 'ProjectPress plugin settings save failed: plugin not found for slug %s.', $slug ) );
                 AjaxHelper::error( [ 'message' => $message, 'alert' => AlertHelper::get_admin_notice( $message, 'error' ) ], 404 );
             }
 
-            $capability = $this->is_internal_plugin( $plugin ) ? 'pluginname_settings_plugins_int_edit' : 'pluginname_settings_plugins_ext_edit';
-            $nonce_actions = array( 'pluginname_save_plugin_settings', 'pluginname_plugin_settings' );
+            $capability = $this->is_internal_plugin( $plugin ) ? 'projectpress_settings_plugins_int_edit' : 'projectpress_settings_plugins_ext_edit';
+            $nonce_actions = array( 'projectpress_save_plugin_settings', 'projectpress_plugin_settings' );
             $has_valid_nonce = false;
             foreach ( $nonce_actions as $action ) {
                 if ( AjaxHelper::authorized( $action, $capability ) ) {
@@ -125,58 +125,58 @@ final class FunctionsPlugins {
             }
 
             if ( ! $has_valid_nonce ) {
-                $message = __( 'You are not authorized to save PluginName plugin settings.', 'pluginname' );
-                LoggerHelper::write_log( sprintf( 'PluginName plugin settings save failed: unauthorized for %s.', $slug ) );
+                $message = __( 'You are not authorized to save ProjectPress plugin settings.', 'projectpress' );
+                LoggerHelper::write_log( sprintf( 'ProjectPress plugin settings save failed: unauthorized for %s.', $slug ) );
                 AjaxHelper::error( [ 'message' => $message, 'alert' => AlertHelper::get_admin_notice( $message, 'error' ) ], 403 );
             }
 
             $input = $this->parse_settings_payload();
-            LoggerHelper::write_log( 'PluginName plugin settings payload parsed.', $input );
+            LoggerHelper::write_log( 'ProjectPress plugin settings payload parsed.', $input );
 
             if ( ! is_array( $input ) ) {
-                $message = __( 'The PluginName plugin settings payload is invalid.', 'pluginname' );
-                LoggerHelper::write_log( 'PluginName plugin settings save failed: invalid payload.' );
+                $message = __( 'The ProjectPress plugin settings payload is invalid.', 'projectpress' );
+                LoggerHelper::write_log( 'ProjectPress plugin settings save failed: invalid payload.' );
                 AjaxHelper::error( [ 'message' => $message, 'alert' => AlertHelper::get_admin_notice( $message, 'error' ) ], 400 );
             }
 
             $settings = $plugin->sanitize_settings( $input );
-            LoggerHelper::write_log( sprintf( 'PluginName plugin settings sanitized for %s.', $slug ), $settings );
+            LoggerHelper::write_log( sprintf( 'ProjectPress plugin settings sanitized for %s.', $slug ), $settings );
 
             if ( ! is_array( $settings ) ) {
-                $message = __( 'The PluginName plugin settings could not be sanitized.', 'pluginname' );
-                LoggerHelper::write_log( sprintf( 'PluginName plugin settings save failed: sanitization returned invalid data for %s.', $slug ) );
+                $message = __( 'The ProjectPress plugin settings could not be sanitized.', 'projectpress' );
+                LoggerHelper::write_log( sprintf( 'ProjectPress plugin settings save failed: sanitization returned invalid data for %s.', $slug ) );
                 AjaxHelper::error( [ 'message' => $message, 'alert' => AlertHelper::get_admin_notice( $message, 'error' ) ], 400 );
             }
 
             $page = $plugin->get_settings_page();
             $group = sanitize_key( $page['slug'] ?? $slug );
-            LoggerHelper::write_log( sprintf( 'PluginName plugin settings target group: %s', $group ) );
+            LoggerHelper::write_log( sprintf( 'ProjectPress plugin settings target group: %s', $group ) );
 
             if ( '' === $group ) {
-                $message = __( 'The PluginName plugin settings group could not be resolved.', 'pluginname' );
-                LoggerHelper::write_log( sprintf( 'PluginName plugin settings save failed: unresolved group for %s.', $slug ) );
+                $message = __( 'The ProjectPress plugin settings group could not be resolved.', 'projectpress' );
+                LoggerHelper::write_log( sprintf( 'ProjectPress plugin settings save failed: unresolved group for %s.', $slug ) );
                 AjaxHelper::error( [ 'message' => $message, 'alert' => AlertHelper::get_admin_notice( $message, 'error' ) ], 400 );
             }
 
             if ( ! Settings::set_group( $group, $settings ) ) {
-                $message = __( 'The PluginName plugin settings could not be saved.', 'pluginname' );
-                LoggerHelper::write_log( sprintf( 'PluginName plugin settings save failed: DB write returned false for %s.', $slug ) );
+                $message = __( 'The ProjectPress plugin settings could not be saved.', 'projectpress' );
+                LoggerHelper::write_log( sprintf( 'ProjectPress plugin settings save failed: DB write returned false for %s.', $slug ) );
                 AjaxHelper::error( [ 'message' => $message, 'alert' => AlertHelper::get_admin_notice( $message, 'error' ) ], 500 );
             }
 
-            LoggerHelper::write_log( sprintf( 'PluginName plugin settings saved successfully for %s.', $slug ), $settings );
+            LoggerHelper::write_log( sprintf( 'ProjectPress plugin settings saved successfully for %s.', $slug ), $settings );
 
             AjaxHelper::success(
                 [
                     'slug' => $slug,
                     'settings' => $settings,
-                    'message' => __( 'Plugin settings saved successfully.', 'pluginname' ),
-                    'alert' => AlertHelper::get_admin_notice( __( 'Plugin settings saved successfully.', 'pluginname' ), 'success' ),
+                    'message' => __( 'Plugin settings saved successfully.', 'projectpress' ),
+                    'alert' => AlertHelper::get_admin_notice( __( 'Plugin settings saved successfully.', 'projectpress' ), 'success' ),
                 ]
             );
         } catch ( \Throwable $exception ) {
-            $message = __( 'The PluginName plugin settings save failed unexpectedly.', 'pluginname' );
-            LoggerHelper::write_log( sprintf( 'PluginName plugin settings save exception: %s', $exception->getMessage() ) );
+            $message = __( 'The ProjectPress plugin settings save failed unexpectedly.', 'projectpress' );
+            LoggerHelper::write_log( sprintf( 'ProjectPress plugin settings save exception: %s', $exception->getMessage() ) );
             AjaxHelper::error(
                 [
                     'message' => $message,
@@ -198,12 +198,12 @@ final class FunctionsPlugins {
         try {
             $slug = $this->resolve_plugin_slug( (string) ( $request->get_param( 'slug' ) ?? $request->get_param( 'plugin_slug' ) ?? '' ) );
             if ( '' === $slug ) {
-                return new \WP_REST_Response( array( 'message' => __( 'The PluginName plugin slug is missing.', 'pluginname' ) ), 400 );
+                return new \WP_REST_Response( array( 'message' => __( 'The ProjectPress plugin slug is missing.', 'projectpress' ) ), 400 );
             }
 
             $plugin = Plugins::get_instance()->get_registered_plugins()[ $slug ] ?? null;
             if ( ! $plugin instanceof PluginInterface || ! $plugin instanceof SettingsPageProviderInterface ) {
-                return new \WP_REST_Response( array( 'message' => __( 'The requested PluginName plugin settings were not found.', 'pluginname' ) ), 404 );
+                return new \WP_REST_Response( array( 'message' => __( 'The requested ProjectPress plugin settings were not found.', 'projectpress' ) ), 404 );
             }
 
             $input = $request->get_param( 'settings' );
@@ -218,24 +218,24 @@ final class FunctionsPlugins {
             $page = $plugin->get_settings_page();
             $group = sanitize_key( $page['slug'] ?? $slug );
             if ( '' === $group ) {
-                return new \WP_REST_Response( array( 'message' => __( 'The PluginName plugin settings group could not be resolved.', 'pluginname' ) ), 400 );
+                return new \WP_REST_Response( array( 'message' => __( 'The ProjectPress plugin settings group could not be resolved.', 'projectpress' ) ), 400 );
             }
 
             if ( ! Settings::set_group( $group, $settings ) ) {
-                return new \WP_REST_Response( array( 'message' => __( 'The PluginName plugin settings could not be saved.', 'pluginname' ) ), 500 );
+                return new \WP_REST_Response( array( 'message' => __( 'The ProjectPress plugin settings could not be saved.', 'projectpress' ) ), 500 );
             }
 
             return rest_ensure_response(
                 array(
                     'slug' => $slug,
                     'settings' => $settings,
-                    'message' => __( 'Plugin settings saved successfully.', 'pluginname' ),
+                    'message' => __( 'Plugin settings saved successfully.', 'projectpress' ),
                 )
             );
         } catch ( \Throwable $exception ) {
             return new \WP_REST_Response(
                 array(
-                    'message' => __( 'The PluginName plugin settings save failed unexpectedly.', 'pluginname' ),
+                    'message' => __( 'The ProjectPress plugin settings save failed unexpectedly.', 'projectpress' ),
                     'details' => $exception->getMessage(),
                 ),
                 500
@@ -355,11 +355,11 @@ final class FunctionsPlugins {
     }
 
     private function is_internal_plugin( PluginInterface $plugin ): bool {
-        return 0 === strpos( get_class( $plugin ), 'PluginName\\Includes\\Plugins\\' );
+        return 0 === strpos( get_class( $plugin ), 'ProjectPress\\Includes\\Plugins\\' );
     }
 
     /**
-     * Collect settings pages from enabled PluginName plugins.
+     * Collect settings pages from enabled ProjectPress plugins.
      *
      * @return array<int, array{provider: SettingsPageProviderInterface, slug: string, label: string, title: string, fields: array}>
      */

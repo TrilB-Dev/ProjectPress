@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const root = document;
-  const panel = root.querySelector('#pluginname-settings-panel');
-  const config = window.pluginnameSettingsTabs;
+  const panel = root.querySelector('#projectpress-settings-panel');
+  const config = window.projectpressSettingsTabs;
   if (!panel || !config) return;
 
   const fieldValue = (name, scope = root) => {
@@ -35,9 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const updateConditionalFields = () => {
-    root.querySelectorAll('[data-pluginname-visible-when], [data-pluginname-required-when]').forEach((field) => {
-      const visibleRule = field.dataset.pluginnameVisibleWhen ? JSON.parse(field.dataset.pluginnameVisibleWhen) : null;
-      const requiredRule = field.dataset.pluginnameRequiredWhen ? JSON.parse(field.dataset.pluginnameRequiredWhen) : null;
+    root.querySelectorAll('[data-projectpress-visible-when], [data-projectpress-required-when]').forEach((field) => {
+      const visibleRule = field.dataset.projectpressVisibleWhen ? JSON.parse(field.dataset.projectpressVisibleWhen) : null;
+      const requiredRule = field.dataset.projectpressRequiredWhen ? JSON.parse(field.dataset.projectpressRequiredWhen) : null;
       const visible = (!visibleRule || conditionMatches(visibleRule, field.closest('form') || root)) && (!requiredRule || conditionMatches(requiredRule, field.closest('form') || root));
       field.hidden = !visible;
       field.style.display = visible ? '' : 'none';
@@ -55,8 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const setActive = (tab, section) => {
-    root.querySelectorAll('[data-pluginname-settings-tab]').forEach((link) => {
-      const active = link.dataset.pluginnameSettingsTab === tab && (!link.dataset.pluginnameSettingsSection || link.dataset.pluginnameSettingsSection === section);
+    root.querySelectorAll('[data-projectpress-settings-tab]').forEach((link) => {
+      const active = link.dataset.projectpressSettingsTab === tab && (!link.dataset.projectpressSettingsSection || link.dataset.projectpressSettingsSection === section);
       link.classList.toggle('active', active);
       link.setAttribute('aria-selected', active ? 'true' : 'false');
       if (active) link.setAttribute('aria-current', 'page');
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  const bindForms = () => root.querySelectorAll('.pluginname-settings-form, .pluginname-import-form').forEach((form) => {
+  const bindForms = () => root.querySelectorAll('.projectpress-settings-form, .projectpress-import-form').forEach((form) => {
     form.addEventListener('submit', () => {
       const submit = form.querySelector('[type="submit"]');
       if (submit) submit.disabled = true;
@@ -79,11 +79,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const target = root.querySelector(button.dataset.bsTarget);
     if (!target) return;
 
-    const current = root.querySelector('#pluginname-layout-tab .nav-link.active');
-    const currentPane = root.querySelector('#pluginname-layout-tab-content .tab-pane.active');
+    const current = root.querySelector('#projectpress-layout-tab .nav-link.active');
+    const currentPane = root.querySelector('#projectpress-layout-tab-content .tab-pane.active');
     if (current === button && currentPane === target) return;
 
-    root.querySelectorAll('#pluginname-layout-tab .nav-link').forEach((tab) => {
+    root.querySelectorAll('#projectpress-layout-tab .nav-link').forEach((tab) => {
       const active = tab === button;
       tab.classList.toggle('active', active);
       tab.setAttribute('aria-selected', active ? 'true' : 'false');
@@ -99,10 +99,10 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const loadTab = (tab, section, updateHash = true) => {
-    const currentContent = panel.querySelector('.pluginname-settings-tab-content');
+    const currentContent = panel.querySelector('.projectpress-settings-tab-content');
     if (currentContent) currentContent.classList.add('is-loading');
     panel.setAttribute('aria-busy', 'true');
-    const body = new URLSearchParams({ action: 'pluginname_load_settings_tab', nonce: config.nonce, tab, layout_section: section });
+    const body = new URLSearchParams({ action: 'projectpress_load_settings_tab', nonce: config.nonce, tab, layout_section: section });
     fetch(config.ajaxUrl, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' }, body })
       .then((response) => response.json())
       .then((response) => {
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setActive(response.data.tab, response.data.layout_section);
         if (updateHash) window.history.pushState({}, '', `${window.location.pathname}${window.location.search}#${response.data.tab === 'layout' ? `layout-${response.data.layout_section}` : response.data.tab}`);
         bindForms();
-        const nextContent = panel.querySelector('.pluginname-settings-tab-content');
+        const nextContent = panel.querySelector('.projectpress-settings-tab-content');
         if (nextContent) requestAnimationFrame(() => nextContent.classList.remove('is-loading'));
       })
       .catch(() => { panel.classList.remove('is-loading'); })
@@ -121,26 +121,26 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   root.addEventListener('click', (event) => {
-    const layoutButton = event.target.closest?.('[data-pluginname-layout-tab]');
+    const layoutButton = event.target.closest?.('[data-projectpress-layout-tab]');
     if (layoutButton) {
       event.preventDefault();
       activateLayoutTab(layoutButton);
-      window.history.pushState({}, '', `${window.location.pathname}${window.location.search}#layout-${layoutButton.dataset.pluginnameLayoutTab}`);
+      window.history.pushState({}, '', `${window.location.pathname}${window.location.search}#layout-${layoutButton.dataset.projectpressLayoutTab}`);
       panel.dataset.currentTab = 'layout';
-      panel.dataset.currentSection = layoutButton.dataset.pluginnameLayoutTab;
+      panel.dataset.currentSection = layoutButton.dataset.projectpressLayoutTab;
       return;
     }
 
-    const link = event.target.closest?.('#pluginname-settings-panel [data-pluginname-settings-tab]');
+    const link = event.target.closest?.('#projectpress-settings-panel [data-projectpress-settings-tab]');
     if (!link) return;
     event.preventDefault();
     event.stopPropagation();
-    loadTab(link.dataset.pluginnameSettingsTab, link.dataset.pluginnameSettingsSection || 'general');
+    loadTab(link.dataset.projectpressSettingsTab, link.dataset.projectpressSettingsSection || 'general');
   }, true);
   const navigateFromHash = () => {
     const state = stateFromHash();
     if ('layout' === state.tab) {
-      const button = root.querySelector(`[data-pluginname-layout-tab="${state.section}"]`);
+      const button = root.querySelector(`[data-projectpress-layout-tab="${state.section}"]`);
       if (button) {
         activateLayoutTab(button);
         panel.dataset.currentTab = 'layout';
@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const initial = stateFromHash();
   setActive(initial.tab, initial.section);
   if ('layout' === initial.tab) {
-    const button = root.querySelector(`[data-pluginname-layout-tab="${initial.section}"]`);
+    const button = root.querySelector(`[data-projectpress-layout-tab="${initial.section}"]`);
     if (button) activateLayoutTab(button);
   }
   if (window.location.hash && 'layout' !== initial.tab && (initial.tab !== panel.dataset.currentTab || initial.section !== panel.dataset.currentSection)) loadTab(initial.tab, initial.section, false);

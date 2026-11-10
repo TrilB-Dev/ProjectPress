@@ -1,6 +1,6 @@
 {
-    "name": "author/pluginname",
-    "description": "A WordPress plugin that provides",
+    "name": "mrtrilb/projectpress",
+    "description": "Project Management Plugin",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",
     "autoload": {
@@ -8,10 +8,10 @@
             "src/Includes/Plugins/PluginsInterface.php"
         ],
         "psr-4": {
-            "PluginName\\": "src/"
+            "ProjectPress\\": "src/"
         },
         "classmap": [
-            "src/PluginName.php"
+            "src/ProjectPress.php"
         ],
         "exclude-from-classmap": [
             "src/Includes/Plugins/"
@@ -19,14 +19,12 @@
     },
     "authors": [
         {
-            "name": "Author Name",
-            "email": "author@trilb.dev",
-            "homepage": "https://author.com"
+            "name": "Anthony Bluthner",
+            "email": "mrtrilb@trilb.dev",
+            "homepage": "https://trilb.dev"
         }
     ],
-    "require": {
-        
-    },
+    "require": {},
     "require-dev": {
         "php-stubs/wordpress-stubs": "^6.9",
         "arts/elementor-stubs": "^4.2",
@@ -38,17 +36,17 @@
         "yoast/wp-test-utils": "^1.2",
         "phpcompatibility/php-compatibility": "^9.3",
         "phpcompatibility/phpcompatibility-wp": "^2.1"
-	},
-	"scripts": {
-		"test": "php ./vendor/bin/phpunit --configuration phpunit.xml.dist",
-		"test:unit": "php ./vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit",
-		"lint": "php ./vendor/bin/phpcs --standard=phpcs.xml.dist",
+    },
+    "scripts": {
+        "test": "php ./vendor/bin/phpunit --configuration phpunit.xml.dist",
+        "test:unit": "php ./vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit",
+        "lint": "php ./vendor/bin/phpcs --standard=phpcs.xml.dist",
         "lint:docs": "php ./vendor/bin/phpcs --standard=WordPress-Docs --extensions=php src Test",
-		"check": [
-			"@test",
-			"@lint",
-			"@lint:docs"
-		]
+        "check": [
+            "@test",
+            "@lint",
+            "@lint:docs"
+        ]
     },
     "config": {
         "allow-plugins": {
@@ -56,7 +54,3 @@
         }
     }
 }
-
-
-
-

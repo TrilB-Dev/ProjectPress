@@ -2,14 +2,14 @@
 /**
  * Defaults class for defining plugin default values.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Core
  * @since 1.0.0
  */
-namespace PluginName\Includes\Core;
+namespace ProjectPress\Includes\Core;
 
-use PluginName\Includes\Functions\Helpers\DBHelper;
-use PluginName\Includes\Functions\Helpers\LoggerHelper;
+use ProjectPress\Includes\Functions\Helpers\DBHelper;
+use ProjectPress\Includes\Functions\Helpers\LoggerHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -76,22 +76,22 @@ final class Defaults {
 		$taxonomies = array_unique( array_merge(
 			get_taxonomies( array(), 'names' ),
 			array(
-				'pluginname_software',
-				'pluginname_platforms',
-				'pluginname_assets',
-				'pluginname_web',
-				'pluginname_games',
-				'pluginname_type',
-				'pluginname_language',
-				'pluginname_tags',
-				'pluginname_mod_status',
-				'pluginname_file_type',
-				'pluginname_changelog_category',
-				'pluginname_licences',
+				'projectpress_software',
+				'projectpress_platforms',
+				'projectpress_assets',
+				'projectpress_web',
+				'projectpress_games',
+				'projectpress_type',
+				'projectpress_language',
+				'projectpress_tags',
+				'projectpress_mod_status',
+				'projectpress_file_type',
+				'projectpress_changelog_category',
+				'projectpress_licences',
 			)
 		) );
 		foreach ( $taxonomies as $taxonomy ) {
-			if ( 0 !== strpos( (string) $taxonomy, 'pluginname_' ) ) {
+			if ( 0 !== strpos( (string) $taxonomy, 'projectpress_' ) ) {
 				continue;
 			}
 
@@ -167,15 +167,15 @@ final class Defaults {
 			return;
 		}
 
-		$type_term_map = self::get_term_id_map( 'pluginname_type' );
-		$asset_term_map = self::get_term_id_map( 'pluginname_assets' );
+		$type_term_map = self::get_term_id_map( 'projectpress_type' );
+		$asset_term_map = self::get_term_id_map( 'projectpress_assets' );
 		$mod_type_group_id = 1;
 
 		DBHelper::insert(
 			'groups',
 			array(
 				'id'                  => $mod_type_group_id,
-				'group_key'           => 'pluginname_type',
+				'group_key'           => 'projectpress_type',
 				'group_name'          => 'Mod Type',
 				'group_slug'          => 'type',
 				'group_singular_name' => 'Mod Type',
@@ -192,7 +192,7 @@ final class Defaults {
 		);
 
 		$group_rows = array(
-			'pluginname_assets' => array(
+			'projectpress_assets' => array(
 				'id'                 => 2,
 				'group_name'         => 'Asset Types',
 				'group_slug'         => 'assets',
@@ -202,7 +202,7 @@ final class Defaults {
 				'group_parent_entry' => array( $type_term_map['assets'] ?? 0 ),
                 'group_multiselect'  => false,
 			),
-			'pluginname_games' => array(
+			'projectpress_games' => array(
 				'id'                 => 3,
 				'group_name'         => 'Games',
 				'group_slug'         => 'games',
@@ -213,7 +213,7 @@ final class Defaults {
 				'group_parent_entry' => array( $type_term_map['games'] ?? 0 ),
                 'group_multiselect'  => false,
 			),
-			'pluginname_software' => array(
+			'projectpress_software' => array(
 				'id'                 => 4,
 				'group_name'         => 'Software',
 				'group_slug'         => 'software',
@@ -223,7 +223,7 @@ final class Defaults {
 				'group_parent_entry' => array( $type_term_map['software'] ?? 0 ),
                 'group_multiselect'  => false,
 			),
-			'pluginname_web' => array(
+			'projectpress_web' => array(
 				'id'                 => 5,
 				'group_name'         => 'Web Extensions',
 				'group_slug'         => 'web',
@@ -233,7 +233,7 @@ final class Defaults {
 				'group_parent_entry' => array( $type_term_map['web'] ?? 0 ),
                 'group_multiselect'  => false,
 			),
-			'pluginname_platforms' => array(
+			'projectpress_platforms' => array(
 				'id'                 => 6,
 				'group_name'         => 'Platforms',
 				'group_slug'         => 'platforms',
@@ -243,7 +243,7 @@ final class Defaults {
 				'group_parent_entry' => array_filter( array( $type_term_map['games'] ?? 0, $type_term_map['software'] ?? 0 ) ),
                 'group_multiselect'  => true,
 			),
-			'pluginname_language' => array(
+			'projectpress_language' => array(
 				'id'                 => 7,
 				'group_name'         => 'Languages',
 				'group_slug'         => 'language',
@@ -320,10 +320,10 @@ final class Defaults {
         );
 
         foreach ( $types as $type => $data ) {
-            if ( ! term_exists( $type, 'pluginname_type' ) ) {
-                $result = wp_insert_term( $type, 'pluginname_type', $data );
+            if ( ! term_exists( $type, 'projectpress_type' ) ) {
+                $result = wp_insert_term( $type, 'projectpress_type', $data );
                 if ( is_wp_error( $result ) ) {
-                    LoggerHelper::write_log( 'PluginName: Failed to create type term ' . $type . ': ' . $result->get_error_message() );
+                    LoggerHelper::write_log( 'ProjectPress: Failed to create type term ' . $type . ': ' . $result->get_error_message() );
                 }
             }
         }
@@ -371,12 +371,12 @@ final class Defaults {
             ]
         ];
         foreach ( $statuses as $status => $data ) {
-            if ( ! term_exists( $status, 'pluginname_mod_status' ) ) {
-                $result = wp_insert_term( $status, 'pluginname_mod_status' );
+            if ( ! term_exists( $status, 'projectpress_mod_status' ) ) {
+                $result = wp_insert_term( $status, 'projectpress_mod_status' );
                 if ( ! is_wp_error( $result ) ) {
                     update_term_meta( $result['term_id'], 'status_color', $data['status_color'] );
                 } else {
-                    LoggerHelper::write_log( 'PluginName: Failed to create mod status term ' . $status . ': ' . $result->get_error_message() );
+                    LoggerHelper::write_log( 'ProjectPress: Failed to create mod status term ' . $status . ': ' . $result->get_error_message() );
                 }
             }
         }
@@ -443,13 +443,13 @@ final class Defaults {
             ]
         ];
         foreach ( $ChangeLogCategories as $category => $data ) {
-            if ( ! term_exists( $category, 'pluginname_changelog_category' ) ) {
-                $result = wp_insert_term( $category, 'pluginname_changelog_category' );
+            if ( ! term_exists( $category, 'projectpress_changelog_category' ) ) {
+                $result = wp_insert_term( $category, 'projectpress_changelog_category' );
                 if ( ! is_wp_error( $result ) ) {
                     // Set the color for the category
                     update_term_meta( $result['term_id'], 'category_color', $data['category_color'] );
                 } else {
-                    LoggerHelper::write_log( 'PluginName: Failed to create category term ' . $category . ': ' . $result->get_error_message() );
+                    LoggerHelper::write_log( 'ProjectPress: Failed to create category term ' . $category . ': ' . $result->get_error_message() );
                 }
             }
         }
@@ -1135,8 +1135,8 @@ final class Defaults {
             ]
         ];
         foreach ( $FileTypes as $type => $data ) {
-            if ( ! term_exists( $type, 'pluginname_file_type' ) ) {
-                $result = wp_insert_term( $type, 'pluginname_file_type' );
+            if ( ! term_exists( $type, 'projectpress_file_type' ) ) {
+                $result = wp_insert_term( $type, 'projectpress_file_type' );
             }
         }
     }
@@ -1204,13 +1204,13 @@ final class Defaults {
             ]
         ];
         foreach ( $software as $name => $data ) {
-            if ( ! term_exists( $name, 'pluginname_software' ) ) {
-                $result = wp_insert_term( $name, 'pluginname_software', array(
+            if ( ! term_exists( $name, 'projectpress_software' ) ) {
+                $result = wp_insert_term( $name, 'projectpress_software', array(
                     'slug'        => $data['slug'],
                     'description' => $data['description'],
                 ) );
                 if ( is_wp_error( $result ) ) {
-                    LoggerHelper::write_log( 'PluginName: Failed to create software term ' . $name . ': ' . $result->get_error_message() );
+                    LoggerHelper::write_log( 'ProjectPress: Failed to create software term ' . $name . ': ' . $result->get_error_message() );
                 }
             }
         }
@@ -1252,13 +1252,13 @@ final class Defaults {
             ]
         ];
         foreach ( $Web as $name => $data ) {
-            if ( ! term_exists( $name, 'pluginname_web' ) ) {
-                $result = wp_insert_term( $name, 'pluginname_web', array(
+            if ( ! term_exists( $name, 'projectpress_web' ) ) {
+                $result = wp_insert_term( $name, 'projectpress_web', array(
                     'slug'        => $data['slug'],
                     'description' => $data['description'],
                 ) );
                 if ( is_wp_error( $result ) ) {
-                    LoggerHelper::write_log( 'PluginName: Failed to create web platform term ' . $name . ': ' . $result->get_error_message() );
+                    LoggerHelper::write_log( 'ProjectPress: Failed to create web platform term ' . $name . ': ' . $result->get_error_message() );
                 }
             }
         }
@@ -1386,13 +1386,13 @@ final class Defaults {
             ]
         ];
         foreach ( $games as $name => $data ) {
-            if ( ! term_exists( $name, 'pluginname_games' ) ) {
-                $result = wp_insert_term( $name, 'pluginname_games', array(
+            if ( ! term_exists( $name, 'projectpress_games' ) ) {
+                $result = wp_insert_term( $name, 'projectpress_games', array(
                     'slug'        => $data['slug'],
                     'description' => $data['description'],
                 ) );
                 if ( is_wp_error( $result ) ) {
-                    LoggerHelper::write_log( 'PluginName: Failed to create game term ' . $name . ': ' . $result->get_error_message() );
+                    LoggerHelper::write_log( 'ProjectPress: Failed to create game term ' . $name . ': ' . $result->get_error_message() );
                 }
             }
         }
@@ -1469,13 +1469,13 @@ final class Defaults {
             ]
         ];
         foreach ( $platforms as $name => $data ) {
-            if ( ! term_exists( $name, 'pluginname_platforms' ) ) {
-                $result = wp_insert_term( $name, 'pluginname_platforms', array(
+            if ( ! term_exists( $name, 'projectpress_platforms' ) ) {
+                $result = wp_insert_term( $name, 'projectpress_platforms', array(
                     'slug'        => $data['slug'],
                     'description' => $data['description'],
                 ) );
                 if ( is_wp_error( $result ) ) {
-                    LoggerHelper::write_log( 'PluginName: Failed to create platform term ' . $name . ': ' . $result->get_error_message() );
+                    LoggerHelper::write_log( 'ProjectPress: Failed to create platform term ' . $name . ': ' . $result->get_error_message() );
                 }
             }
         }
@@ -1564,13 +1564,13 @@ final class Defaults {
             ]
         ];
         foreach ( $asset_types as $name => $data ) {
-            if ( ! term_exists( $name, 'pluginname_assets' ) ) {
-                $result = wp_insert_term( $name, 'pluginname_assets', array(
+            if ( ! term_exists( $name, 'projectpress_assets' ) ) {
+                $result = wp_insert_term( $name, 'projectpress_assets', array(
                     'slug'        => $data['slug'],
                     'description' => $data['description'],
                 ) );
                 if ( is_wp_error( $result ) ) {
-                    LoggerHelper::write_log( 'PluginName: Failed to create asset type term ' . $name . ': ' . $result->get_error_message() );
+                    LoggerHelper::write_log( 'ProjectPress: Failed to create asset type term ' . $name . ': ' . $result->get_error_message() );
                 }
             }
         }
@@ -1655,13 +1655,13 @@ final class Defaults {
                 'description' => 'Lua language'
             ] ];
         foreach ( $languages as $name => $data ) {
-            if ( ! term_exists( $name, 'pluginname_language' ) ) {
-                $result = wp_insert_term( $name, 'pluginname_language', array(
+            if ( ! term_exists( $name, 'projectpress_language' ) ) {
+                $result = wp_insert_term( $name, 'projectpress_language', array(
                     'slug'        => $data['slug'],
                     'description' => $data['description'],
                 ) );
                 if ( is_wp_error( $result ) ) {
-                    LoggerHelper::write_log( 'PluginName: Failed to create language term ' . $name . ': ' . $result->get_error_message() );
+                    LoggerHelper::write_log( 'ProjectPress: Failed to create language term ' . $name . ': ' . $result->get_error_message() );
                 }
             }
         }
@@ -1738,10 +1738,10 @@ final class Defaults {
             ]
         ];
         foreach ( $tags as $tag => $tag_data ) {
-            if ( ! term_exists( $tag, 'pluginname_tags' ) ) {
-                $result = wp_insert_term( $tag, 'pluginname_tags', [ 'slug' => $tags[$tag]['slug'] ] );
+            if ( ! term_exists( $tag, 'projectpress_tags' ) ) {
+                $result = wp_insert_term( $tag, 'projectpress_tags', [ 'slug' => $tags[$tag]['slug'] ] );
                 if ( is_wp_error( $result ) ) {
-                    LoggerHelper::write_log( 'PluginName: Failed to create tag term ' . $tag . ': ' . $result->get_error_message() );
+                    LoggerHelper::write_log( 'ProjectPress: Failed to create tag term ' . $tag . ': ' . $result->get_error_message() );
                 }
             }
         }
@@ -1782,10 +1782,10 @@ final class Defaults {
             ]
         ];
         foreach ( $licences as $licence => $licence_data ) {
-            if ( ! term_exists( $licence, 'pluginname_licences' ) ) {
-                $result = wp_insert_term( $licence, 'pluginname_licences', [ 'slug' => $licences[$licence]['slug'] ] );
+            if ( ! term_exists( $licence, 'projectpress_licences' ) ) {
+                $result = wp_insert_term( $licence, 'projectpress_licences', [ 'slug' => $licences[$licence]['slug'] ] );
                 if ( is_wp_error( $result ) ) {
-                    LoggerHelper::write_log( 'PluginName: Failed to create licence term ' . $licence . ': ' . $result->get_error_message() );
+                    LoggerHelper::write_log( 'ProjectPress: Failed to create licence term ' . $licence . ': ' . $result->get_error_message() );
                 }
             }
         }

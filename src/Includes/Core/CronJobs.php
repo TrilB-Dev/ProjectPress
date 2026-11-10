@@ -2,11 +2,11 @@
 /**
  * CronJobs class.
  *
- * Handles the scheduling and execution of PluginName cron jobs.
+ * Handles the scheduling and execution of ProjectPress cron jobs.
  *
- * @package PluginName\Includes\Core
+ * @package ProjectPress\Includes\Core
  */
-namespace PluginName\Includes\Core;
+namespace ProjectPress\Includes\Core;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -172,7 +172,7 @@ final class CronJobs {
 	 * @return array<string, array<string, mixed>>
 	 */
 	public static function definitions(): array {
-		return apply_filters( 'pluginname_cronjob_definitions', self::$registered );
+		return apply_filters( 'projectpress_cronjob_definitions', self::$registered );
 	}
 
 	/**
@@ -358,7 +358,7 @@ final class CronJobs {
 			return '';
 		}
 
-		return 'pluginname_' . $scope . '_' . $hook;
+		return 'projectpress_' . $scope . '_' . $hook;
 	}
 
 	/**
@@ -381,7 +381,7 @@ final class CronJobs {
 	private static function normalize_definition( array $definition ): array {
 		$scope    = self::normalize_scope( $definition['scope'] ?? 'core' );
 		$hook     = (string) ( $definition['hook'] ?? '' );
-		if ( '' !== $hook && 0 !== strpos( $hook, 'pluginname_' . $scope . '_' ) ) {
+		if ( '' !== $hook && 0 !== strpos( $hook, 'projectpress_' . $scope . '_' ) ) {
 			$hook = self::normalize_hook( $scope, $hook );
 		} elseif ( '' === $hook ) {
 			$hook = self::normalize_hook( $scope, '' );

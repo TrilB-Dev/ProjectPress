@@ -1,17 +1,17 @@
 <?php
 /**
- * Sidebar UI component for PluginName admin pages.
+ * Sidebar UI component for ProjectPress admin pages.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Admin\Manager\UI
  * @since 1.0.0
  */
-namespace PluginName\Admin\Manager\UI;
+namespace ProjectPress\Admin\Manager\UI;
 
-use PluginName\Includes\Functions\Admin\FunctionsSidebar;
-use PluginName\Includes\Functions\Helpers\FormFieldHelper;
-use PluginName\Includes\Functions\Helpers\RequestHelper;
-use PluginName\Includes\Functions\Helpers\SanitizationHelper;
+use ProjectPress\Includes\Functions\Admin\FunctionsSidebar;
+use ProjectPress\Includes\Functions\Helpers\FormFieldHelper;
+use ProjectPress\Includes\Functions\Helpers\RequestHelper;
+use ProjectPress\Includes\Functions\Helpers\SanitizationHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -24,41 +24,41 @@ final class Sidebar {
 	 * @return void
 	 */
 	public static function render(): void {
-		$current = RequestHelper::get_key( 'page', 'pluginname' );
+		$current = RequestHelper::get_key( 'page', 'projectpress' );
 		$groups  = FunctionsSidebar::get_sidebar_groups();
 		?>
-		<aside class="col-12 col-lg-auto pluginname-sidebar-column">
-			<div class="pluginname-sidebar position-sticky" style="top: 32px;">
+		<aside class="col-12 col-lg-auto projectpress-sidebar-column">
+			<div class="projectpress-sidebar position-sticky" style="top: 32px;">
 				<div class="d-flex align-items-center justify-content-between mb-3 px-2">
 					<span class="small text-uppercase fw-semibold text-secondary">
-						<?php esc_html_e( 'Navigate', 'pluginname' ); ?>
+						<?php esc_html_e( 'Navigate', 'projectpress' ); ?>
 					</span>
 					<span class="badge rounded-pill text-bg-light">WP</span>
 				</div>
-				<nav aria-label="<?php esc_attr_e( 'PluginName admin navigation', 'pluginname' ); ?>">
-					<a class="pluginname-sidebar-link <?php echo 'pluginname' === $current ? 'active' : ''; ?>" href="<?php echo esc_url( admin_url( 'admin.php?page=pluginname' ) ); ?>">
-						<?php echo self::render_icon_markup( 'fa-solid fa-house' ); ?><?php esc_html_e( 'Dashboard', 'pluginname' ); ?>
+				<nav aria-label="<?php esc_attr_e( 'ProjectPress admin navigation', 'projectpress' ); ?>">
+					<a class="projectpress-sidebar-link <?php echo 'projectpress' === $current ? 'active' : ''; ?>" href="<?php echo esc_url( admin_url( 'admin.php?page=projectpress' ) ); ?>">
+						<?php echo self::render_icon_markup( 'fa-solid fa-house' ); ?><?php esc_html_e( 'Dashboard', 'projectpress' ); ?>
 					</a>
-					<div id="pluginname-sidebar-groups">
+					<div id="projectpress-sidebar-groups">
 						<?php foreach ( $groups as $key => $group ) : ?>
 							<?php $expanded = self::group_is_expanded( $key, $group, $current ); ?>
-							<div class="pluginname-sidebar-group">
-								<h3 class="pluginname-sidebar-group-heading">
+							<div class="projectpress-sidebar-group">
+								<h3 class="projectpress-sidebar-group-heading">
 										<?php echo FormFieldHelper::button(
 											self::render_icon_markup( (string) ( $group['icon'] ?? '' ) ) . esc_html( $group['label'] ) . '<span class="ms-auto text-secondary">' . count( $group['items'] ) . '</span>',
 											array(
-												'class'          => 'pluginname-sidebar-link pluginname-sidebar-group-link border-0 bg-transparent w-100 text-start ' . ( $expanded ? '' : 'collapsed' ),
+												'class'          => 'projectpress-sidebar-link projectpress-sidebar-group-link border-0 bg-transparent w-100 text-start ' . ( $expanded ? '' : 'collapsed' ),
 												'type'           => 'button',
 												'data-bs-toggle' => 'collapse',
-												'data-bs-target' => '#pluginname-group-' . esc_attr( $key ),
+												'data-bs-target' => '#projectpress-group-' . esc_attr( $key ),
 												'aria-expanded'  => $expanded ? 'true' : 'false',
-												'aria-controls'  => 'pluginname-group-' . esc_attr( $key ),
+												'aria-controls'  => 'projectpress-group-' . esc_attr( $key ),
 												'raw'            => true,
 											)
 										); ?>
 								</h3>
-								<div id="pluginname-group-<?php echo esc_attr( $key ); ?>" class="collapse <?php echo $expanded ? 'show' : ''; ?>">
-									<div class="nav flex-column pluginname-sidebar-group-items">
+								<div id="projectpress-group-<?php echo esc_attr( $key ); ?>" class="collapse <?php echo $expanded ? 'show' : ''; ?>">
+									<div class="nav flex-column projectpress-sidebar-group-items">
 										<?php foreach ( $group['items'] as $slug => $item ) : ?>
 											<?php
 										$link   = self::item_link( $slug, $item );
@@ -93,14 +93,14 @@ final class Sidebar {
 
 		if ( preg_match( '/^(https?:)?\/\//i', $icon ) || preg_match( '/\.(svg|png|jpg|jpeg|webp)(\?.*)?$/i', $icon ) ) {
 			return sprintf(
-				'<span class="pluginname-sidebar-icon pluginname-sidebar-icon-image" aria-hidden="true"><img src="%1$s" alt="" loading="lazy"%2$s /></span>',
+				'<span class="projectpress-sidebar-icon projectpress-sidebar-icon-image" aria-hidden="true"><img src="%1$s" alt="" loading="lazy"%2$s /></span>',
 				esc_url( $icon ),
 				$with_spacing ? ' class="me-2"' : ''
 			);
 		}
 
 		return sprintf(
-			'<span class="pluginname-sidebar-icon" aria-hidden="true"><i class="%1$s%2$s"></i></span>',
+			'<span class="projectpress-sidebar-icon" aria-hidden="true"><i class="%1$s%2$s"></i></span>',
 			esc_attr( $icon ),
 			$with_spacing ? ' me-2' : ''
 		);
@@ -141,7 +141,7 @@ final class Sidebar {
 	private static function item_page( string $slug ): string {
 		$page = trim( (string) strtok( $slug, '&' ) );
 		if ( '' === $page || preg_match( '/^\d+$/', $page ) ) {
-			return 'pluginname';
+			return 'projectpress';
 		}
 
 		return $page;
@@ -185,7 +185,7 @@ final class Sidebar {
 	private static function item_url( string $page, array $query ): string {
 		$page = trim( $page );
 		if ( '' === $page || preg_match( '/^\d+$/', $page ) ) {
-			$page = 'pluginname';
+			$page = 'projectpress';
 		}
 		$query_string = empty( $query ) ? '' : '?' . http_build_query( $query, '', '&', PHP_QUERY_RFC3986 );
 		if ( in_array( $page, array( 'edit.php', 'post-new.php' ), true ) ) {

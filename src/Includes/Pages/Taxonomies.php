@@ -2,13 +2,13 @@
 /**
  * Taxonomies class for registering plugin taxonomies.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Pages
  * @since 1.0.0
  */
-namespace PluginName\Includes\Pages;
+namespace ProjectPress\Includes\Pages;
 
-use PluginName\Includes\Core\Taxonomy;
+use ProjectPress\Includes\Core\Taxonomy;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -33,16 +33,16 @@ final class Taxonomies {
 	 * @since 1.0.0
 	 */
 	public static function category_taxonomy(): bool {
-		if ( taxonomy_exists( 'pluginname_category' ) ) {
+		if ( taxonomy_exists( 'projectpress_category' ) ) {
 			return false;
 		}
 
 		return Taxonomy::create(
-			'pluginname_category',
+			'projectpress_category',
 			array(
-				'label'             => __( 'Categories', 'pluginname' ),
-				'description'       => __( 'Categories used to organize mods.', 'pluginname' ),
-				'post_type'       	=> array( 'pluginname_posttype' ),
+				'label'             => __( 'Categories', 'projectpress' ),
+				'description'       => __( 'Categories used to organize mods.', 'projectpress' ),
+				'post_type'       	=> array( 'projectpress_posttype' ),
 				'hierarchical'      => true,
 				'public'            => true,
 				'show_ui'           => true,
@@ -61,16 +61,16 @@ final class Taxonomies {
 	 * @since 1.0.0
 	 */
 	public static function tag_taxonomy(): bool {
-		if ( taxonomy_exists( 'pluginname_tag' ) ) {
+		if ( taxonomy_exists( 'projectpress_tag' ) ) {
 			return false;
 		}
 
 		return Taxonomy::create(
-			'pluginname_tag',
+			'projectpress_tag',
 			array(
-				'label'             => __( 'Tags', 'pluginname' ),
-				'description'       => __( 'Tags used to describe mods.', 'pluginname' ),
-				'post_type'       => array( 'pluginname_posttype' ),
+				'label'             => __( 'Tags', 'projectpress' ),
+				'description'       => __( 'Tags used to describe mods.', 'projectpress' ),
+				'post_type'       => array( 'projectpress_posttype' ),
 				'hierarchical'      => false,
 				'public'            => true,
 				'show_ui'           => true,

@@ -1,12 +1,12 @@
 <?php
 /**
- * Helper for querying and modifying PluginName custom database tables.
+ * Helper for querying and modifying ProjectPress custom database tables.
  *
- * @package PluginName\Includes\Functions\Helpers
+ * @package ProjectPress\Includes\Functions\Helpers
  * @since 1.0.0
  */
-namespace PluginName\Includes\Functions\Helpers;
-use PluginName\Includes\Core\WP\Database;
+namespace ProjectPress\Includes\Functions\Helpers;
+use ProjectPress\Includes\Core\WP\Database;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -14,14 +14,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class DBHelper {
 	/**
-	 * Static table prefix used for all PluginName custom tables.
+	 * Static table prefix used for all ProjectPress custom tables.
 	 *
 	 * @var string
 	 */
-	private static string $table_prefix = 'pluginname_';
+	private static string $table_prefix = 'projectpress_';
 
 	/**
-	 * Set the PluginName table prefix.
+	 * Set the ProjectPress table prefix.
 	 *
 	 * @param string $prefix Prefix to use for custom tables.
 	 * @return void
@@ -31,7 +31,7 @@ final class DBHelper {
 		$prefix = preg_replace( '/[^A-Za-z0-9_]/', '', $prefix );
 
 		if ( '' === $prefix ) {
-			self::$table_prefix = 'pluginname_';
+			self::$table_prefix = 'projectpress_';
 			return;
 		}
 
@@ -50,7 +50,7 @@ final class DBHelper {
 	/**
 	 * Register a core table schema for the next installation/update.
 	 *
-	 * @param string   $table  Unprefixed PluginName table suffix.
+	 * @param string   $table  Unprefixed ProjectPress table suffix.
 	 * @param callable $schema Schema callback.
 	 * @return bool
 	 */
@@ -61,7 +61,7 @@ final class DBHelper {
 	/**
 	 * Register a plugin table schema for the next installation/update.
 	 *
-	 * @param string   $table  Unprefixed PluginName table suffix.
+	 * @param string   $table  Unprefixed ProjectPress table suffix.
 	 * @param callable $schema Schema callback.
 	 * @return bool
 	 */
@@ -70,7 +70,7 @@ final class DBHelper {
 	}
 
 	/**
-	 * Get the registered core PluginName tables.
+	 * Get the registered core ProjectPress tables.
 	 *
 	 * @return array<string, callable>
 	 */
@@ -79,7 +79,7 @@ final class DBHelper {
 	}
 
 	/**
-	 * Get the registered plugin PluginName tables.
+	 * Get the registered plugin ProjectPress tables.
 	 *
 	 * @return array<string, callable>
 	 */
@@ -90,7 +90,7 @@ final class DBHelper {
 	/**
 	 * Build a fully qualified table name from a table suffix.
 	 *
-	 * Example: DBHelper::table_name( 'settings' ) => wp_pluginname_settings
+	 * Example: DBHelper::table_name( 'settings' ) => wp_projectpress_settings
 	 *
 	 * @param string $table Table suffix only, not a full table name.
 	 * @return string
@@ -120,7 +120,7 @@ final class DBHelper {
 	}
 
 	/**
-	 * Create or update a single custom PluginName table from the registered schema.
+	 * Create or update a single custom ProjectPress table from the registered schema.
 	 *
 	 * @param string $table Unprefixed table suffix.
 	 * @return bool
@@ -130,7 +130,7 @@ final class DBHelper {
 	}
 
 	/**
-	 * Empty all rows from a custom PluginName table.
+	 * Empty all rows from a custom ProjectPress table.
 	 *
 	 * @param string $table Unprefixed table suffix.
 	 * @return bool
@@ -150,7 +150,7 @@ final class DBHelper {
 	}
 
 	/**
-	 * Delete a PluginName custom table.
+	 * Delete a ProjectPress custom table.
 	 *
 	 * @param string $table Unprefixed table suffix.
 	 * @return bool
@@ -170,7 +170,7 @@ final class DBHelper {
 	}
 
 	/**
-	 * Install or update all registered PluginName tables.
+	 * Install or update all registered ProjectPress tables.
 	 *
 	 * @return void
 	 */
@@ -179,7 +179,7 @@ final class DBHelper {
 	}
 
 	/**
-	 * Determine whether a custom PluginName table exists.
+	 * Determine whether a custom ProjectPress table exists.
 	 *
 	 * @param string $table Table suffix.
 	 * @return bool

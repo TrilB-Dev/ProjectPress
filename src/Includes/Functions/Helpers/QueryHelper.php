@@ -1,11 +1,11 @@
 <?php
 /**
- * WordPress query helpers for PluginName and extensions.
+ * WordPress query helpers for ProjectPress and extensions.
  *
- * @package PluginName\Includes\Functions\Helpers
+ * @package ProjectPress\Includes\Functions\Helpers
  * @since 1.0.0
  */
-namespace PluginName\Includes\Functions\Helpers;
+namespace ProjectPress\Includes\Functions\Helpers;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

@@ -1,5 +1,5 @@
 ---
-description: Change workflow and implementation boundaries for PluginName
+description: Change workflow and implementation boundaries for ProjectPress
 # applyTo: '**/*.{php,js,ts,scss,md}' # when provided, instructions are automatically added to matching files
 ---
 

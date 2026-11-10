@@ -1,9 +1,9 @@
 {
-  "name": "pluginname",
+  "name": "projectpress",
   "version": "1.0.0",
-  "description": "A WordPress plugin built for managing licences and documentation.",
+  "description": "Project Management Plugin",
   "license": "ISC",
-  "author": "Mr TrilB <mrtrilb@trilb.dev>",
+  "author": "Anthony Bluthner <mrtrilb@trilb.dev>",
   "type": "commonjs",
   "main": "index.js",
   "scripts": {

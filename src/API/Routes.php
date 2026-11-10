@@ -1,13 +1,13 @@
 <?php
 /**
- * REST API routes for PluginName.
+ * REST API routes for ProjectPress.
  *
- * @package PluginName
+ * @package ProjectPress
  */
 
-namespace PluginName\API;
+namespace ProjectPress\API;
 
-use PluginName\Includes\Licence\LicenceManager;
+use ProjectPress\Includes\Licence\LicenceManager;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -25,7 +25,7 @@ final class Routes {
 	 */
 	public static function register_routes(): void {
 		register_rest_route(
-			'pluginname/v1',
+			'projectpress/v1',
 			'/licence/validate',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,

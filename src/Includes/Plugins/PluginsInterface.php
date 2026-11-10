@@ -1,11 +1,11 @@
 <?php
 /**
- * PluginName Plugin interface for all plugins.
+ * ProjectPress Plugin interface for all plugins.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Plugins
  */
-namespace PluginName\Includes\Plugins;
+namespace ProjectPress\Includes\Plugins;
 
 /**
  * Plugin interface for all plugins.
@@ -86,7 +86,7 @@ interface SettingsProviderInterface {
 }
 
 /**
- * Provides an automatically generated settings tab for a PluginName plugin.
+ * Provides an automatically generated settings tab for a ProjectPress plugin.
  * @since 1.0.0
  */
 interface SettingsPageProviderInterface {
@@ -121,7 +121,7 @@ interface DatabaseProviderInterface {
     public function register_tables(): void;
 }
 /**
- * Provides shortcode definitions for a PluginName extension.
+ * Provides shortcode definitions for a ProjectPress extension.
  * @since 1.0.0
  */
 interface ShortcodeProviderInterface {
@@ -157,10 +157,10 @@ interface AdminPageProviderInterface {
     public function register_admin_pages(): void;
 }
 /**
- * Provides PluginName admin menu definitions for a plugin.
+ * Provides ProjectPress admin menu definitions for a plugin.
  *
  * Definitions may use `type => menu` for a new top-level menu or provide a
- * `parent` slug for a submenu under an existing PluginName menu.
+ * `parent` slug for a submenu under an existing ProjectPress menu.
  * @since 1.0.0
  */
 interface AdminMenuProviderInterface extends PluginInterface {
@@ -176,7 +176,7 @@ interface AdminMenuProviderInterface extends PluginInterface {
     public function get_admin_menu(): array;
 }
 /**
- * Provides entries for the PluginName in-page admin sidebar.
+ * Provides entries for the ProjectPress in-page admin sidebar.
  * @since 1.0.0
  */
 interface AdminSidebarProviderInterface extends PluginInterface {

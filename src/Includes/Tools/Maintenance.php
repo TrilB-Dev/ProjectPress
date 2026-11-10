@@ -1,15 +1,15 @@
 <?php
 /**
- * Safe maintenance operations for PluginName.
+ * Safe maintenance operations for ProjectPress.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Tools
  * @since 1.0.0
  */
 
-namespace PluginName\Includes\Tools;
+namespace ProjectPress\Includes\Tools;
 
-use PluginName\Includes\Functions\Helpers\SanitizationHelper;
+use ProjectPress\Includes\Functions\Helpers\SanitizationHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

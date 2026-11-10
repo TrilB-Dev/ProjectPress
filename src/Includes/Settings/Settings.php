@@ -1,8 +1,8 @@
 <?php
 
-namespace PluginName\Includes\Settings;
+namespace ProjectPress\Includes\Settings;
 
-use PluginName\Includes\Functions\Helpers\SanitizationHelper;
+use ProjectPress\Includes\Functions\Helpers\SanitizationHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;

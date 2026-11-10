@@ -2,14 +2,14 @@
 /**
  * Assets class for FontAwesome plugin.
  *
- * @package PluginName\Includes\Plugins\FontAwesome\Assets
+ * @package ProjectPress\Includes\Plugins\FontAwesome\Assets
  */
-namespace PluginName\Includes\Plugins\FontAwesome\Assets;
+namespace ProjectPress\Includes\Plugins\FontAwesome\Assets;
 
-use PluginName\Assets\Assets as RootAssets;
-use PluginName\Includes\Functions\Helpers\LoaderHelper;
-use PluginName\Includes\Plugins\FontAwesome\Includes\Settings\Settings as FontAwesomeSettings;
-use PluginName\Includes\Plugins\FontAwesome\Includes\IconPicker;
+use ProjectPress\Assets\Assets as RootAssets;
+use ProjectPress\Includes\Functions\Helpers\LoaderHelper;
+use ProjectPress\Includes\Plugins\FontAwesome\Includes\Settings\Settings as FontAwesomeSettings;
+use ProjectPress\Includes\Plugins\FontAwesome\Includes\IconPicker;
 
 final class Assets extends RootAssets {
     /**
@@ -23,13 +23,13 @@ final class Assets extends RootAssets {
             array(
                 array(
                     'type' => 'filter',
-                    'hook' => 'pluginname_admin_assets',
+                    'hook' => 'projectpress_admin_assets',
                     'callback' => 'register_admin_assets',
                     'accepted_args' => 2,
                 ),
                 array(
                     'type' => 'filter',
-                    'hook' => 'pluginname_frontend_assets',
+                    'hook' => 'projectpress_frontend_assets',
                     'callback' => 'register_frontend_assets',
                     'accepted_args' => 2,
                 ),
@@ -56,7 +56,7 @@ final class Assets extends RootAssets {
 
         if ( 'kit' === $type && '' !== $kit_id ) {
             $assets['scripts'][] = array(
-                'handle' => 'pluginname-fontawesome-kit',
+                'handle' => 'projectpress-fontawesome-kit',
                 'src' => 'https://kit.fontawesome.com/' . rawurlencode( $kit_id ) . '.js',
                 'deps' => array(),
                 'version' => null,
@@ -64,39 +64,39 @@ final class Assets extends RootAssets {
             );
         } elseif ( 'cdn' === $type && 'webfont' === $cdn_technology ) {
             /**$assets['styles'][] = array(
-                'handle' => 'pluginname-fontawesome-cdn-style',
+                'handle' => 'projectpress-fontawesome-cdn-style',
                 'src' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/fontawesome.min.css'
             );*/
             $assets['styles'][] = array(
-                'handle' => 'pluginname-fontawesome-cdn-style',
+                'handle' => 'projectpress-fontawesome-cdn-style',
                 'src' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/fontawesome.min.css',
             );
             $assets['styles'][] = array(
-                'handle' => 'pluginname-fontawesome-cdn-style-solid',
+                'handle' => 'projectpress-fontawesome-cdn-style-solid',
                 'src' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/solid.min.css',
-                'deps' => array( 'pluginname-fontawesome-cdn-style' ),
+                'deps' => array( 'projectpress-fontawesome-cdn-style' ),
             );
             $assets['styles'][] = array(
-                'handle' => 'pluginname-fontawesome-cdn-style-brands',
+                'handle' => 'projectpress-fontawesome-cdn-style-brands',
                 'src' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/brands.min.css',
-                'deps' => array( 'pluginname-fontawesome-cdn-style' ),
+                'deps' => array( 'projectpress-fontawesome-cdn-style' ),
             );
         } elseif ( 'cdn' === $type && 'svg' === $cdn_technology ) {
             $assets['scripts'][] = array(
-                'handle' => 'pluginname-fontawesome-cdn-svg',
+                'handle' => 'projectpress-fontawesome-cdn-svg',
                 'src' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/js/fontawesome.min.js',
                 'in_footer' => true
             );
             $assets['scripts'][] = array(
-                'handle' => 'pluginname-fontawesome-cdn-svg-inline',
+                'handle' => 'projectpress-fontawesome-cdn-svg-inline',
                 'src' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/js/solid.min.js',
-                'deps' => array( 'pluginname-fontawesome-cdn-svg' ),
+                'deps' => array( 'projectpress-fontawesome-cdn-svg' ),
                 'in_footer' => true
             );
             $assets['scripts'][] = array(
-                'handle' => 'pluginname-fontawesome-cdn-svg-brands',
+                'handle' => 'projectpress-fontawesome-cdn-svg-brands',
                 'src' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/js/brands.min.js',
-                'deps' => array( 'pluginname-fontawesome-cdn-svg' ),
+                'deps' => array( 'projectpress-fontawesome-cdn-svg' ),
                 'in_footer' => true
             );
         }
@@ -105,41 +105,41 @@ final class Assets extends RootAssets {
         $current_group = isset( $_GET['group'] ) ? sanitize_text_field( wp_unslash( $_GET['group'] ) ) : '';
         $current_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
 
-        if ( 'pluginname' === $current_page && 'settings' === $current_group && 'plugins' === $current_tab ) {
+        if ( 'projectpress' === $current_page && 'settings' === $current_group && 'plugins' === $current_tab ) {
             $assets['scripts'][] = array(
-                'handle' => 'pluginname-fontawesome-plugin-settings',
-                'src' => PLUGINNAME_PLUGINS_URL . '/FontAwesome/Assets/dist/js/admin.plugins.fontawesome.js',
-                'deps' => array( 'pluginname-bootstrap' ),
-                'version' => PLUGINNAME_VERSION,
+                'handle' => 'projectpress-fontawesome-plugin-settings',
+                'src' => PROJECTPRESS_PLUGINS_URL . '/FontAwesome/Assets/dist/js/admin.plugins.fontawesome.js',
+                'deps' => array( 'projectpress-bootstrap' ),
+                'version' => PROJECTPRESS_VERSION,
                 'in_footer' => true,
             );
         }
 
         if ( FontAwesomeSettings::enable_icon_picker() ) {
             $assets['styles'][] = array(
-                'handle' => 'pluginname-fontawesome-icon-picker',
-                'src' => PLUGINNAME_PLUGINS_URL . '/FontAwesome/Assets/dist/css/icon-picker.css',
-                'deps' => array( 'pluginname-bootstrap' ),
-                'version' => PLUGINNAME_VERSION,
+                'handle' => 'projectpress-fontawesome-icon-picker',
+                'src' => PROJECTPRESS_PLUGINS_URL . '/FontAwesome/Assets/dist/css/icon-picker.css',
+                'deps' => array( 'projectpress-bootstrap' ),
+                'version' => PROJECTPRESS_VERSION,
             );
             $assets['scripts'][] = array(
-                'handle' => 'pluginname-fontawesome-icon-picker',
-                'src' => PLUGINNAME_PLUGINS_URL . '/FontAwesome/Assets/dist/js/icon-picker.js',
+                'handle' => 'projectpress-fontawesome-icon-picker',
+                'src' => PROJECTPRESS_PLUGINS_URL . '/FontAwesome/Assets/dist/js/icon-picker.js',
                 'deps' => array( 'jquery' ),
-                'version' => PLUGINNAME_VERSION,
+                'version' => PROJECTPRESS_VERSION,
                 'in_footer' => true,
                 'localize' => array(
-                    'object_name' => 'pluginname_fa_picker',
+                    'object_name' => 'projectpress_fa_picker',
                     'data' => array(
                         'ajax_url' => admin_url( 'admin-ajax.php' ),
-                        'nonce' => wp_create_nonce( 'pluginname_fontawesome_picker' ),
+                        'nonce' => wp_create_nonce( 'projectpress_fontawesome_picker' ),
                         'icons' => IconPicker::get_default_icon_catalog(),
                         'strings' => array(
-                            'search_placeholder' => __( 'Search icons...', 'pluginname' ),
-                            'no_icons_found' => __( 'No icons found', 'pluginname' ),
-                            'loading' => __( 'Loading...', 'pluginname' ),
-                            'select_icon' => __( 'Select Icon', 'pluginname' ),
-                            'close' => __( 'Close', 'pluginname' ),
+                            'search_placeholder' => __( 'Search icons...', 'projectpress' ),
+                            'no_icons_found' => __( 'No icons found', 'projectpress' ),
+                            'loading' => __( 'Loading...', 'projectpress' ),
+                            'select_icon' => __( 'Select Icon', 'projectpress' ),
+                            'close' => __( 'Close', 'projectpress' ),
                         ),
                     ),
                 ),
@@ -166,7 +166,7 @@ final class Assets extends RootAssets {
 
         if ( 'kit' === $type && '' !== $kit_id ) {
             $assets['scripts'][] = array(
-                'handle' => 'pluginname-fontawesome-kit',
+                'handle' => 'projectpress-fontawesome-kit',
                 'src' => 'https://kit.fontawesome.com/' . rawurlencode( $kit_id ) . '.js',
                 'deps' => array(),
                 'in_footer' => true,
@@ -175,13 +175,13 @@ final class Assets extends RootAssets {
         }
 
         $assets['styles'][] = array(
-            'handle' => 'pluginname-fontawesome-cdn-style',
+            'handle' => 'projectpress-fontawesome-cdn-style',
             'src' => 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7/css/fontawesome.min.css',
             'deps' => array(),
             'version' => '7.0.0',
         );
         $assets['scripts'][] = array(
-            'handle' => 'pluginname-fontawesome-cdn-script',
+            'handle' => 'projectpress-fontawesome-cdn-script',
             'src' => 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7/js/fontawesome.min.js',
             'deps' => array(),
             'version' => '7.0.0',
@@ -195,7 +195,7 @@ final class Assets extends RootAssets {
      */
     public function add_crossorigin_attribute($tag, $handle, $src) {
 
-        if ('pluginname-fontawesome-kit' === $handle) {
+        if ('projectpress-fontawesome-kit' === $handle) {
             // Add crossorigin="anonymous" safely
             $tag = '<script src="' . esc_url($src) . '" crossorigin="anonymous"></script>' . "\n";
         }

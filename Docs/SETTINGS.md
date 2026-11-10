@@ -7,9 +7,9 @@ Plugin settings are stored through `SettingsManager`. Use logical, plugin-owned 
 Use the `Settings` facade rather than querying the database directly:
 
 ```php
-use PluginName\Includes\Settings\Settings;
+use ProjectPress\Includes\Settings\Settings;
 
-$name = Settings::get_string('name', 'PluginName');
+$name = Settings::get_string('name', 'ProjectPress');
 $mode = Settings::get_key('mode', 'default');
 $enabled = Settings::get_bool('enabled', true);
 

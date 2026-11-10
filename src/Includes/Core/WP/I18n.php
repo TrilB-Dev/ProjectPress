@@ -12,11 +12,11 @@
  * @package    Wikipress
  * @subpackage Wikipress/Includes
  */
-namespace PluginName\Includes\Core\WP;
+namespace ProjectPress\Includes\Core\WP;
 
 final class I18n {
 	/**
-	 * Default Local Translation of PluginName
+	 * Default Local Translation of ProjectPress
 	 * 
 	 * @since 1.0.0
 	 */
@@ -51,9 +51,9 @@ final class I18n {
 	 * @param string|null $plugin_file Plugin file used to derive the default path.
 	 * @param string      $default_locale Authoring and translation baseline locale.
 	 */
-	public function __construct( string $domain = 'pluginname', ?string $languages_path = null, ?string $plugin_file = null, string $default_locale = self::DEFAULT_LOCALE ) {
+	public function __construct( string $domain = 'projectpress', ?string $languages_path = null, ?string $plugin_file = null, string $default_locale = self::DEFAULT_LOCALE ) {
 		$this->domain         = sanitize_key( $domain );
-		$plugin_basename      = defined( 'PLUGINNAME_BASENAME' ) ? PLUGINNAME_BASENAME : ( $plugin_file && function_exists( 'plugin_basename' ) ? plugin_basename( $plugin_file ) : null );
+		$plugin_basename      = defined( 'PROJECTPRESS_BASENAME' ) ? PROJECTPRESS_BASENAME : ( $plugin_file && function_exists( 'plugin_basename' ) ? plugin_basename( $plugin_file ) : null );
 		$default_path         = $plugin_basename ? dirname( $plugin_basename ) . '/src/languages' : 'src/languages';
 		$this->languages_path = trim( $languages_path ?? $default_path, '/' );
 		$this->default_locale = str_replace( '-', '_', $default_locale );

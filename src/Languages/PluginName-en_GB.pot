@@ -1,12 +1,12 @@
-# Translation catalog for PluginName
-# Copyright (C) 2026 PluginName contributors
+# Translation catalog for ProjectPress
+# Copyright (C) 2026 ProjectPress contributors
 # This file is distributed under the same license as the plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: PluginName 1.0.0\n"
+"Project-Id-Version: ProjectPress 1.0.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Domain: pluginname\n"
+"X-Domain: projectpress\n"
 #: src/Public/Frontend.php:38
 msgid "%d min read"
 msgstr ""
@@ -20,7 +20,7 @@ msgid "A page entry was skipped because it was invalid."
 msgstr ""
 
 #: src/Includes/Settings/SettingsManager.php:93
-msgid "A searchable knowledge base powered by PluginName."
+msgid "A searchable knowledge base powered by ProjectPress."
 msgstr ""
 
 #: src/Includes/Tools/DataTransfer.php:74
@@ -40,11 +40,11 @@ msgid "Add New Wiki Page"
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:34
-msgid "Allows access to the PluginName Wiki Pages administration area."
+msgid "Allows access to the ProjectPress Wiki Pages administration area."
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:25
-msgid "Allows access to the PluginName Wikis administration area."
+msgid "Allows access to the ProjectPress Wikis administration area."
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:35
@@ -80,15 +80,15 @@ msgid "Allows deleting Wikis."
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:44
-msgid "Allows editing general PluginName settings."
+msgid "Allows editing general ProjectPress settings."
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:53
-msgid "Allows editing PluginName access settings."
+msgid "Allows editing ProjectPress access settings."
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:46
-msgid "Allows editing PluginName layout settings."
+msgid "Allows editing ProjectPress layout settings."
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:41
@@ -100,11 +100,11 @@ msgid "Allows editing published Wikis."
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:51
-msgid "Allows editing settings for external PluginName plugins."
+msgid "Allows editing settings for external ProjectPress plugins."
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:49
-msgid "Allows editing settings for internal PluginName plugins."
+msgid "Allows editing settings for internal ProjectPress plugins."
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:38
@@ -124,11 +124,11 @@ msgid "Allows editing Wikis."
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:55
-msgid "Allows exporting PluginName data."
+msgid "Allows exporting ProjectPress data."
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:54
-msgid "Allows importing PluginName data."
+msgid "Allows importing ProjectPress data."
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:40
@@ -140,35 +140,35 @@ msgid "Allows publishing Wikis."
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:56
-msgid "Allows using PluginName debug tools."
+msgid "Allows using ProjectPress debug tools."
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:43
-msgid "Allows viewing general PluginName settings."
+msgid "Allows viewing general ProjectPress settings."
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:52
-msgid "Allows viewing PluginName access settings."
+msgid "Allows viewing ProjectPress access settings."
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:57
-msgid "Allows viewing PluginName analytics."
+msgid "Allows viewing ProjectPress analytics."
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:45
-msgid "Allows viewing PluginName layout settings."
+msgid "Allows viewing ProjectPress layout settings."
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:47
-msgid "Allows viewing PluginName plugin settings."
+msgid "Allows viewing ProjectPress plugin settings."
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:50
-msgid "Allows viewing settings for external PluginName plugins."
+msgid "Allows viewing settings for external ProjectPress plugins."
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:48
-msgid "Allows viewing settings for internal PluginName plugins."
+msgid "Allows viewing settings for internal ProjectPress plugins."
 msgstr ""
 
 #: src/Includes/Functions/Admin/FunctionsSidebar.php:164
@@ -192,7 +192,7 @@ msgid "Breadcrumbs"
 msgstr ""
 
 #: src/Includes/Settings/SettingsManager.php:95
-msgid "Browse the PluginName knowledge base."
+msgid "Browse the ProjectPress knowledge base."
 msgstr ""
 
 #: src/Public/Frontend.php:90
@@ -213,7 +213,7 @@ msgid "Choose an Icon"
 msgstr ""
 
 #: src/Includes/Plugins/FontAwesome/Includes/Settings/Settings.php:45
-msgid "Choose how PluginName loads Font Awesome icons."
+msgid "Choose how ProjectPress loads Font Awesome icons."
 msgstr ""
 
 #: src/Includes/Plugins/FontAwesome/Includes/IconPicker.php:527
@@ -369,7 +369,7 @@ msgid "Export"
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:55
-msgid "Export PluginName Data"
+msgid "Export ProjectPress Data"
 msgstr ""
 
 #: src/Includes/Plugins/FontAwesome/Includes/Settings/Settings.php:38
@@ -397,7 +397,7 @@ msgid "Import"
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:54
-msgid "Import PluginName Data"
+msgid "Import ProjectPress Data"
 msgstr ""
 
 #: src/Includes/Plugins/TinyMCE/Assets/Assets.php:80
@@ -410,7 +410,7 @@ msgid "Insert media"
 msgstr ""
 
 #: src/Includes/Plugins/TinyMCE/TinyMCE.php:75
-msgid "Introduces a local TinyMCE 8.8 editor for PluginName."
+msgid "Introduces a local TinyMCE 8.8 editor for ProjectPress."
 msgstr ""
 
 #: src/Includes/Plugins/FontAwesome/Includes/Settings/Settings.php:55
@@ -423,11 +423,11 @@ msgstr ""
 
 #: src/Includes/Functions/Admin/FunctionsSidebar.php:94
 #: src/Public/Frontend.php:72
-msgid "PluginName"
+msgid "ProjectPress"
 msgstr ""
 
 #: src/Includes/Settings/SettingsManager.php:94
-msgid "PluginName Documentation"
+msgid "ProjectPress Documentation"
 msgstr ""
 
 #: src/Includes/Plugins/FontAwesome/Includes/IconPicker.php:567
@@ -473,7 +473,7 @@ msgid "Page Title"
 msgstr ""
 
 #: src/Includes/Functions/Admin/FunctionsImport.php:31
-msgid "Please upload a valid PluginName JSON export."
+msgid "Please upload a valid ProjectPress JSON export."
 msgstr ""
 
 #: src/Includes/Functions/Admin/FunctionsPlugins.php:75
@@ -486,7 +486,7 @@ msgid "Plugins"
 msgstr ""
 
 #: src/Includes/Plugins/FontAwesome/FontAwesome.php:96
-msgid "Provides Font Awesome enqueueing in Admin, Frontend, Login Page, icon picking, and styling APIs for PluginName."
+msgid "Provides Font Awesome enqueueing in Admin, Frontend, Login Page, icon picking, and styling APIs for ProjectPress."
 msgstr ""
 
 #: src/Includes/Core/Capabilities.php:40
@@ -520,7 +520,7 @@ msgid "Search icons..."
 msgstr ""
 
 #: src/Public/Frontend.php:63
-msgid "Search PluginName"
+msgid "Search ProjectPress"
 msgstr ""
 
 #: src/Includes/Functions/Helpers/FormFieldHelper.php:542
@@ -592,19 +592,19 @@ msgid "The import file is empty."
 msgstr ""
 
 #: src/Includes/Functions/Admin/FunctionsPlugins.php:44
-msgid "The PluginName plugin state could not be saved."
+msgid "The ProjectPress plugin state could not be saved."
 msgstr ""
 
 #: src/Includes/Functions/Admin/FunctionsPlugins.php:59
-msgid "The requested PluginName plugin settings were not found."
+msgid "The requested ProjectPress plugin settings were not found."
 msgstr ""
 
 #: src/Includes/Functions/Admin/FunctionsPlugins.php:37
-msgid "The requested PluginName plugin was not found."
+msgid "The requested ProjectPress plugin was not found."
 msgstr ""
 
 #: src/Includes/Functions/Helpers/PermalinkHelper.php:23
-msgid "The root PluginName slug."
+msgid "The root ProjectPress slug."
 msgstr ""
 
 #: src/Includes/Functions/Helpers/PermalinkHelper.php:25
@@ -640,7 +640,7 @@ msgid "Thin"
 msgstr ""
 
 #: src/Includes/Tools/DataTransfer.php:53
-msgid "This PluginName export version is not supported."
+msgid "This ProjectPress export version is not supported."
 msgstr ""
 
 #: src/Includes/Plugins/FontAwesome/Includes/Settings/Settings.php:57
@@ -753,27 +753,27 @@ msgid "Wikis"
 msgstr ""
 
 #: src/Includes/Functions/Admin/FunctionsExport.php:26
-msgid "You are not allowed to export PluginName data."
+msgid "You are not allowed to export ProjectPress data."
 msgstr ""
 
 #: src/Includes/Functions/Admin/FunctionsImport.php:26
-msgid "You are not allowed to import PluginName data."
+msgid "You are not allowed to import ProjectPress data."
 msgstr ""
 
 #: src/Admin/Admin.php:159
-msgid "You are not authorized to load PluginName settings."
+msgid "You are not authorized to load ProjectPress settings."
 msgstr ""
 
 #: src/Includes/Functions/Admin/FunctionsPlugins.php:40
-msgid "You are not authorized to manage external PluginName plugins."
+msgid "You are not authorized to manage external ProjectPress plugins."
 msgstr ""
 
 #: src/Includes/Functions/Admin/FunctionsPlugins.php:29
-msgid "You are not authorized to manage PluginName plugins."
+msgid "You are not authorized to manage ProjectPress plugins."
 msgstr ""
 
 #: src/Includes/Functions/Admin/FunctionsPlugins.php:64
-msgid "You are not authorized to save PluginName plugin settings."
+msgid "You are not authorized to save ProjectPress plugin settings."
 msgstr ""
 
 

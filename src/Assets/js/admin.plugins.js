@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const root = document;
-    const config = window.pluginnameSettingsTabs;
+    const config = window.projectpressSettingsTabs;
     if (!config) {
-        console.warn('[PluginName] Missing pluginnameSettingsTabs config. Check that the settings page enqueues the admin plugin script.');
+        console.warn('[ProjectPress] Missing projectpressSettingsTabs config. Check that the settings page enqueues the admin plugin script.');
         return;
     }
 
@@ -59,10 +59,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const showPluginNotice = (alertMarkup) => {
-        const container = root.querySelector('#pluginname-settings-panel .pluginname-settings-tab-content');
+        const container = root.querySelector('#projectpress-settings-panel .projectpress-settings-tab-content');
         if (!container || !alertMarkup) return;
 
-        container.querySelectorAll('[data-pluginname-alert]').forEach((notice) => notice.remove());
+        container.querySelectorAll('[data-projectpress-alert]').forEach((notice) => notice.remove());
         container.insertAdjacentHTML('afterbegin', alertMarkup);
     };
 
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         toggle.disabled = true;
 
         const body = new URLSearchParams({
-            action: 'pluginname_toggle_plugin',
+            action: 'projectpress_toggle_plugin',
             nonce: config.pluginNonce,
             slug: toggle.dataset.pluginSlug || '',
             enabled: enabled ? '1' : '0'
@@ -129,13 +129,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const debugLog = (...args) => {
         if (typeof console !== 'undefined') {
-            console.log('[PluginName]', ...args);
+            console.log('[ProjectPress]', ...args);
         }
     };
 
     const savePluginSettings = (source) => {
         const button = source instanceof HTMLElement ? source : null;
-        const modal = button ? button.closest('.pluginname-plugin-settings-modal') : source?.closest?.('.pluginname-plugin-settings-modal');
+        const modal = button ? button.closest('.projectpress-plugin-settings-modal') : source?.closest?.('.projectpress-plugin-settings-modal');
         const form = button ? button.form || modal?.querySelector('[data-plugin-settings-form]') : source instanceof HTMLFormElement ? source : modal?.querySelector('[data-plugin-settings-form]');
 
         if (!modal || !form) {
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         debugLog('savePluginSettings: starting save', {
             slug: form.dataset.pluginSlug || '',
-            action: 'pluginname_save_plugin_settings',
+            action: 'projectpress_save_plugin_settings',
         });
 
         const formData = new FormData(form);
@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
         debugLog('savePluginSettings: parsed payload', { formDataKeys: Object.keys(payload), settings });
 
         const body = new URLSearchParams();
-        body.set('action', 'pluginname_save_plugin_settings');
+        body.set('action', 'projectpress_save_plugin_settings');
         body.set('nonce', config.pluginSettingsNonce || '');
         body.set('slug', form.dataset.pluginSlug || '');
         body.set('settings', JSON.stringify(settings));
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         })
         .catch((error) => {
-            console.error('[PluginName] savePluginSettings: failed', error);
+            console.error('[ProjectPress] savePluginSettings: failed', error);
             if (saveButton) {
                 resetSavingButton(saveButton);
             }
@@ -280,9 +280,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const applyConditionalFieldVisibility = () => {
-        root.querySelectorAll('[data-pluginname-visible-when], [data-pluginname-required-when]').forEach((field) => {
-            const visibleRule = field.dataset.pluginnameVisibleWhen ? JSON.parse(field.dataset.pluginnameVisibleWhen) : null;
-            const requiredRule = field.dataset.pluginnameRequiredWhen ? JSON.parse(field.dataset.pluginnameRequiredWhen) : null;
+        root.querySelectorAll('[data-projectpress-visible-when], [data-projectpress-required-when]').forEach((field) => {
+            const visibleRule = field.dataset.projectpressVisibleWhen ? JSON.parse(field.dataset.projectpressVisibleWhen) : null;
+            const requiredRule = field.dataset.projectpressRequiredWhen ? JSON.parse(field.dataset.projectpressRequiredWhen) : null;
             const visible = matchesCondition(field, visibleRule) || !visibleRule;
             const required = matchesCondition(field, requiredRule) || !requiredRule;
             const showField = visible && required;
@@ -318,10 +318,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Close modal
-        const dismiss = event.target.closest?.('.pluginname-plugin-settings-modal [data-bs-dismiss="modal"]');
+        const dismiss = event.target.closest?.('.projectpress-plugin-settings-modal [data-bs-dismiss="modal"]');
         if (dismiss) {
             event.preventDefault();
-            const modal = dismiss.closest('.pluginname-plugin-settings-modal');
+            const modal = dismiss.closest('.projectpress-plugin-settings-modal');
             closePluginModal(modal);
             return;
         }
@@ -335,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, true);
 
     root.addEventListener('change', (event) => {
-        const toggle = event.target.closest?.('[data-pluginname-plugin-toggle]');
+        const toggle = event.target.closest?.('[data-projectpress-plugin-toggle]');
         if (toggle) {
             togglePlugin(toggle);
         }

@@ -3,7 +3,7 @@
  * FAHelper documentation
  *
  * Purpose:
- * FAHelper is the dedicated Font Awesome rendering utility for PluginName. It generates
+ * FAHelper is the dedicated Font Awesome rendering utility for ProjectPress. It generates
  * consistent HTML for icons using the official Font Awesome CSS class conventions and
  * supports styling, transforms, animations, accessibility attributes, and custom inline
  * styling without requiring callers to build repetitive markup by hand.
@@ -39,7 +39,7 @@
  * </i>
  *
  * Class name:
- * PluginName\Includes\Plugins\FontAwesome\Includes\Functions\Helpers\FAHelper
+ * ProjectPress\Includes\Plugins\FontAwesome\Includes\Functions\Helpers\FAHelper
  *
  * Public API:
  * - render_icon( string $icon_name, array $options = [] ): string

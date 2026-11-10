@@ -2,13 +2,13 @@
 /**
  * This file contains the core logging & debugging functions for the plugin.
  *
- * @package    PluginName
+ * @package    ProjectPress
  * @since      1.0.0
  */
-namespace PluginName\Includes\Functions\Helpers;
+namespace ProjectPress\Includes\Functions\Helpers;
 
-use PluginName\Includes\Analytics\Analytics;
-use PluginName\Includes\Settings\Settings;
+use ProjectPress\Includes\Analytics\Analytics;
+use ProjectPress\Includes\Settings\Settings;
 
 class LoggerHelper {
 

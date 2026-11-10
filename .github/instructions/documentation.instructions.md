@@ -1,5 +1,5 @@
 ---
-description: Documentation references for PluginName
+description: Documentation references for ProjectPress
 # applyTo: 'Docs/**/*.md' # when provided, instructions are automatically added to matching files
 ---
 

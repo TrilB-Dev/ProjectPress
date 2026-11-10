@@ -1,14 +1,14 @@
-.pluginname-admin {
-	[data-pluginname-menu-builder] {
+.projectpress-admin {
+	[data-projectpress-menu-builder] {
 		background: var(--bs-tertiary-bg);
 		border-color: var(--bs-border-color) !important;
 	}
 
-	[data-pluginname-nav-items] {
+	[data-projectpress-nav-items] {
 		min-height: 2.75rem;
 	}
 
-	[data-pluginname-nav-item] {
+	[data-projectpress-nav-item] {
 		cursor: grab;
 	}
 }

@@ -1,12 +1,12 @@
 <?php
 /**
- * PluginName Sidebar Admin Menu helper.
+ * ProjectPress Sidebar Admin Menu helper.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Functions\Helpers
  * @since 1.0.0
  */
-namespace PluginName\Includes\Functions\Helpers;
+namespace ProjectPress\Includes\Functions\Helpers;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -18,10 +18,10 @@ class ASMHelper {
 	 *
 	 * @var string
 	 */
-	public const FILTER = 'pluginname_admin_sidebar_menus';
+	public const FILTER = 'projectpress_admin_sidebar_menus';
 
 	/**
-	 * Create a PluginName sidebar menu definition.
+	 * Create a ProjectPress sidebar menu definition.
 	 *
 	 * @param string $name Menu label.
 	 * @param string $slug Menu page slug.

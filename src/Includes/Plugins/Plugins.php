@@ -1,19 +1,19 @@
 <?php
 /**
- * PluginName - Plugins
+ * ProjectPress - Plugins
  *
- * Handles discovery and loading of PluginName plugin modules.
+ * Handles discovery and loading of ProjectPress plugin modules.
  *
- * @package PluginName
- * @subpackage Includes\PluginName\Plugins
+ * @package ProjectPress
+ * @subpackage Includes\ProjectPress\Plugins
  * @since 1.0.0
  */
 
-namespace PluginName\Includes\Plugins;
+namespace ProjectPress\Includes\Plugins;
 
-use PluginName\Includes\Functions\Helpers\LoggerHelper;
-use PluginName\Includes\Settings\Settings;
-use PluginName\Includes\Plugins\PluginInterface;
+use ProjectPress\Includes\Functions\Helpers\LoggerHelper;
+use ProjectPress\Includes\Settings\Settings;
+use ProjectPress\Includes\Plugins\PluginInterface;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -89,14 +89,14 @@ class Plugins {
         }
 
         /**
-         * Allow WordPress plugins to register PluginName extensions.
+         * Allow WordPress plugins to register ProjectPress extensions.
          *
          * Plugins installed via the normal WordPress plugin system can hook
-         * into this action and call PluginName\Plugins::register_plugin().
+         * into this action and call ProjectPress\Plugins::register_plugin().
          *
          * @since 1.0.0
          */
-        do_action( 'pluginname_register_plugin', $this );
+        do_action( 'projectpress_register_plugin', $this );
     }
     /**
      * Retrieves the list of loaded plugin class names.
@@ -198,7 +198,7 @@ class Plugins {
         }
 
 		if ( preg_match( '/-demo$/', $slug ) === 1 ) {
-			LoggerHelper::write_log( sprintf( 'PluginName plugin %s is ignored because plugin slugs ending in -demo are reserved for demo-only plugins.', $slug ) );
+			LoggerHelper::write_log( sprintf( 'ProjectPress plugin %s is ignored because plugin slugs ending in -demo are reserved for demo-only plugins.', $slug ) );
 			return;
 		}
 
@@ -261,13 +261,13 @@ class Plugins {
      * @since 1.0.0
      */
     private function resolve_plugin_directory(): string {
-        $path = trim( Settings::get( 'pluginpress_plugin_directory', PLUGINNAME_PLUGINS ) );
+        $path = trim( Settings::get( 'pluginpress_plugin_directory', PROJECTPRESS_PLUGINS ) );
         $resolved = $this->is_absolute_path( $path )
             ? untrailingslashit( $path )
-            : untrailingslashit( PLUGINNAME_ROOT ) . '/' . ltrim( str_replace( '\\', '/', $path ), '/' );
+            : untrailingslashit( PROJECTPRESS_ROOT ) . '/' . ltrim( str_replace( '\\', '/', $path ), '/' );
 
         if ( ! is_dir( $resolved ) ) {
-            return PLUGINNAME_PLUGINS;
+            return PROJECTPRESS_PLUGINS;
         }
 
         return $resolved;
@@ -337,7 +337,7 @@ class Plugins {
                 : $expected_class;
 
             if ( ! class_exists( $fqcn ) || ! is_a( $fqcn, PluginInterface::class, true ) ) {
-                LoggerHelper::write_log( sprintf( 'PluginName plugin file %s does not declare a PluginInterface implementation.', $file ) );
+                LoggerHelper::write_log( sprintf( 'ProjectPress plugin file %s does not declare a PluginInterface implementation.', $file ) );
                 return;
             }
 
@@ -346,14 +346,14 @@ class Plugins {
                 : new $fqcn();
 
             if ( ! $instance instanceof PluginInterface ) {
-                LoggerHelper::write_log( sprintf( 'PluginName plugin %s does not implement PluginInterface.', $fqcn ) );
+                LoggerHelper::write_log( sprintf( 'ProjectPress plugin %s does not implement PluginInterface.', $fqcn ) );
                 return;
             }
 
             $this->register_plugin_instance( $instance );
             $this->loaded_plugins[] = $fqcn;
         } catch ( \Throwable $e ) {
-            LoggerHelper::write_log( sprintf( 'PluginName plugin loader failed to require file %s: %s', $file, $e->getMessage() ) );
+            LoggerHelper::write_log( sprintf( 'ProjectPress plugin loader failed to require file %s: %s', $file, $e->getMessage() ) );
         }
     }
     /**
@@ -439,7 +439,7 @@ class Plugins {
             }
 
             if ( $plugin instanceof ShortcodeProviderInterface ) {
-                \PluginName\Includes\Core\Shortcodes::get_instance()->register_many( $plugin->get_shortcodes() );
+                \ProjectPress\Includes\Core\Shortcodes::get_instance()->register_many( $plugin->get_shortcodes() );
             }
 
             if ( $plugin instanceof AssetsProviderInterface ) {
@@ -464,7 +464,7 @@ class Plugins {
 
             $plugin->init();
         } catch ( \Throwable $e ) {
-            LoggerHelper::write_log( sprintf( 'PluginName plugin %s failed to initialize: %s', $plugin->get_slug(), $e->getMessage() ) );
+            LoggerHelper::write_log( sprintf( 'ProjectPress plugin %s failed to initialize: %s', $plugin->get_slug(), $e->getMessage() ) );
         }
     }
     /**

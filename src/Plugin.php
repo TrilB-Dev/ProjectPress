@@ -9,18 +9,18 @@
  * version of the plugin.
  *
  * @since      1.0.0
- * @package    PluginName
- * @subpackage PluginName/src
+ * @package    ProjectPress
+ * @subpackage ProjectPress/src
  * @author     MrTrilB <mrtrilb@trilb.dev>
  */
-namespace PluginName;
-use PluginName\Admin\Admin;
-use PluginName\Assets\Assets;
-use PluginName\Includes\Includes;
-use PluginName\Includes\Core\WP\I18n;
-use PluginName\Includes\Functions\Helpers\LoaderHelper;
-use PluginName\Includes\Plugins\Plugins;
-use PluginName\Public\Frontend;
+namespace ProjectPress;
+use ProjectPress\Admin\Admin;
+use ProjectPress\Assets\Assets;
+use ProjectPress\Includes\Includes;
+use ProjectPress\Includes\Core\WP\I18n;
+use ProjectPress\Includes\Functions\Helpers\LoaderHelper;
+use ProjectPress\Includes\Plugins\Plugins;
+use ProjectPress\Public\Frontend;
 
 class Plugin {
 
@@ -87,7 +87,7 @@ class Plugin {
 	protected Frontend $frontend;
 
 	/**
-	 * The PluginName plugin registry and discovery service.
+	 * The ProjectPress plugin registry and discovery service.
 	 *
 	 * @var Plugins
 	 * @since 1.0.0
@@ -112,7 +112,7 @@ class Plugin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function __construct( string $plugin_file = PLUGINNAME_FILE, string $plugin_name = PLUGINNAME_NAME, string $version = PLUGINNAME_VERSION ) {
+	public function __construct( string $plugin_file = PROJECTPRESS_FILE, string $plugin_name = PROJECTPRESS_NAME, string $version = PROJECTPRESS_VERSION ) {
 		/**
 		 * The file path to the main plugin file.
 		 *
@@ -170,10 +170,10 @@ class Plugin {
 	 *
 	 * Include the following files that make up the plugin:
 	 *
-	 * - PluginName_Loader. Orchestrates the hooks of the plugin.
-	 * - PluginName_i18n. Defines internationalization functionality.
-	 * - PluginName_Admin. Defines all hooks for the admin area.
-	 * - PluginName_Public. Defines all hooks for the public side of the site.
+	 * - ProjectPress_Loader. Orchestrates the hooks of the plugin.
+	 * - ProjectPress_i18n. Defines internationalization functionality.
+	 * - ProjectPress_Admin. Defines all hooks for the admin area.
+	 * - ProjectPress_Public. Defines all hooks for the public side of the site.
 	 *
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
@@ -190,7 +190,7 @@ class Plugin {
 	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
-	 * Uses the PluginName_i18n class in order to set the domain and to register the hook
+	 * Uses the ProjectPress_i18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
 	 * @since    1.0.0
@@ -253,7 +253,7 @@ class Plugin {
 		 */
 		$this->frontend = new Frontend();
 		/**
-		 * The PluginName plugin registry and discovery service.
+		 * The ProjectPress plugin registry and discovery service.
 		 *
 		 * @var Plugins
 		 * @since 1.0.0

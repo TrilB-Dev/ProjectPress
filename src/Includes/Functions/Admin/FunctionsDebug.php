@@ -4,11 +4,11 @@
  *
  * This file contains the FunctionsDebug class, which provides functionality to retrieve debug information about the WordPress environment.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Functions\Admin
  * @since 1.0.0
  */
-namespace PluginName\Includes\Functions\Admin;
+namespace ProjectPress\Includes\Functions\Admin;
 
 class FunctionsDebug {
     public static function debug_info(): array {

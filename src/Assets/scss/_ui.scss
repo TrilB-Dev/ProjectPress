@@ -1,7 +1,7 @@
-.pluginname-admin {
+.projectpress-admin {
 	min-height: 100vh;
-	background: var(--pluginname-paper);
-	color: var(--pluginname-ink);
+	background: var(--projectpress-paper);
+	color: var(--projectpress-ink);
 	display: flex;
 	flex-direction: column;
 
@@ -12,8 +12,8 @@
 		width: auto;
 	}
 
-	.pluginname-header {
-		background: var(--pluginname-header);
+	.projectpress-header {
+		background: var(--projectpress-header);
 		box-shadow: 0 0.25rem 1rem rgba(16, 42, 67, 0.16);
 		min-height: 150px;
 		overflow: visible;
@@ -36,7 +36,7 @@
 
 		.navbar-brand,
 		.navbar .nav-link {
-			color: var(--pluginname-ink);
+			color: var(--projectpress-ink);
 		}
 
 		.navbar-brand {
@@ -55,7 +55,7 @@
 			&:hover,
 			&:focus-visible {
 				background: rgba(255, 255, 255, 0.72);
-				color: var(--pluginname-blue);
+				color: var(--projectpress-blue);
 			}
 		}
 
@@ -68,29 +68,29 @@
 		}
 	}
 
-	.pluginname-shell {
+	.projectpress-shell {
 		width: 100%;
 		max-width: none;
 		margin-inline: 0;
 		position: relative;
 	}
 
-	.pluginname-admin-main .pluginname-shell {
+	.projectpress-admin-main .projectpress-shell {
 		padding-top: 0 !important;
 	}
 
-	.pluginname-admin-main {
+	.projectpress-admin-main {
 		flex: 1 0 auto;
 		min-height: calc(100vh - 10rem);
 	}
 
-	.pluginname-page-heading {
-		border-bottom: 1px solid var(--pluginname-line);
+	.projectpress-page-heading {
+		border-bottom: 1px solid var(--projectpress-line);
 		padding-bottom: 1rem;
 	}
 
-	.pluginname-sidebar {
-		background: var(--pluginname-header);
+	.projectpress-sidebar {
+		background: var(--projectpress-header);
 		border: 0;
 		border-radius: 0;
 		box-shadow: none;
@@ -101,29 +101,29 @@
 		z-index: 1;
 	}
 
-	.pluginname-sidebar-column {
+	.projectpress-sidebar-column {
 		flex: 0 0 350px;
 		max-width: 350px;
 	}
 
-	.pluginname-sidebar-group-link {
+	.projectpress-sidebar-group-link {
 		font-family: inherit;
 	}
 
-	.pluginname-sidebar-group-heading {
+	.projectpress-sidebar-group-heading {
 		font-size: inherit;
 		font-weight: inherit;
 		margin: 0;
 	}
 
-	.pluginname-sidebar-group-items {
+	.projectpress-sidebar-group-items {
 		padding-left: 20px;
 	}
 
-	.pluginname-sidebar-link,
+	.projectpress-sidebar-link,
 	.accordion-button {
 		align-items: center;
-		color: var(--pluginname-ink);
+		color: var(--projectpress-ink);
 		display: flex;
 		font-size: 1.2rem;
 		font-weight: 600;
@@ -132,7 +132,7 @@
 		width: 100%;
 	}
 
-	.pluginname-sidebar-link {
+	.projectpress-sidebar-link {
 		border-radius: 0.5rem;
 		margin-bottom: 0.25rem;
 		padding: 0.7rem 0.75rem;
@@ -142,17 +142,17 @@
 		&:focus-visible,
 		&.active {
 			background: #e8f0ff;
-			color: var(--pluginname-blue);
+			color: var(--projectpress-blue);
 		}
 
 		&:hover { transform: translateX(2px); }
 	}
 
-	.pluginname-sidebar .nav-link.active {
+	.projectpress-sidebar .nav-link.active {
 		font-weight: 700;
 	}
 
-	.pluginname-sidebar-icon {
+	.projectpress-sidebar-icon {
 		align-items: center;
 		background: #eaf0f6;
 		border-radius: 0.35rem;
@@ -173,13 +173,13 @@
 	.accordion-button {
 		background: transparent;
 		box-shadow: none;
-		color: var(--pluginname-ink);
+		color: var(--projectpress-ink);
 	}
 
 	.accordion-button:not(.collapsed) {
 		background: #f0f5f8;
 		box-shadow: none;
-		color: var(--pluginname-navy);
+		color: var(--projectpress-navy);
 	}
 
 	.accordion-body { padding-inline: 0.5rem; }
@@ -194,33 +194,33 @@
 		&:focus-visible,
 		&.active {
 			background: #e8f0ff;
-			border-left-color: var(--pluginname-blue);
-			color: var(--pluginname-blue);
+			border-left-color: var(--projectpress-blue);
+			color: var(--projectpress-blue);
 		}
 	}
 
-	.pluginname-footer {
+	.projectpress-footer {
 		background: #fff;
 	}
 
 	.card,
-	.pluginname-inline-form,
-	.pluginname-content-toolbar {
-		border-color: var(--pluginname-line);
+	.projectpress-inline-form,
+	.projectpress-content-toolbar {
+		border-color: var(--projectpress-line);
 		max-width: 100%;
 	}
 }
 
 @media (max-width: 991.98px) {
-	.pluginname-admin .pluginname-sidebar { position: static !important; }
-	.pluginname-admin .pluginname-sidebar-column {
+	.projectpress-admin .projectpress-sidebar { position: static !important; }
+	.projectpress-admin .projectpress-sidebar-column {
 		flex-basis: 100%;
 		max-width: 100%;
 	}
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.pluginname-admin .pluginname-sidebar-link,
-	.pluginname-admin .nav-link { transition: none; }
+	.projectpress-admin .projectpress-sidebar-link,
+	.projectpress-admin .nav-link { transition: none; }
 }
 

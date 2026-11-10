@@ -1,17 +1,17 @@
 <?php
 /**
- * Manager class for PluginName plugin.
+ * Manager class for ProjectPress plugin.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Admin\Manager
  * @since 1.0.0
  */
-namespace PluginName\Admin\Manager;
+namespace ProjectPress\Admin\Manager;
 
-use PluginName\Assets\Assets;
-use PluginName\Admin\Manager\UI\Footer;
-use PluginName\Admin\Manager\UI\Header;
-use PluginName\Admin\Manager\UI\Sidebar;
+use ProjectPress\Assets\Assets;
+use ProjectPress\Admin\Manager\UI\Footer;
+use ProjectPress\Admin\Manager\UI\Header;
+use ProjectPress\Admin\Manager\UI\Sidebar;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -96,16 +96,16 @@ abstract class Manager {
 		return array(
 			'styles'  => array(
 				array(
-					'handle' => 'pluginname-admin-' . $bundle,
-					'src'    => PLUGINNAME_ASSETS_URL . '/dist/css/' . $style_name . '.css',
-					'deps'   => array( 'pluginname-bootstrap', 'pluginname-admin-ui' ),
+					'handle' => 'projectpress-admin-' . $bundle,
+					'src'    => PROJECTPRESS_ASSETS_URL . '/dist/css/' . $style_name . '.css',
+					'deps'   => array( 'projectpress-bootstrap', 'projectpress-admin-ui' ),
 				),
 			),
 			'scripts' => array(
 				array(
-					'handle'    => 'pluginname-admin-' . $bundle,
-					'src'       => PLUGINNAME_ASSETS_URL . '/dist/js/' . $bundle_name . '.js',
-					'deps'      => array( 'pluginname-bootstrap', 'pluginname-admin-ui' ),
+					'handle'    => 'projectpress-admin-' . $bundle,
+					'src'       => PROJECTPRESS_ASSETS_URL . '/dist/js/' . $bundle_name . '.js',
+					'deps'      => array( 'projectpress-bootstrap', 'projectpress-admin-ui' ),
 					'in_footer' => true,
 				),
 			),
@@ -165,16 +165,16 @@ abstract class Manager {
 	 * @since 1.0.0
 	 */
 	protected function header( string $title ): void {
-		echo '<div class="wrap pluginname-admin">';
+		echo '<div class="wrap projectpress-admin">';
 		Header::render();
 		?>
-		<main class="pluginname-admin-main">
-			<div class="container-fluid pluginname-shell px-3 px-lg-4 py-4">
+		<main class="projectpress-admin-main">
+			<div class="container-fluid projectpress-shell px-3 px-lg-4 py-4">
 				<div class="row g-4">
 					<?php Sidebar::render(); ?>
-					<section class="col-12 col-lg flex-grow-1" aria-labelledby="pluginname-page-title">
-						<div class="pluginname-page-heading d-flex flex-wrap align-items-end justify-content-between gap-3 mb-4">
-							<h1 class="h1 mb-0" id="pluginname-page-title"><?php echo esc_html( $title ); ?></h1>
+					<section class="col-12 col-lg flex-grow-1" aria-labelledby="projectpress-page-title">
+						<div class="projectpress-page-heading d-flex flex-wrap align-items-end justify-content-between gap-3 mb-4">
+							<h1 class="h1 mb-0" id="projectpress-page-title"><?php echo esc_html( $title ); ?></h1>
 						</div>
 		<?php
 	}
@@ -201,7 +201,7 @@ abstract class Manager {
 	 */
 	protected function card( string $label, $value, string $slug ): void {
 		printf(
-			'<div class="col-md-6 col-xl-3 mb-4"><div class="card pluginname-dashboard-card h-100 shadow-sm"><div class="card-body"><h2 class="h6 text-muted">%s</h2><p class="display-6 mb-0"><a class="text-decoration-none" href="%s">%s</a></p></div></div></div>',
+			'<div class="col-md-6 col-xl-3 mb-4"><div class="card projectpress-dashboard-card h-100 shadow-sm"><div class="card-body"><h2 class="h6 text-muted">%s</h2><p class="display-6 mb-0"><a class="text-decoration-none" href="%s">%s</a></p></div></div></div>',
 			esc_html( $label ),
 			esc_url( admin_url( 'admin.php?page=' . $slug ) ),
 			esc_html( (string) $value )

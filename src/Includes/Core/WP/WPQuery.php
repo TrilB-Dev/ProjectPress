@@ -2,13 +2,13 @@
 /**
  * Backward-compatible query helper name.
  *
- * @package PluginName\Includes\Core\WP
+ * @package ProjectPress\Includes\Core\WP
  * @since 1.0.0
  */
-namespace PluginName\Includes\Core\WP;
+namespace ProjectPress\Includes\Core\WP;
 
-use PluginName\Includes\Functions\Helpers\QueryHelper;
-use PluginName\Includes\Functions\Helpers\RequestHelper;
+use ProjectPress\Includes\Functions\Helpers\QueryHelper;
+use ProjectPress\Includes\Functions\Helpers\RequestHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

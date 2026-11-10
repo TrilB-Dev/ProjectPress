@@ -1,13 +1,13 @@
 <?php
 /**
- * Tokenized PluginName permalink support.
+ * Tokenized ProjectPress permalink support.
  *
- * @package PluginName
+ * @package ProjectPress
  */
 
-namespace PluginName\Includes\Functions\Helpers;
+namespace ProjectPress\Includes\Functions\Helpers;
 
-use PluginName\Includes\Settings\Settings;
+use ProjectPress\Includes\Settings\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -19,7 +19,7 @@ final class PermalinkHelper {
 	 *
 	 * @since 1.0.0
 	 */
-	public const OVERRIDE_META = '_pluginname_permalink';
+	public const OVERRIDE_META = '_projectpress_permalink';
 
 	/**
 	 * Resolve a reusable alias map for a plugin-specific permalink scheme.
@@ -147,11 +147,11 @@ final class PermalinkHelper {
 	 * @since 1.0.0
 	 */
 	public static function rewrite_rule(): void {
-		add_rewrite_rule( '^(.+?)/?$', 'index.php?pluginname_path=$matches[1]', 'top' );
+		add_rewrite_rule( '^(.+?)/?$', 'index.php?projectpress_path=$matches[1]', 'top' );
 		add_filter(
 			'query_vars',
 			static function ( array $vars ): array {
-				$vars[] = 'pluginname_path';
+				$vars[] = 'projectpress_path';
 				return $vars;
 			}
 		);
@@ -165,12 +165,12 @@ final class PermalinkHelper {
 	 * @since 1.0.0
 	 */
 	public static function resolve_request( array $vars ): array {
-		$requested_path = isset( $vars['pluginname_path'] ) ? trim( urldecode( (string) $vars['pluginname_path'] ), '/' ) : '';
+		$requested_path = isset( $vars['projectpress_path'] ) ? trim( urldecode( (string) $vars['projectpress_path'] ), '/' ) : '';
 		if ( '' === $requested_path ) {
 			return $vars;
 		}
 
-		$post_types = class_exists( '\PluginName\Includes\Core\PostType' ) ? \PluginName\Includes\Core\PostType::get_post_type_names() : array( 'pluginname_page' );
+		$post_types = class_exists( '\ProjectPress\Includes\Core\PostType' ) ? \ProjectPress\Includes\Core\PostType::get_post_type_names() : array( 'projectpress_page' );
 		$pages      = get_posts(
 			array(
 				'post_type'        => $post_types,
@@ -196,7 +196,7 @@ final class PermalinkHelper {
 	 * @since 1.0.0
 	 */
 	public static function filter_page_permalink( string $link, \WP_Post $post ): string {
-		$post_types = class_exists( '\PluginName\Includes\Core\PostType' ) ? \PluginName\Includes\Core\PostType::get_post_type_names() : array( 'pluginname_page' );
+		$post_types = class_exists( '\ProjectPress\Includes\Core\PostType' ) ? \ProjectPress\Includes\Core\PostType::get_post_type_names() : array( 'projectpress_page' );
 		return in_array( $post->post_type, $post_types, true ) ? self::page_url( $post ) : $link;
 	}
 	/**

@@ -1,16 +1,16 @@
 <?php
 /**
- * Core taxonomy registry for PluginName.
+ * Core taxonomy registry for ProjectPress.
  *
  * Supports multiple taxonomies and dynamic metadata registration.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Core
  * @since 1.0.0
  */
-namespace PluginName\Includes\Core;
+namespace ProjectPress\Includes\Core;
 
-use PluginName\Includes\Functions\Helpers\SanitizationHelper;
+use ProjectPress\Includes\Functions\Helpers\SanitizationHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -29,7 +29,7 @@ final class Taxonomy {
 	 *
 	 * @var string
 	 */
-	private static string $taxonomy_prefix = 'pluginname_';
+	private static string $taxonomy_prefix = 'projectpress_';
 
 	/**
 	 * Register the configured taxonomies.
@@ -86,15 +86,15 @@ final class Taxonomy {
 			'name'          => $data['name'] ?? self::humanize_slug( $taxonomy ),
 			'singular_name' => $data['singular_name'] ?? self::humanize_slug( $taxonomy, true ),
 			'menu_name'     => $data['menu_name'] ?? self::humanize_slug( $taxonomy ),
-			'all_items'     => $data['all_items'] ?? sprintf( __( 'All %s', 'pluginname' ), self::humanize_slug( $taxonomy ) ),
-			'edit_item'     => $data['edit_item'] ?? sprintf( __( 'Edit %s', 'pluginname' ), self::humanize_slug( $taxonomy, true ) ),
-			'view_item'     => $data['view_item'] ?? sprintf( __( 'View %s', 'pluginname' ), self::humanize_slug( $taxonomy, true ) ),
-			'update_item'   => $data['update_item'] ?? sprintf( __( 'Update %s', 'pluginname' ), self::humanize_slug( $taxonomy, true ) ),
-			'add_new_item'  => $data['add_new_item'] ?? sprintf( __( 'Add New %s', 'pluginname' ), self::humanize_slug( $taxonomy, true ) ),
-			'new_item_name' => $data['new_item_name'] ?? sprintf( __( 'New %s Name', 'pluginname' ), self::humanize_slug( $taxonomy, true ) ),
-			'parent_item'   => $data['parent_item'] ?? sprintf( __( 'Parent %s', 'pluginname' ), self::humanize_slug( $taxonomy, true ) ),
-			'search_items'  => $data['search_items'] ?? sprintf( __( 'Search %s', 'pluginname' ), self::humanize_slug( $taxonomy ) ),
-			'popular_items' => $data['popular_items'] ?? sprintf( __( 'Popular %s', 'pluginname' ), self::humanize_slug( $taxonomy ) ),
+			'all_items'     => $data['all_items'] ?? sprintf( __( 'All %s', 'projectpress' ), self::humanize_slug( $taxonomy ) ),
+			'edit_item'     => $data['edit_item'] ?? sprintf( __( 'Edit %s', 'projectpress' ), self::humanize_slug( $taxonomy, true ) ),
+			'view_item'     => $data['view_item'] ?? sprintf( __( 'View %s', 'projectpress' ), self::humanize_slug( $taxonomy, true ) ),
+			'update_item'   => $data['update_item'] ?? sprintf( __( 'Update %s', 'projectpress' ), self::humanize_slug( $taxonomy, true ) ),
+			'add_new_item'  => $data['add_new_item'] ?? sprintf( __( 'Add New %s', 'projectpress' ), self::humanize_slug( $taxonomy, true ) ),
+			'new_item_name' => $data['new_item_name'] ?? sprintf( __( 'New %s Name', 'projectpress' ), self::humanize_slug( $taxonomy, true ) ),
+			'parent_item'   => $data['parent_item'] ?? sprintf( __( 'Parent %s', 'projectpress' ), self::humanize_slug( $taxonomy, true ) ),
+			'search_items'  => $data['search_items'] ?? sprintf( __( 'Search %s', 'projectpress' ), self::humanize_slug( $taxonomy ) ),
+			'popular_items' => $data['popular_items'] ?? sprintf( __( 'Popular %s', 'projectpress' ), self::humanize_slug( $taxonomy ) ),
 		);
 
 		$config = array(
@@ -151,7 +151,7 @@ final class Taxonomy {
 	 * @return array<string, array<string, mixed>>
 	 */
 	public static function definitions(): array {
-		return \apply_filters( 'pluginname_taxonomy_definitions', self::$registered );
+		return \apply_filters( 'projectpress_taxonomy_definitions', self::$registered );
 	}
 
 	/**
@@ -374,14 +374,14 @@ final class Taxonomy {
 				'name'          => self::humanize_slug( $taxonomy ),
 				'singular_name' => self::humanize_slug( $taxonomy, true ),
 				'menu_name'     => self::humanize_slug( $taxonomy ),
-				'all_items'     => sprintf( __( 'All %s', 'pluginname' ), self::humanize_slug( $taxonomy ) ),
-				'edit_item'     => sprintf( __( 'Edit %s', 'pluginname' ), self::humanize_slug( $taxonomy, true ) ),
-				'view_item'     => sprintf( __( 'View %s', 'pluginname' ), self::humanize_slug( $taxonomy, true ) ),
-				'update_item'   => sprintf( __( 'Update %s', 'pluginname' ), self::humanize_slug( $taxonomy, true ) ),
-				'add_new_item'  => sprintf( __( 'Add New %s', 'pluginname' ), self::humanize_slug( $taxonomy, true ) ),
-				'new_item_name' => sprintf( __( 'New %s Name', 'pluginname' ), self::humanize_slug( $taxonomy, true ) ),
-				'parent_item'   => sprintf( __( 'Parent %s', 'pluginname' ), self::humanize_slug( $taxonomy, true ) ),
-				'search_items'  => sprintf( __( 'Search %s', 'pluginname' ), self::humanize_slug( $taxonomy ) ),
+				'all_items'     => sprintf( __( 'All %s', 'projectpress' ), self::humanize_slug( $taxonomy ) ),
+				'edit_item'     => sprintf( __( 'Edit %s', 'projectpress' ), self::humanize_slug( $taxonomy, true ) ),
+				'view_item'     => sprintf( __( 'View %s', 'projectpress' ), self::humanize_slug( $taxonomy, true ) ),
+				'update_item'   => sprintf( __( 'Update %s', 'projectpress' ), self::humanize_slug( $taxonomy, true ) ),
+				'add_new_item'  => sprintf( __( 'Add New %s', 'projectpress' ), self::humanize_slug( $taxonomy, true ) ),
+				'new_item_name' => sprintf( __( 'New %s Name', 'projectpress' ), self::humanize_slug( $taxonomy, true ) ),
+				'parent_item'   => sprintf( __( 'Parent %s', 'projectpress' ), self::humanize_slug( $taxonomy, true ) ),
+				'search_items'  => sprintf( __( 'Search %s', 'projectpress' ), self::humanize_slug( $taxonomy ) ),
 			),
 			'post_type'          => array(),
 			'hierarchical'         => false,

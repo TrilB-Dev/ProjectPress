@@ -1,13 +1,13 @@
 <?php
 /**
- * Core analytics tracker for PluginName.
+ * Core analytics tracker for ProjectPress.
  *
- * @package PluginName\Includes\Analytics
+ * @package ProjectPress\Includes\Analytics
  */
 
-namespace PluginName\Includes\Analytics;
+namespace ProjectPress\Includes\Analytics;
 
-use PluginName\Includes\Core\WP\Database;
+use ProjectPress\Includes\Core\WP\Database;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -53,7 +53,7 @@ final class Analytics {
 	}
 
 	/**
-	 * Record an analytics event from PluginName flows.
+	 * Record an analytics event from ProjectPress flows.
 	 *
 	 * @param string $event Event key.
 	 * @param array  $context Event payload.
@@ -87,7 +87,7 @@ final class Analytics {
 	}
 
 	/**
-	 * Store a structured log event in the PluginName logs table.
+	 * Store a structured log event in the ProjectPress logs table.
 	 *
 	 * @param string $level Log level.
 	 * @param string $message Log message.
@@ -109,7 +109,7 @@ final class Analytics {
 				'log_level'  => sanitize_key( $level ),
 				'message'    => $message,
 				'context'    => maybe_serialize( $context ),
-				'source'     => 'pluginname',
+				'source'     => 'projectpress',
 				'created_at' => current_time( 'mysql' ),
 				'updated_at' => current_time( 'mysql' ),
 			)

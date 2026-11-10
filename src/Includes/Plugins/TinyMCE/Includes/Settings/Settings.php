@@ -2,14 +2,14 @@
 /**
  * Settings for the TinyMCE plugin.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Plugins\TinyMCE\Includes\Settings
  * @since 1.0.0
  */
-namespace PluginName\Includes\Plugins\TinyMCE\Includes\Settings;
+namespace ProjectPress\Includes\Plugins\TinyMCE\Includes\Settings;
 
-use PluginName\Includes\Settings\Settings as BaseSettings;
-use PluginName\Includes\Functions\Helpers\SanitizationHelper;
+use ProjectPress\Includes\Settings\Settings as BaseSettings;
+use ProjectPress\Includes\Functions\Helpers\SanitizationHelper;
 
 final class Settings {
 	/**
@@ -99,33 +99,33 @@ final class Settings {
 		return array(
 			'slug'           => self::GROUP,
 			'settings_group' => self::GROUP,
-			'label'          => __( 'TinyMCE', 'pluginname' ),
-			'title'          => __( 'TinyMCE integration', 'pluginname' ),
+			'label'          => __( 'TinyMCE', 'projectpress' ),
+			'title'          => __( 'TinyMCE integration', 'projectpress' ),
 			'layout'         => 'table',
 			'fields'         => array(
 				array(
 					'key'         => 'tinymce_content_skin',
-					'label'       => __( 'Default content skin', 'pluginname' ),
-					'description' => __( 'Choose the stylesheet used inside the editor content area.', 'pluginname' ),
-					'tooltip'     => __( 'Content skins control typography and content formatting inside the editing area.', 'pluginname' ),
+					'label'       => __( 'Default content skin', 'projectpress' ),
+					'description' => __( 'Choose the stylesheet used inside the editor content area.', 'projectpress' ),
+					'tooltip'     => __( 'Content skins control typography and content formatting inside the editing area.', 'projectpress' ),
 					'type'        => 'select',
 					'options'     => self::skin_options( self::CONTENT_SKINS ),
 					'default'     => 'default',
 				),
 				array(
 					'key'         => 'tinymce_ui_skin',
-					'label'       => __( 'Default user-interface skin', 'pluginname' ),
-					'description' => __( 'Choose the TinyMCE toolbar and dialog skin.', 'pluginname' ),
-					'tooltip'     => __( 'UI skins control the toolbar, menus, dialogs, and editor chrome.', 'pluginname' ),
+					'label'       => __( 'Default user-interface skin', 'projectpress' ),
+					'description' => __( 'Choose the TinyMCE toolbar and dialog skin.', 'projectpress' ),
+					'tooltip'     => __( 'UI skins control the toolbar, menus, dialogs, and editor chrome.', 'projectpress' ),
 					'type'        => 'select',
 					'options'     => self::skin_options( self::UI_SKINS ),
 					'default'     => 'oxide',
 				),
 				array(
 					'key'                 => 'tinymce_plugins',
-					'label'               => __( 'Enabled TinyMCE plugins', 'pluginname' ),
-					'description'         => __( 'Choose which bundled TinyMCE plugins are available to the editor.', 'pluginname' ),
-					'tooltip'             => __( 'Only selected local plugin files are requested when an editor starts.', 'pluginname' ),
+					'label'               => __( 'Enabled TinyMCE plugins', 'projectpress' ),
+					'description'         => __( 'Choose which bundled TinyMCE plugins are available to the editor.', 'projectpress' ),
+					'tooltip'             => __( 'Only selected local plugin files are requested when an editor starts.', 'projectpress' ),
 					'type'                => 'multiselect',
 					'dropup_auto'         => false,
 					'show_tick'           => true,

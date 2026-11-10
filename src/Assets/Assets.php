@@ -1,17 +1,17 @@
 <?php
 /**
- * PluginName Assets
+ * ProjectPress Assets
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Assets
  * @since 1.0.0
  */
-namespace PluginName\Assets;
+namespace ProjectPress\Assets;
 
-use PluginName\Includes\Functions\Helpers\ImageHelper;
-use PluginName\Includes\Functions\Helpers\LoaderHelper;
-use PluginName\Includes\Functions\Helpers\RequestHelper;
-use PluginName\Includes\Functions\Helpers\SanitizationHelper;
+use ProjectPress\Includes\Functions\Helpers\ImageHelper;
+use ProjectPress\Includes\Functions\Helpers\LoaderHelper;
+use ProjectPress\Includes\Functions\Helpers\RequestHelper;
+use ProjectPress\Includes\Functions\Helpers\SanitizationHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -51,7 +51,7 @@ class Assets {
 			array(
 				array(
 					'type'          => 'filter',
-					'hook'          => 'pluginname_base_assets',
+					'hook'          => 'projectpress_base_assets',
 					'callback'      => 'default_assets',
 					'priority'      => 90,
 					'accepted_args' => 2,
@@ -122,48 +122,48 @@ class Assets {
 		$defaults = array(
 			'styles'  => array(
 				array(
-					'handle' => 'pluginname-wp-override',
-					'src'    => PLUGINNAME_ASSETS_URL . '/dist/css/wpoverride.css',
+					'handle' => 'projectpress-wp-override',
+					'src'    => PROJECTPRESS_ASSETS_URL . '/dist/css/wpoverride.css',
 					'deps'   => array( 'forms' ),
 				),
 				array(
-					'handle'  => 'pluginname-bootstrap',
-					'src'     => PLUGINNAME_ASSETS_URL . '/dist/css/bootstrap.css',
+					'handle'  => 'projectpress-bootstrap',
+					'src'     => PROJECTPRESS_ASSETS_URL . '/dist/css/bootstrap.css',
 					'version' => '5.3.8',
-					'deps'    => array( 'pluginname-wp-override' ),
+					'deps'    => array( 'projectpress-wp-override' ),
 				),
 				array(
-					'handle'  => 'pluginname-bootstrap-select',
-					'src'     => PLUGINNAME_ASSETS_URL . '/dist/css/bootstrap-select.min.css',
+					'handle'  => 'projectpress-bootstrap-select',
+					'src'     => PROJECTPRESS_ASSETS_URL . '/dist/css/bootstrap-select.min.css',
 					'version' => '1.2.2',
-					'deps'    => array( 'pluginname-bootstrap' ),
+					'deps'    => array( 'projectpress-bootstrap' ),
 				),
 				array(
-					'handle'  => 'pluginname-bs-country-data',
-					'src'     => PLUGINNAME_ASSETS_URL . '/dist/css/bs-country-data.min.css',
+					'handle'  => 'projectpress-bs-country-data',
+					'src'     => PROJECTPRESS_ASSETS_URL . '/dist/css/bs-country-data.min.css',
 					'version' => '1.0.4',
-					'deps'    => array( 'pluginname-bootstrap-select' ),
+					'deps'    => array( 'projectpress-bootstrap-select' ),
 				),
 			),
 			'scripts' => array(
 				array(
-					'handle'    => 'pluginname-bootstrap',
-					'src'       => PLUGINNAME_ASSETS_URL . '/dist/js/bootstrap.js',
+					'handle'    => 'projectpress-bootstrap',
+					'src'       => PROJECTPRESS_ASSETS_URL . '/dist/js/bootstrap.js',
 					'version'   => '5.3.8',
 					'in_footer' => true,
 				),
 				array(
-					'handle'    => 'pluginname-bootstrap-select',
-					'src'       => PLUGINNAME_ASSETS_URL . '/dist/js/bootstrap-select.min.js',
+					'handle'    => 'projectpress-bootstrap-select',
+					'src'       => PROJECTPRESS_ASSETS_URL . '/dist/js/bootstrap-select.min.js',
 					'version'   => '1.2.2',
-					'deps'      => array( 'pluginname-bootstrap' ),
+					'deps'      => array( 'projectpress-bootstrap' ),
 					'in_footer' => true,
 				),
 				array(
-					'handle'	=> 'pluginname-bs-country-data',
-					'src'       => PLUGINNAME_ASSETS_URL . '/dist/js/bs-country-data.min.js',
+					'handle'	=> 'projectpress-bs-country-data',
+					'src'       => PROJECTPRESS_ASSETS_URL . '/dist/js/bs-country-data.min.js',
 					'version'   => '1.0.4',
-					'deps'      => array( 'pluginname-bootstrap-select' ),
+					'deps'      => array( 'projectpress-bootstrap-select' ),
 					'in_footer' => true,
 				)
 			),
@@ -179,11 +179,11 @@ class Assets {
 	 * @since 1.0.0
 	 */
 	public function enqueue_frontend(): void {
-		if ( ! is_singular( 'pluginname_page' ) ) {
+		if ( ! is_singular( 'projectpress_page' ) ) {
 			return;
 		}
 
-		$assets = apply_filters( 'pluginname_base_assets', array(), 'frontend' );
+		$assets = apply_filters( 'projectpress_base_assets', array(), 'frontend' );
 		$this->enqueue_registered(
 			'frontend',
 			array(
@@ -191,9 +191,9 @@ class Assets {
 					$assets['base']['styles'] ?? array(),
 					array(
 						array(
-							'handle' => 'pluginname-public',
-							'src'    => PLUGINNAME_ASSETS_URL . '/dist/css/public.css',
-							'version' => PLUGINNAME_VERSION,
+							'handle' => 'projectpress-public',
+							'src'    => PROJECTPRESS_ASSETS_URL . '/dist/css/public.css',
+							'version' => PROJECTPRESS_VERSION,
 						),
 					)
 				),
@@ -201,9 +201,9 @@ class Assets {
 					$assets['base']['scripts'] ?? array(),
 					array(
 						array(
-							'handle'    => 'pluginname-public',
-							'src'       => PLUGINNAME_ASSETS_URL . '/dist/js/public.js',
-							'version'   => PLUGINNAME_VERSION,
+							'handle'    => 'projectpress-public',
+							'src'       => PROJECTPRESS_ASSETS_URL . '/dist/js/public.js',
+							'version'   => PROJECTPRESS_VERSION,
 							'in_footer' => true,
 						),
 					)
@@ -219,13 +219,13 @@ class Assets {
 	 * @since 1.0.0
 	 */
 	public function enqueue_admin( string $hook_suffix ): void {
-		if ( false === strpos( $hook_suffix, 'pluginname' ) ) {
+		if ( false === strpos( $hook_suffix, 'projectpress' ) ) {
 			return;
 		}
 
-		$page       = RequestHelper::get_key( 'page', 'pluginname' );
+		$page       = RequestHelper::get_key( 'page', 'projectpress' );
 		$registered = $this->pages[ $page ] ?? array();
-		$base       = apply_filters( 'pluginname_base_assets', array(), 'admin' );
+		$base       = apply_filters( 'projectpress_base_assets', array(), 'admin' );
 		$this->enqueue_registered(
 			'admin',
 			array(
@@ -233,10 +233,10 @@ class Assets {
 					$base['styles'] ?? array(),
 					array(
 						array(
-							'handle'  => 'pluginname-admin-ui',
-							'src'     => PLUGINNAME_ASSETS_URL . '/dist/css/admin.ui.css',
-							'version' => PLUGINNAME_VERSION,
-							'deps'    => array( 'pluginname-bootstrap' ),
+							'handle'  => 'projectpress-admin-ui',
+							'src'     => PROJECTPRESS_ASSETS_URL . '/dist/css/admin.ui.css',
+							'version' => PROJECTPRESS_VERSION,
+							'deps'    => array( 'projectpress-bootstrap' ),
 						),
 					),
 					$registered['styles'] ?? array()
@@ -245,10 +245,10 @@ class Assets {
 					$base['scripts'] ?? array(),
 					array(
 						array(
-							'handle'    => 'pluginname-admin-ui',
-							'src'       => PLUGINNAME_ASSETS_URL . '/dist/js/admin.ui.js',
-							'version'   => PLUGINNAME_VERSION,
-							'deps'      => array( 'pluginname-bootstrap' ),
+							'handle'    => 'projectpress-admin-ui',
+							'src'       => PROJECTPRESS_ASSETS_URL . '/dist/js/admin.ui.js',
+							'version'   => PROJECTPRESS_VERSION,
+							'deps'      => array( 'projectpress-bootstrap' ),
 							'in_footer' => true,
 						),
 					),
@@ -266,7 +266,7 @@ class Assets {
 	 * @since 1.0.0
 	 */
 	protected function enqueue_registered( string $context, array $assets ): void {
-		$assets = apply_filters( 'pluginname_' . $context . '_assets', $assets, $context );
+		$assets = apply_filters( 'projectpress_' . $context . '_assets', $assets, $context );
 		$this->enqueue_bundle( $assets );
 	}
 	/**
@@ -280,69 +280,69 @@ class Assets {
 		if ( isset( $assets['styles'] ) && is_string( $assets['styles'] ) ) {
 			$assets['styles'] = array(
 				array(
-					'handle' => 'pluginname-admin-' . $assets['styles'],
-					'src'    => PLUGINNAME_ASSETS_URL . '/dist/css/admin.' . $assets['styles'] . '.css',
-					'deps'    => array( 'pluginname-admin-ui' ),
-					'version' => PLUGINNAME_VERSION,
+					'handle' => 'projectpress-admin-' . $assets['styles'],
+					'src'    => PROJECTPRESS_ASSETS_URL . '/dist/css/admin.' . $assets['styles'] . '.css',
+					'deps'    => array( 'projectpress-admin-ui' ),
+					'version' => PROJECTPRESS_VERSION,
 				),
 			);
 		}
 		if ( isset( $assets['scripts'] ) && is_string( $assets['scripts'] ) ) {
 			$assets['scripts'] = array(
 				array(
-					'handle' => 'pluginname-admin-' . $assets['scripts'],
-					'src'    => PLUGINNAME_ASSETS_URL . '/dist/js/admin.' . $assets['scripts'] . '.js',
-					'deps'   => array( 'pluginname-admin-ui' ),
-					'version' => PLUGINNAME_VERSION,
+					'handle' => 'projectpress-admin-' . $assets['scripts'],
+					'src'    => PROJECTPRESS_ASSETS_URL . '/dist/js/admin.' . $assets['scripts'] . '.js',
+					'deps'   => array( 'projectpress-admin-ui' ),
+					'version' => PROJECTPRESS_VERSION,
 					'in_footer' => true,
 				),
 			);
 		}
 		foreach ( $assets['styles'] ?? array() as $style ) {
-			LoaderHelper::enqueue_style( $style['handle'], $style['src'], $style['deps'] ?? array(), $style['version'] ?? PLUGINNAME_VERSION, $style['media'] ?? 'all' );
+			LoaderHelper::enqueue_style( $style['handle'], $style['src'], $style['deps'] ?? array(), $style['version'] ?? PROJECTPRESS_VERSION, $style['media'] ?? 'all' );
 		}
 		foreach ( $assets['scripts'] ?? array() as $script ) {
-			LoaderHelper::enqueue_script( $script['handle'], $script['src'], $script['deps'] ?? array(), $script['version'] ?? PLUGINNAME_VERSION, $script['in_footer'] ?? true );
+			LoaderHelper::enqueue_script( $script['handle'], $script['src'], $script['deps'] ?? array(), $script['version'] ?? PROJECTPRESS_VERSION, $script['in_footer'] ?? true );
 			if ( isset( $script['localize']['object_name'], $script['localize']['data'] ) ) {
 				LoaderHelper::localize_script( $script['handle'], $script['localize']['object_name'], $script['localize']['data'] );
 			}
 		}
 
-		if ( wp_script_is( 'pluginname-admin-ui', 'enqueued' ) ) {
+		if ( wp_script_is( 'projectpress-admin-ui', 'enqueued' ) ) {
 			LoaderHelper::localize_script(
-				'pluginname-admin-ui',
-				'pluginnameOnboarding',
+				'projectpress-admin-ui',
+				'projectpressOnboarding',
 				array(
 					'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-					'nonce'   => wp_create_nonce( 'pluginname_dismiss_onboarding' ),
+					'nonce'   => wp_create_nonce( 'projectpress_dismiss_onboarding' ),
 				)
 			);
 		}
 
 		$route = $this->current_admin_route();
-		$settings_page = 'pluginname' === $route['page'] && 'settings' === $route['group'];
+		$settings_page = 'projectpress' === $route['page'] && 'settings' === $route['group'];
 		$plugin_tab = in_array( $route['tab'], array( 'plugins', 'third-party' ), true );
 
 		if ( $settings_page && $plugin_tab ) {
 			$settings_config = array(
 				'ajaxUrl'             => admin_url( 'admin-ajax.php' ),
-				'nonce'               => wp_create_nonce( 'pluginname_settings_tabs' ),
-				'pluginNonce'         => wp_create_nonce( 'pluginname_plugin_toggle' ),
-				'pluginSettingsNonce' => wp_create_nonce( 'pluginname_save_plugin_settings' ),
+				'nonce'               => wp_create_nonce( 'projectpress_settings_tabs' ),
+				'pluginNonce'         => wp_create_nonce( 'projectpress_plugin_toggle' ),
+				'pluginSettingsNonce' => wp_create_nonce( 'projectpress_save_plugin_settings' ),
 			);
-			foreach ( array( 'pluginname-admin-settings', 'pluginname-admin-plugins' ) as $handle ) {
+			foreach ( array( 'projectpress-admin-settings', 'projectpress-admin-plugins' ) as $handle ) {
 				if ( wp_script_is( $handle, 'enqueued' ) ) {
-					LoaderHelper::localize_script( $handle, 'pluginnameSettingsTabs', $settings_config );
+					LoaderHelper::localize_script( $handle, 'projectpressSettingsTabs', $settings_config );
 				}
 			}
 		}
-		if ( 'pluginname' === $route['page'] && in_array( $route['group'], array( 'manage-mod', 'mods' ), true ) && wp_script_is( 'pluginname-admin', 'enqueued' ) ) {
+		if ( 'projectpress' === $route['page'] && in_array( $route['group'], array( 'manage-mod', 'mods' ), true ) && wp_script_is( 'projectpress-admin', 'enqueued' ) ) {
 			LoaderHelper::localize_script(
-				'pluginname-admin',
-				'pluginnameManager',
+				'projectpress-admin',
+				'projectpressManager',
 				array(
 					'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-					'nonce'   => wp_create_nonce( 'pluginname_manage' ),
+					'nonce'   => wp_create_nonce( 'projectpress_manage' ),
 				)
 			);
 		}

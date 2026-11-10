@@ -2,12 +2,12 @@
 /**
  * Schema class for managing core and extension database schema definitions.
  *
- * @package PluginName\Includes\Core
+ * @package ProjectPress\Includes\Core
  * @since 1.0.0
  */
-namespace PluginName\Includes\Core;
+namespace ProjectPress\Includes\Core;
 
-use PluginName\Includes\Core\WP\Database;
+use ProjectPress\Includes\Core\WP\Database;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -103,34 +103,40 @@ final class Schema {
         return 'logs';
     }
 
-    public static function groups_table(): string {
+    public static function projects_table(): string {
         Database::register_core_table(
-            'groups',
+            'projects',
             static function ( string $table_name, string $charset ) {
                 return "CREATE TABLE {$table_name} (
                 id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-                group_key varchar(120) NOT NULL,
-                group_name varchar(120) NOT NULL,
-                group_slug varchar(120) NOT NULL,
-                group_singular_name varchar(120) NOT NULL,
-                group_description longtext DEFAULT NULL,
-                group_hierarchical boolean DEFAULT FALSE,
-                group_parent longtext DEFAULT NULL,
-                group_parent_entry longtext DEFAULT NULL,
-                group_fields longtext DEFAULT NULL,
-                group_multiselect boolean DEFAULT FALSE,
+                project_name varchar(120) NOT NULL,
+                project_slug varchar(120) NOT NULL,
+                project_key varchar(120) NOT NULL,
+                project_description longtext DEFAULT NULL,
+                project_parent bigint(20) DEFAULT NULL,
+                project_team bigint(20) DEFAULT NULL,
+                project_type bigint(20) DEFAULT NULL,
+                project_owner bigint(20) DEFAULT NULL,
+                project_start_date datetime DEFAULT NULL,
+                project_target_end_date datetime DEFAULT NULL,
+                project_actual_end_date datetime DEFAULT NULL,
+                project_status varchar(32) DEFAULT NULL,
+                project_priority varchar(32) DEFAULT NULL,
+                project_visibility varchar(32) DEFAULT NULL,
+                project_members longtext DEFAULT NULL,
+                project_fields longtext DEFAULT NULL,
                 created_by bigint(20) unsigned DEFAULT NULL,
                 created_at datetime DEFAULT CURRENT_TIMESTAMP,
                 updated_at datetime DEFAULT CURRENT_TIMESTAMP,
                 PRIMARY KEY  (id),
-                UNIQUE KEY group_key (group_key),
-                UNIQUE KEY group_slug (group_slug),
+                UNIQUE KEY project_key (project_key),
+                UNIQUE KEY project_slug (project_slug),
                 KEY created_by (created_by)
             ) {$charset};";
             }
         );
 
-        return 'groups';
+        return 'projects';
     }
 
 }

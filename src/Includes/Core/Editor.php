@@ -1,13 +1,13 @@
 <?php
 /**
- * Editor registry for PluginName content editors.
+ * Editor registry for ProjectPress content editors.
  *
- * @package PluginName\Includes\Core
+ * @package ProjectPress\Includes\Core
  */
-namespace PluginName\Includes\Core;
+namespace ProjectPress\Includes\Core;
 
-use PluginName\Includes\Functions\Helpers\FormFieldHelper;
-use PluginName\Includes\Functions\Helpers\SanitizationHelper;
+use ProjectPress\Includes\Functions\Helpers\FormFieldHelper;
+use ProjectPress\Includes\Functions\Helpers\SanitizationHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -82,7 +82,7 @@ final class Editor {
 	 * @return array<string, array<string, mixed>>
 	 */
 	public static function definitions(): array {
-		return apply_filters( 'pluginname_editor_definitions', self::$registered );
+		return apply_filters( 'projectpress_editor_definitions', self::$registered );
 	}
 
 	/**
@@ -95,33 +95,33 @@ final class Editor {
 	}
 
 	/**
-	 * Save a PluginName page submission.
+	 * Save a ProjectPress page submission.
 	 *
 	 * @param int $page_id Page ID.
 	 * @param \WP_Post|null $page Current page object.
 	 * @return bool
 	 */
 	public static function save_page( int $page_id, ?\WP_Post $page = null ): bool {
-		if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ?? '' ) || 'save_pluginname_page' !== ( $_POST['pluginname_action'] ?? '' ) || ! check_admin_referer( 'pluginname_save_pluginname_page', 'pluginname_save_pluginname_page_nonce' ) ) {
+		if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ?? '' ) || 'save_projectpress_page' !== ( $_POST['projectpress_action'] ?? '' ) || ! check_admin_referer( 'projectpress_save_projectpress_page', 'projectpress_save_projectpress_page_nonce' ) ) {
 			return false;
 		}
 
 		$page = $page_id ? get_post( $page_id ) : null;
-		if ( ! $page_id && ! current_user_can( 'pluginname_page_create' ) ) {
+		if ( ! $page_id && ! current_user_can( 'projectpress_page_create' ) ) {
 			return false;
 		}
-		if ( $page_id && ( ! $page || 'pluginname_page' !== $page->post_type || ! current_user_can( 'pluginname_page_edit' ) || ( (int) $page->post_author !== get_current_user_id() && ! current_user_can( 'pluginname_page_edit_others' ) ) || ( 'publish' === $page->post_status && ! current_user_can( 'pluginname_page_edit_published' ) ) ) ) {
+		if ( $page_id && ( ! $page || 'projectpress_page' !== $page->post_type || ! current_user_can( 'projectpress_page_edit' ) || ( (int) $page->post_author !== get_current_user_id() && ! current_user_can( 'projectpress_page_edit_others' ) ) || ( 'publish' === $page->post_status && ! current_user_can( 'projectpress_page_edit_published' ) ) ) ) {
 			return false;
 		}
 
-		$input = wp_unslash( $_POST['pluginname_page'] ?? array() );
+		$input = wp_unslash( $_POST['projectpress_page'] ?? array() );
 		$input = is_array( $input ) ? $input : array();
 		$title = SanitizationHelper::text( $input['title'] ?? '' );
 		if ( '' === $title ) {
 			return false;
 		}
 
-		if ( ! current_user_can( 'pluginname_page_publish' ) ) {
+		if ( ! current_user_can( 'projectpress_page_publish' ) ) {
 			return false;
 		}
 
@@ -141,44 +141,44 @@ final class Editor {
 			return false;
 		}
 
-		update_post_meta( $post_id, '_pluginname_page_id', $page_id );
+		update_post_meta( $post_id, '_projectpress_page_id', $page_id );
 		return true;
 	}
 
 	/**
-	 * Render a PluginName page editor form.
+	 * Render a ProjectPress page editor form.
 	 *
 	 * @param \WP_Post|null $page Page being edited.
 	 * @return void
 	 */
-	public static function render_pluginname_page_form( ?\WP_Post $page = null ): void {
+	public static function render_projectpress_page_form( ?\WP_Post $page = null ): void {
 		?>
 		<form method="post" class="card shadow-sm">
-			<?php wp_nonce_field( 'pluginname_save_pluginname_page', 'pluginname_save_pluginname_page_nonce' ); ?>
-			<input type="hidden" name="pluginname_action" value="save_pluginname_page">
-			<input type="hidden" name="pluginname_page[post_type]" value="<?php echo esc_attr( $page ? $page->post_type : '' ); ?>">
+			<?php wp_nonce_field( 'projectpress_save_projectpress_page', 'projectpress_save_projectpress_page_nonce' ); ?>
+			<input type="hidden" name="projectpress_action" value="save_projectpress_page">
+			<input type="hidden" name="projectpress_page[post_type]" value="<?php echo esc_attr( $page ? $page->post_type : '' ); ?>">
 			<div class="card-body">
 				<div class="mb-3">
-					<label class="form-label" for="pluginname-page-title">
-						<?php esc_html_e( 'Page Title', 'pluginname' ); ?>
+					<label class="form-label" for="projectpress-page-title">
+						<?php esc_html_e( 'Page Title', 'projectpress' ); ?>
 					</label>
-					<input class="form-control" id="pluginname-page-title" name="pluginname_page[title]" value="<?php echo esc_attr( $page ? $page->post_title : '' ); ?>" required>
+					<input class="form-control" id="projectpress-page-title" name="projectpress_page[title]" value="<?php echo esc_attr( $page ? $page->post_title : '' ); ?>" required>
 				</div>
 				<?php FormFieldHelper::tinymce( 
-					'pluginname-page-content', 
-					'pluginname_page[content]', 
-					__( 'Page Content', 'pluginname' ), 
+					'projectpress-page-content', 
+					'projectpress_page[content]', 
+					__( 'Page Content', 'projectpress' ), 
 					$page ? $page->post_content : '', 
 					14, 
 					true 
 				); ?>
 			</div>
 			<div class="card-footer d-flex justify-content-end gap-2">
-				<a class="btn btn-outline-secondary" href="<?php echo esc_url( admin_url( 'admin.php?page=pluginname&group=manage-mod&tab=mods' ) ); ?>">
-					<?php esc_html_e( 'Cancel', 'pluginname' ); ?>
+				<a class="btn btn-outline-secondary" href="<?php echo esc_url( admin_url( 'admin.php?page=projectpress&group=manage-mod&tab=mods' ) ); ?>">
+					<?php esc_html_e( 'Cancel', 'projectpress' ); ?>
 				</a>
 				<button class="btn btn-primary" type="submit">
-					<?php echo esc_html( $page ? __( 'Save Page', 'pluginname' ) : __( 'Create Page', 'pluginname' ) ); ?>
+					<?php echo esc_html( $page ? __( 'Save Page', 'projectpress' ) : __( 'Create Page', 'projectpress' ) ); ?>
 				</button>
 			</div>
 		</form>

@@ -1,13 +1,13 @@
 ---
-description: Asset pipeline and registration rules for PluginName
+description: Asset pipeline and registration rules for ProjectPress
 # applyTo: 'src/Assets/**/*.{js,ts,scss,php}' # when provided, instructions are automatically added to matching files
 ---
 
 ## Assets
 
-All PluginName and internal-plugin assets must flow through `src/Assets/Assets.php`.
+All ProjectPress and internal-plugin assets must flow through `src/Assets/Assets.php`.
 
-- Plugin asset classes may define asset lists and page conditions, but must register them through the central `PluginName\Assets\Assets` service.
+- Plugin asset classes may define asset lists and page conditions, but must register them through the central `ProjectPress\Assets\Assets` service.
 - Use the central page registry and enqueue pipeline; do not call `wp_enqueue_style()` or `wp_enqueue_script()` directly from plugin code when the central service can express the requirement.
 - Keep source JavaScript and SCSS in the owning plugin's `Assets/js` and `Assets/scss` directories, and generated files in its `Assets/dist` directory. Core source assets remain in `src/Assets/js` and `src/Assets/scss`.
 - Preserve page-specific loading conditions so plugin assets do not load on unrelated admin or frontend pages.

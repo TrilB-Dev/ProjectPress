@@ -1,19 +1,19 @@
 <?php
 /**
- * Settings-related admin functions for PluginName.
+ * Settings-related admin functions for ProjectPress.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Functions\Admin
  * @since 1.0.0
  */
-namespace PluginName\Includes\Functions\Admin;
+namespace ProjectPress\Includes\Functions\Admin;
 
-use PluginName\Includes\Functions\Admin\FunctionsPlugins;
-use PluginName\Includes\Functions\Helpers\LoaderHelper;
-use PluginName\Includes\Functions\Helpers\LoggerHelper;
-use PluginName\Includes\Functions\Helpers\PermalinkHelper;
-use PluginName\Includes\Settings\Settings;
-use PluginName\Includes\Settings\SettingsManager;
+use ProjectPress\Includes\Functions\Admin\FunctionsPlugins;
+use ProjectPress\Includes\Functions\Helpers\LoaderHelper;
+use ProjectPress\Includes\Functions\Helpers\LoggerHelper;
+use ProjectPress\Includes\Functions\Helpers\PermalinkHelper;
+use ProjectPress\Includes\Settings\Settings;
+use ProjectPress\Includes\Settings\SettingsManager;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -32,12 +32,12 @@ final class FunctionsSettings {
     }
 
     /**
-     * Register PluginName and provider-backed plugin settings.
+     * Register ProjectPress and provider-backed plugin settings.
      *
      * @return void
      */
     public function register_settings(): void {
-        // PluginName stores settings in its own custom table rather than the default
+        // ProjectPress stores settings in its own custom table rather than the default
         // WordPress options table. The regular settings API is intentionally not used
         // here; form submissions are handled through the custom admin-post flow.
     }
@@ -54,22 +54,22 @@ final class FunctionsSettings {
 			array(
 				array(
 					'type'     => 'action',
-					'hook'     => 'admin_post_pluginname_save_general_settings',
+					'hook'     => 'admin_post_projectpress_save_general_settings',
 					'callback' => 'handle_general_save',
 				),
 				array(
 					'type'     => 'action',
-					'hook'     => 'admin_post_pluginname_save_access_settings',
+					'hook'     => 'admin_post_projectpress_save_access_settings',
 					'callback' => 'handle_access_save',
 				),
 				array(
 					'type'     => 'action',
-					'hook'     => 'admin_post_pluginname_save_layout_settings',
+					'hook'     => 'admin_post_projectpress_save_layout_settings',
 					'callback' => 'handle_layout_save',
 				),
 				array(
 					'type'     => 'action',
-					'hook'     => 'admin_post_pluginname_save_billing_invoice_settings',
+					'hook'     => 'admin_post_projectpress_save_billing_invoice_settings',
 					'callback' => 'handle_billing_invoice_save',
 				),
 			)
@@ -86,15 +86,15 @@ final class FunctionsSettings {
 			return;
 		}
 
-		if ( 'pluginname_save_general_settings' === $action ) {
+		if ( 'projectpress_save_general_settings' === $action ) {
 			$this->general_save();
 		}
 
-		if ( in_array( $action, array( 'pluginname_save_access_settings' ), true ) ) {
+		if ( in_array( $action, array( 'projectpress_save_access_settings' ), true ) ) {
 			$this->access_save();
 		}
 
-		if ( 'pluginname_save_layout_settings' === $action ) {
+		if ( 'projectpress_save_layout_settings' === $action ) {
 			$this->layout_save();
 		}
 	}
@@ -121,18 +121,18 @@ final class FunctionsSettings {
      * @since 1.0.0
 	 */
 	public function general_save(): void {
-		LoggerHelper::write_log( 'PluginName general settings save started.' );
+		LoggerHelper::write_log( 'ProjectPress general settings save started.' );
 		LoggerHelper::write_log( array(
 			'request' => $_POST,
-			'action' => 'pluginname_save_general_settings',
+			'action' => 'projectpress_save_general_settings',
 		) );
-		if ( ! user_can( get_current_user_id(), 'pluginname_settings_general_edit' ) ) {
-			LoggerHelper::write_log( 'PluginName general settings save denied: missing general_edit capability.' );
-			$this->redirect_after_save( 'general', false, __( 'You are not allowed to save PluginName general settings.', 'pluginname' ) );
+		if ( ! user_can( get_current_user_id(), 'projectpress_settings_general_edit' ) ) {
+			LoggerHelper::write_log( 'ProjectPress general settings save denied: missing general_edit capability.' );
+			$this->redirect_after_save( 'general', false, __( 'You are not allowed to save ProjectPress general settings.', 'projectpress' ) );
 		}
 
-		$this->validate_save_nonce( 'pluginname_save_general_settings' );
-		$input = isset( $_POST['pluginname_general'] ) && is_array( $_POST['pluginname_general'] ) ? wp_unslash( $_POST['pluginname_general'] ) : array();
+		$this->validate_save_nonce( 'projectpress_save_general_settings' );
+		$input = isset( $_POST['projectpress_general'] ) && is_array( $_POST['projectpress_general'] ) ? wp_unslash( $_POST['projectpress_general'] ) : array();
 		LoggerHelper::write_log( array(
 			'general_input' => $input,
 			'general_input_keys' => array_keys( $input ),
@@ -148,13 +148,13 @@ final class FunctionsSettings {
 				'general_sanitized' => $sanitized,
 				'general_db_group' => Settings::get_group( Settings::GENERAL, array() ),
 			) );
-			$this->redirect_after_save( 'general', true, __( 'PluginName general settings saved successfully.', 'pluginname' ) );
+			$this->redirect_after_save( 'general', true, __( 'ProjectPress general settings saved successfully.', 'projectpress' ) );
 		} catch ( \Throwable $exception ) {
 			LoggerHelper::write_log( array(
 				'general_save_error' => $exception->getMessage(),
 				'general_save_trace' => $exception->getTraceAsString(),
 			) );
-			$this->redirect_after_save( 'general', false, __( 'Failed to save PluginName general settings.', 'pluginname' ) );
+			$this->redirect_after_save( 'general', false, __( 'Failed to save ProjectPress general settings.', 'projectpress' ) );
 		}
 	}
 
@@ -164,18 +164,18 @@ final class FunctionsSettings {
 	 * @return void
 	 */
 	public function access_save(): void {
-		LoggerHelper::write_log( 'PluginName access settings save started.' );
+		LoggerHelper::write_log( 'ProjectPress access settings save started.' );
 		LoggerHelper::write_log( array(
 			'request' => $_POST,
-			'action' => 'pluginname_save_access_settings',
+			'action' => 'projectpress_save_access_settings',
 		) );
-		if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'pluginname_settings_access_edit' ) ) {
-			LoggerHelper::write_log( 'PluginName access settings save denied: missing access_edit capability.' );
-			$this->redirect_after_save( 'access', false, __( 'You are not allowed to save PluginName access settings.', 'pluginname' ) );
+		if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'projectpress_settings_access_edit' ) ) {
+			LoggerHelper::write_log( 'ProjectPress access settings save denied: missing access_edit capability.' );
+			$this->redirect_after_save( 'access', false, __( 'You are not allowed to save ProjectPress access settings.', 'projectpress' ) );
 		}
 
-		$this->validate_save_nonce( 'pluginname_save_access_settings' );
-		$input = isset( $_POST['pluginname_access'] ) && is_array( $_POST['pluginname_access'] ) ? wp_unslash( $_POST['pluginname_access'] ) : array();
+		$this->validate_save_nonce( 'projectpress_save_access_settings' );
+		$input = isset( $_POST['projectpress_access'] ) && is_array( $_POST['projectpress_access'] ) ? wp_unslash( $_POST['projectpress_access'] ) : array();
 		LoggerHelper::write_log( array(
 			'access_input' => $input,
 			'access_input_keys' => array_keys( $input ),
@@ -191,13 +191,13 @@ final class FunctionsSettings {
 				'access_sanitized' => $sanitized,
 				'access_db_group' => Settings::get_group( Settings::ACCESS, array() ),
 			) );
-			$this->redirect_after_save( 'access', true, __( 'PluginName access settings saved successfully.', 'pluginname' ) );
+			$this->redirect_after_save( 'access', true, __( 'ProjectPress access settings saved successfully.', 'projectpress' ) );
 		} catch ( \Throwable $exception ) {
 			LoggerHelper::write_log( array(
 				'access_save_error' => $exception->getMessage(),
 				'access_save_trace' => $exception->getTraceAsString(),
 			) );
-			$this->redirect_after_save( 'access', false, __( 'Failed to save PluginName access settings.', 'pluginname' ) );
+			$this->redirect_after_save( 'access', false, __( 'Failed to save ProjectPress access settings.', 'projectpress' ) );
 		}
 	}
 
@@ -207,18 +207,18 @@ final class FunctionsSettings {
 	 * @return void
 	 */
 	public function layout_save(): void {
-		LoggerHelper::write_log( 'PluginName layout settings save started.' );
+		LoggerHelper::write_log( 'ProjectPress layout settings save started.' );
 		LoggerHelper::write_log( array(
 			'request' => $_POST,
-			'action' => 'pluginname_save_layout_settings',
+			'action' => 'projectpress_save_layout_settings',
 		) );
-		if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'pluginname_settings_layout_edit' ) ) {
-			LoggerHelper::write_log( 'PluginName layout settings save denied: missing layout_edit capability.' );
-			$this->redirect_after_save( 'layout', false, __( 'You are not allowed to save PluginName layout settings.', 'pluginname' ) );
+		if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'projectpress_settings_layout_edit' ) ) {
+			LoggerHelper::write_log( 'ProjectPress layout settings save denied: missing layout_edit capability.' );
+			$this->redirect_after_save( 'layout', false, __( 'You are not allowed to save ProjectPress layout settings.', 'projectpress' ) );
 		}
 
-		$this->validate_save_nonce( 'pluginname_save_layout_settings' );
-		$input = isset( $_POST['pluginname_layout'] ) && is_array( $_POST['pluginname_layout'] ) ? wp_unslash( $_POST['pluginname_layout'] ) : array();
+		$this->validate_save_nonce( 'projectpress_save_layout_settings' );
+		$input = isset( $_POST['projectpress_layout'] ) && is_array( $_POST['projectpress_layout'] ) ? wp_unslash( $_POST['projectpress_layout'] ) : array();
 		LoggerHelper::write_log( array(
 			'layout_input' => $input,
 			'layout_input_keys' => array_keys( $input ),
@@ -236,13 +236,13 @@ final class FunctionsSettings {
 				'layout_sanitized' => $sanitized,
 				'layout_db_group' => Settings::get_group( Settings::LAYOUT, array() ),
 			) );
-			$this->redirect_after_save( 'layout', true, __( 'PluginName layout settings saved successfully.', 'pluginname' ), array( 'layout_section' => $section ) );
+			$this->redirect_after_save( 'layout', true, __( 'ProjectPress layout settings saved successfully.', 'projectpress' ), array( 'layout_section' => $section ) );
 		} catch ( \Throwable $exception ) {
 			LoggerHelper::write_log( array(
 				'layout_save_error' => $exception->getMessage(),
 				'layout_save_trace' => $exception->getTraceAsString(),
 			) );
-			$this->redirect_after_save( 'layout', false, __( 'Failed to save PluginName layout settings.', 'pluginname' ) );
+			$this->redirect_after_save( 'layout', false, __( 'Failed to save ProjectPress layout settings.', 'projectpress' ) );
 		}
 	}
     /**
@@ -257,7 +257,7 @@ final class FunctionsSettings {
      */
     private function redirect_after_save( string $tab, bool $success, string $message = '', array $extra_query = array() ): void {
         $query = array(
-            'page' => 'pluginname',
+            'page' => 'projectpress',
             'group' => 'settings',
             'tab' => $tab,
             $success ? 'settings_saved' : 'settings_failed' => '1',
@@ -283,9 +283,9 @@ final class FunctionsSettings {
      * @since 1.0.0
 	 */
     public function sanitize_general( $input ): array {
-        LoggerHelper::write_log( 'PluginName general settings sanitization started.' );
-        if ( ! current_user_can( 'pluginname_settings_general_edit' ) ) {
-            LoggerHelper::write_log( 'PluginName general settings sanitization skipped: missing general_edit capability.' );
+        LoggerHelper::write_log( 'ProjectPress general settings sanitization started.' );
+        if ( ! current_user_can( 'projectpress_settings_general_edit' ) ) {
+            LoggerHelper::write_log( 'ProjectPress general settings sanitization skipped: missing general_edit capability.' );
             return (array) Settings::get_group( Settings::GENERAL, [] );
         }
 
@@ -335,9 +335,9 @@ final class FunctionsSettings {
     }
 
     public function sanitize_layout( $input ): array {
-        LoggerHelper::write_log( 'PluginName layout settings sanitization started.' );
-        if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'pluginname_settings_layout_edit' ) ) {
-            LoggerHelper::write_log( 'PluginName layout settings sanitization skipped: missing layout_edit capability.' );
+        LoggerHelper::write_log( 'ProjectPress layout settings sanitization started.' );
+        if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'projectpress_settings_layout_edit' ) ) {
+            LoggerHelper::write_log( 'ProjectPress layout settings sanitization skipped: missing layout_edit capability.' );
             return (array) Settings::get_group( Settings::LAYOUT, [] );
         }
 
@@ -392,9 +392,9 @@ final class FunctionsSettings {
     }
 
     public function sanitize_access( $input ): array {
-        LoggerHelper::write_log( 'PluginName access settings sanitization started.' );
-        if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'pluginname_settings_access_edit' ) ) {
-            LoggerHelper::write_log( 'PluginName access settings sanitization skipped: missing access_edit capability.' );
+        LoggerHelper::write_log( 'ProjectPress access settings sanitization started.' );
+        if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'projectpress_settings_access_edit' ) ) {
+            LoggerHelper::write_log( 'ProjectPress access settings sanitization skipped: missing access_edit capability.' );
             return (array) Settings::get_group( Settings::ACCESS, [] );
         }
 
@@ -416,7 +416,7 @@ final class FunctionsSettings {
     }
 
     public function sanitize_tools( $input ): array {
-        LoggerHelper::write_log( 'PluginName tools settings sanitization started.' );
+        LoggerHelper::write_log( 'ProjectPress tools settings sanitization started.' );
         $input = is_array( $input ) ? $input : [];
         foreach ( [ 'debug_logging', 'console_logging' ] as $key ) {
             $input[ $key ] = ! empty( $input[ $key ] );

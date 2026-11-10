@@ -1,13 +1,13 @@
 <?php
 /**
- * Dashboard main UI for the PluginName plugin.
+ * Dashboard main UI for the ProjectPress plugin.
  *
- * @package PluginName\Admin\Manager\Dashboard
+ * @package ProjectPress\Admin\Manager\Dashboard
  */
-namespace PluginName\Admin\Manager\Dashboard;
+namespace ProjectPress\Admin\Manager\Dashboard;
 
-use PluginName\Includes\UserManagement\Groups\Groups;
-use PluginName\Includes\UserManagement\Roles\Roles;
+use ProjectPress\Includes\UserManagement\Groups\Groups;
+use ProjectPress\Includes\UserManagement\Roles\Roles;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -20,14 +20,14 @@ final class DashboardMain extends DashboardManager {
 	 * @return void
 	 */
 	public function render_page_content(): void {
-		$this->header( __( 'PluginName Dashboard', 'pluginname' ) );
+		$this->header( __( 'ProjectPress Dashboard', 'projectpress' ) );
 		$this->render_summary();
 		$this->render_cards();
 		$this->footer();
 	}
 
 	/**
-	 * Render the key PluginName overview metrics for users, groups, and roles.
+	 * Render the key ProjectPress overview metrics for users, groups, and roles.
 	 *
 	 * @return void
 	 */
@@ -39,46 +39,46 @@ final class DashboardMain extends DashboardManager {
 		$max_roles   = Roles::get_max_roles();
 		$cards       = array(
 			array(
-				'label'       => __( 'Users', 'pluginname' ),
+				'label'       => __( 'Users', 'projectpress' ),
 				'value'       => $user_count,
 				'url'         => admin_url( 'users.php' ),
-				'description' => __( 'Total WordPress users managed by the site.', 'pluginname' ),
+				'description' => __( 'Total WordPress users managed by the site.', 'projectpress' ),
 				'icon'        => 'dashicons-admin-users',
 			),
 			array(
-				'label'       => __( 'Groups', 'pluginname' ),
+				'label'       => __( 'Groups', 'projectpress' ),
 				'value'       => $group_count,
-				'url'         => admin_url( 'admin.php?page=pluginname&group=user-management&tab=user-groups' ),
-				'description' => __( 'Configured PluginName membership groups.', 'pluginname' ),
+				'url'         => admin_url( 'admin.php?page=projectpress&group=user-management&tab=user-groups' ),
+				'description' => __( 'Configured ProjectPress membership groups.', 'projectpress' ),
 				'icon'        => 'dashicons-groups',
 			),
 			array(
-				'label'       => __( 'Roles', 'pluginname' ),
+				'label'       => __( 'Roles', 'projectpress' ),
 				'value'       => $role_count,
-				'url'         => admin_url( 'admin.php?page=pluginname&group=user-management&tab=user-roles' ),
-				'description' => __( 'Available WordPress roles in the PluginName role layer.', 'pluginname' ),
+				'url'         => admin_url( 'admin.php?page=projectpress&group=user-management&tab=user-roles' ),
+				'description' => __( 'Available WordPress roles in the ProjectPress role layer.', 'projectpress' ),
 				'icon'        => 'dashicons-shield',
 			),
 			array(
-				'label'       => __( 'Max per user', 'pluginname' ),
+				'label'       => __( 'Max per user', 'projectpress' ),
 				'value'       => $max_roles,
-				'url'         => admin_url( 'admin.php?page=pluginname&group=settings&tab=access' ),
-				'description' => __( 'Maximum linked roles allowed on one account.', 'pluginname' ),
+				'url'         => admin_url( 'admin.php?page=projectpress&group=settings&tab=access' ),
+				'description' => __( 'Maximum linked roles allowed on one account.', 'projectpress' ),
 				'icon'        => 'dashicons-admin-network',
 			),
 		);
 		?>
-		<section class="mb-4" aria-labelledby="pluginname-dashboard-summary">
+		<section class="mb-4" aria-labelledby="projectpress-dashboard-summary">
 			<div class="d-flex justify-content-between align-items-center mb-3">
-				<h2 id="pluginname-dashboard-summary" class="h5 mb-0"><?php esc_html_e( 'PluginName overview', 'pluginname' ); ?></h2>
-				<span class="small text-secondary"><?php esc_html_e( 'Frontend user management health', 'pluginname' ); ?></span>
+				<h2 id="projectpress-dashboard-summary" class="h5 mb-0"><?php esc_html_e( 'ProjectPress overview', 'projectpress' ); ?></h2>
+				<span class="small text-secondary"><?php esc_html_e( 'Frontend user management health', 'projectpress' ); ?></span>
 			</div>
 			<div class="row g-3">
 				<?php foreach ( $cards as $card ) : ?>
 					<div class="col-md-6 col-xl-3">
-						<a class="pluginname-summary-card h-100 d-flex flex-column gap-1" href="<?php echo esc_url( $card['url'] ?? '' ); ?>">
-							<span class="pluginname-summary-icon dashicons <?php echo esc_attr( $card['icon'] ?? 'dashicons-admin-generic' ); ?>" aria-hidden="true"></span>
-							<span class="text-uppercase small fw-semibold text-secondary"><?php echo esc_html( $card['label'] ?? __( 'Metric', 'pluginname' ) ); ?></span>
+						<a class="projectpress-summary-card h-100 d-flex flex-column gap-1" href="<?php echo esc_url( $card['url'] ?? '' ); ?>">
+							<span class="projectpress-summary-icon dashicons <?php echo esc_attr( $card['icon'] ?? 'dashicons-admin-generic' ); ?>" aria-hidden="true"></span>
+							<span class="text-uppercase small fw-semibold text-secondary"><?php echo esc_html( $card['label'] ?? __( 'Metric', 'projectpress' ) ); ?></span>
 							<strong class="h4 mb-0"><?php echo esc_html( (string) ( $card['value'] ?? 0 ) ); ?></strong>
 							<span class="small text-secondary"><?php echo esc_html( $card['description'] ?? '' ); ?></span>
 						</a>
@@ -90,52 +90,52 @@ final class DashboardMain extends DashboardManager {
 	}
 
 	/**
-	 * Render quick actions for the PluginName portal configuration.
+	 * Render quick actions for the ProjectPress portal configuration.
 	 *
 	 * @return void
 	 */
 	protected function render_cards(): void {
 		$cards = array(
 			array(
-				'title'       => __( 'User groups', 'pluginname' ),
-				'description' => __( 'Create and manage membership groups for access control and portal segmentation.', 'pluginname' ),
+				'title'       => __( 'User groups', 'projectpress' ),
+				'description' => __( 'Create and manage membership groups for access control and portal segmentation.', 'projectpress' ),
 				'icon'        => 'dashicons-groups',
-				'url'         => admin_url( 'admin.php?page=pluginname&group=user-management&tab=user-groups' ),
+				'url'         => admin_url( 'admin.php?page=projectpress&group=user-management&tab=user-groups' ),
 				'priority'    => 10,
 			),
 			array(
-				'title'       => __( 'User roles', 'pluginname' ),
-				'description' => __( 'Adjust role combinations and ensure users stay within the configured maximum role count.', 'pluginname' ),
+				'title'       => __( 'User roles', 'projectpress' ),
+				'description' => __( 'Adjust role combinations and ensure users stay within the configured maximum role count.', 'projectpress' ),
 				'icon'        => 'dashicons-shield',
-				'url'         => admin_url( 'admin.php?page=pluginname&group=user-management&tab=user-roles' ),
+				'url'         => admin_url( 'admin.php?page=projectpress&group=user-management&tab=user-roles' ),
 				'priority'    => 20,
 			),
 			array(
-				'title'       => __( 'Login', 'pluginname' ),
-				'description' => __( 'Review and manage the frontend login experience and authentication flow.', 'pluginname' ),
+				'title'       => __( 'Login', 'projectpress' ),
+				'description' => __( 'Review and manage the frontend login experience and authentication flow.', 'projectpress' ),
 				'icon'        => 'dashicons-admin-network',
-				'url'         => admin_url( 'admin.php?page=pluginname&group=user-management&tab=user-login' ),
+				'url'         => admin_url( 'admin.php?page=projectpress&group=user-management&tab=user-login' ),
 				'priority'    => 30,
 			),
 			array(
-				'title'       => __( 'Registration', 'pluginname' ),
-				'description' => __( 'Configure the custom PluginName registration and activation workflow.', 'pluginname' ),
+				'title'       => __( 'Registration', 'projectpress' ),
+				'description' => __( 'Configure the custom ProjectPress registration and activation workflow.', 'projectpress' ),
 				'icon'        => 'dashicons-plus-alt',
-				'url'         => admin_url( 'admin.php?page=pluginname&group=user-management&tab=user-registration' ),
+				'url'         => admin_url( 'admin.php?page=projectpress&group=user-management&tab=user-registration' ),
 				'priority'    => 40,
 			),
 			array(
-				'title'       => __( 'Profile', 'pluginname' ),
-				'description' => __( 'Review the frontend account profile experience and user details management.', 'pluginname' ),
+				'title'       => __( 'Profile', 'projectpress' ),
+				'description' => __( 'Review the frontend account profile experience and user details management.', 'projectpress' ),
 				'icon'        => 'dashicons-id',
-				'url'         => admin_url( 'admin.php?page=pluginname&group=user-management&tab=user-profile' ),
+				'url'         => admin_url( 'admin.php?page=projectpress&group=user-management&tab=user-profile' ),
 				'priority'    => 50,
 			),
 			array(
-				'title'       => __( 'Access settings', 'pluginname' ),
-				'description' => __( 'Update portal-wide security, access restrictions, and default member controls.', 'pluginname' ),
+				'title'       => __( 'Access settings', 'projectpress' ),
+				'description' => __( 'Update portal-wide security, access restrictions, and default member controls.', 'projectpress' ),
 				'icon'        => 'dashicons-lock',
-				'url'         => admin_url( 'admin.php?page=pluginname&group=settings&tab=access' ),
+				'url'         => admin_url( 'admin.php?page=projectpress&group=settings&tab=access' ),
 				'priority'    => 60,
 			),
 		);
@@ -145,17 +145,17 @@ final class DashboardMain extends DashboardManager {
 			static fn( array $left, array $right ): int => (int) ( $left['priority'] ?? 100 ) <=> (int) ( $right['priority'] ?? 100 )
 		);
 		?>
-		<section aria-labelledby="pluginname-dashboard-cards">
+		<section aria-labelledby="projectpress-dashboard-cards">
 			<div class="d-flex justify-content-between align-items-center mb-3">
-				<h2 id="pluginname-dashboard-cards" class="h5 mb-0"><?php esc_html_e( 'Quick actions', 'pluginname' ); ?></h2>
-				<span class="small text-secondary"><?php esc_html_e( 'Manage the core access experience', 'pluginname' ); ?></span>
+				<h2 id="projectpress-dashboard-cards" class="h5 mb-0"><?php esc_html_e( 'Quick actions', 'projectpress' ); ?></h2>
+				<span class="small text-secondary"><?php esc_html_e( 'Manage the core access experience', 'projectpress' ); ?></span>
 			</div>
 			<div class="row g-3">
 				<?php foreach ( $cards as $card ) : ?>
 					<div class="col-md-6 col-xl-4">
-						<a class="pluginname-summary-card h-100 d-flex flex-column gap-1" href="<?php echo esc_url( $card['url'] ?? '' ); ?>">
-							<span class="pluginname-summary-icon dashicons <?php echo esc_attr( $card['icon'] ?? 'dashicons-admin-generic' ); ?>" aria-hidden="true"></span>
-							<span class="fw-semibold text-body"><?php echo esc_html( $card['title'] ?? __( 'Action', 'pluginname' ) ); ?></span>
+						<a class="projectpress-summary-card h-100 d-flex flex-column gap-1" href="<?php echo esc_url( $card['url'] ?? '' ); ?>">
+							<span class="projectpress-summary-icon dashicons <?php echo esc_attr( $card['icon'] ?? 'dashicons-admin-generic' ); ?>" aria-hidden="true"></span>
+							<span class="fw-semibold text-body"><?php echo esc_html( $card['title'] ?? __( 'Action', 'projectpress' ) ); ?></span>
 							<span class="small text-secondary"><?php echo esc_html( $card['description'] ?? '' ); ?></span>
 						</a>
 					</div>

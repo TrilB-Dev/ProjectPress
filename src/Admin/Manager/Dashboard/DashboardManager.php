@@ -1,15 +1,15 @@
 <?php
 /**
- * DashboardManager class for the PluginName plugin.
+ * DashboardManager class for the ProjectPress plugin.
  *
- * @package PluginName
+ * @package ProjectPress
  */
-namespace PluginName\Admin\Manager\Dashboard;
+namespace ProjectPress\Admin\Manager\Dashboard;
 
-use PluginName\Admin\Manager\Manager;
-use PluginName\Assets\Assets;
-use PluginName\Includes\UserManagement\Groups\Groups;
-use PluginName\Includes\UserManagement\Roles\Roles;
+use ProjectPress\Admin\Manager\Manager;
+use ProjectPress\Assets\Assets;
+use ProjectPress\Includes\UserManagement\Groups\Groups;
+use ProjectPress\Includes\UserManagement\Roles\Roles;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -29,7 +29,7 @@ class DashboardManager extends Manager {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		$this->page = 'pluginname';
+		$this->page = 'projectpress';
 	}
 
 	/**
@@ -48,7 +48,7 @@ class DashboardManager extends Manager {
 	 * @since 1.0.0
 	 */
 	public function register_assets( Assets $assets ): void {
-		$this->register_page_assets( $assets, array( 'pluginname' ), 'dashboard' );
+		$this->register_page_assets( $assets, array( 'projectpress' ), 'dashboard' );
 	}
 }
 

@@ -2,14 +2,14 @@
 /**
  * SettingsManager class.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Settings
  * @since 1.0.0
  */
 
-namespace PluginName\Includes\Settings;
+namespace ProjectPress\Includes\Settings;
 
-use PluginName\Includes\Core\WP\Database;
+use ProjectPress\Includes\Core\WP\Database;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -152,10 +152,10 @@ final class SettingsManager {
     public static function defaults(): array {
         return [
             'general' => [
-                'root_name' => 'PluginName',
-                'root_description' => __( 'A searchable catalogue powered by PluginName.', 'pluginname' ),
-                'archive_title' => __( 'PluginName Catalogue', 'pluginname' ),
-                'archive_description' => __( 'Browse the PluginName catalogue.', 'pluginname' ),
+                'root_name' => 'ProjectPress',
+                'root_description' => __( 'A searchable catalogue powered by ProjectPress.', 'projectpress' ),
+                'archive_title' => __( 'ProjectPress Catalogue', 'projectpress' ),
+                'archive_description' => __( 'Browse the ProjectPress catalogue.', 'projectpress' ),
                 'root_slug' => 'catalogue',
                 'category_slug' => 'catalogue-group',
                 'tag_slug' => 'catalogue-tag',
@@ -172,10 +172,10 @@ final class SettingsManager {
                 'show_feedback' => true,
                 'show_related_pages' => true,
                 'related_pages_count' => 4,
-                'search_placeholder' => __( 'Search the catalogue', 'pluginname' ),
-                'search_button_text' => __( 'Search', 'pluginname' ),
+                'search_placeholder' => __( 'Search the catalogue', 'projectpress' ),
+                'search_button_text' => __( 'Search', 'projectpress' ),
                 'search_scope' => 'all',
-                'search_no_results_message' => __( 'No catalogue entries found.', 'pluginname' ),
+                'search_no_results_message' => __( 'No catalogue entries found.', 'projectpress' ),
                 'search_results_count' => 10,
                 'search_min_chars' => 2,
                 'search_live_results' => true,
@@ -291,7 +291,7 @@ final class SettingsManager {
      */
     private static function storage_group( string $group ): string {
         $group = self::normalize_group( $group );
-        return str_starts_with( $group, 'pluginname_' ) ? $group : 'pluginname_' . $group;
+        return str_starts_with( $group, 'projectpress_' ) ? $group : 'projectpress_' . $group;
     }
 
     /**
@@ -302,7 +302,7 @@ final class SettingsManager {
      * @since 1.0.0
      */
     private static function logical_group( string $group ): string {
-        return str_starts_with( $group, 'pluginname_' ) ? substr( $group, 10 ) : $group;
+        return str_starts_with( $group, 'projectpress_' ) ? substr( $group, 10 ) : $group;
     }
     /**
      * Get the logical group name for a given setting key.
@@ -364,7 +364,7 @@ final class SettingsManager {
         return $fallback;
     }
     /**
-     * Normalize a group name by replacing dashes and spaces with underscores and removing the 'pluginname_' prefix if present.
+     * Normalize a group name by replacing dashes and spaces with underscores and removing the 'projectpress_' prefix if present.
      *
      * @param string $group
      * @return string
@@ -374,8 +374,8 @@ final class SettingsManager {
         $group = str_replace( '-', '_', sanitize_key( $group ) );
         $group = str_replace( ' ', '_', $group );
 
-        if ( str_starts_with( $group, 'pluginname_' ) ) {
-            return preg_replace( '/^pluginname_/', '', $group ) ?: $group;
+        if ( str_starts_with( $group, 'projectpress_' ) ) {
+            return preg_replace( '/^projectpress_/', '', $group ) ?: $group;
         }
 
         return $group;

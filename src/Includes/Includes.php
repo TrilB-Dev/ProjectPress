@@ -1,15 +1,15 @@
 <?php
 
-namespace PluginName\Includes;
+namespace ProjectPress\Includes;
 
-use PluginName\Includes\Core\Capabilities;
-use PluginName\Includes\Core\WP\WPLoader;
-use PluginName\Includes\Functions\Helpers\LoggerHelper;
-use PluginName\Includes\TemplateManagement\TemplateManagement;
-use PluginName\Includes\Pages\CronJobs;
-use PluginName\Includes\Pages\PostTypes;
-use PluginName\Includes\Pages\Shortcodes;
-use PluginName\Includes\Pages\Taxonomies;
+use ProjectPress\Includes\Core\Capabilities;
+use ProjectPress\Includes\Core\WP\WPLoader;
+use ProjectPress\Includes\Functions\Helpers\LoggerHelper;
+use ProjectPress\Includes\TemplateManagement\TemplateManagement;
+use ProjectPress\Includes\Pages\CronJobs;
+use ProjectPress\Includes\Pages\PostTypes;
+use ProjectPress\Includes\Pages\Shortcodes;
+use ProjectPress\Includes\Pages\Taxonomies;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -41,7 +41,7 @@ final class Includes {
      * Private constructor to prevent direct instantiation.
      */
     private function __construct() {
-        LoggerHelper::write_log( 'PluginName includes initialized.' );
+        LoggerHelper::write_log( 'ProjectPress includes initialized.' );
     }
 
     /**
@@ -54,7 +54,7 @@ final class Includes {
     }
 
     /**
-     * Initialize the core PluginName runtime registrations.
+     * Initialize the core ProjectPress runtime registrations.
      *
      * @return void
      */
@@ -133,7 +133,7 @@ final class Includes {
     }
 
     /**
-     * Attach the shared init lifecycle to an external PluginName loader.
+     * Attach the shared init lifecycle to an external ProjectPress loader.
      *
      * @param WPLoader $loader Loader owned by the main runtime or an extension.
      * @param string $hook WordPress action name.

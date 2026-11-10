@@ -1,6 +1,6 @@
 <?php
 
-namespace PluginName\Includes\Plugins\FontAwesome\Includes\Functions\Helpers;
+namespace ProjectPress\Includes\Plugins\FontAwesome\Includes\Functions\Helpers;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

@@ -6,10 +6,10 @@
  *
  * @since 1.0.0
  *
- * @package    PluginName
- * @subpackage PluginName/Includes/Core/WP
+ * @package    ProjectPress
+ * @subpackage ProjectPress/Includes/Core/WP
  */
-namespace PluginName\Includes\Core\WP;
+namespace ProjectPress\Includes\Core\WP;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

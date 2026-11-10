@@ -2,10 +2,10 @@
 /**
  * Admin email template for newly created licence types.
  *
- * @package PluginName
+ * @package ProjectPress
  */
 
-namespace PluginName\Includes\Email\Templates\Admin;
+namespace ProjectPress\Includes\Email\Templates\Admin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -17,15 +17,15 @@ final class LicenceTypeCreated extends EmailTemplate {
 
 	public function render( array $context = array() ): string {
 		$values      = array_merge( $this->context, $context );
-		$name        = $this->text( $values['name'] ?? __( 'Licence type', 'pluginname' ) );
+		$name        = $this->text( $values['name'] ?? __( 'Licence type', 'projectpress' ) );
 		$slug        = $this->text( $values['slug'] ?? '' );
 		$description = $this->text( $values['description'] ?? '' );
 
-		$html = '<h2 style="margin: 0 0 12px;">' . esc_html__( 'Licence type created', 'pluginname' ) . '</h2>
-            <p style="margin: 0 0 12px;">' . esc_html__( 'A new licence type has been created in PluginName.', 'pluginname' ) . '</p>
+		$html = '<h2 style="margin: 0 0 12px;">' . esc_html__( 'Licence type created', 'projectpress' ) . '</h2>
+            <p style="margin: 0 0 12px;">' . esc_html__( 'A new licence type has been created in ProjectPress.', 'projectpress' ) . '</p>
             <ul style="margin: 0 0 12px; padding-left: 20px;">
-                <li><strong>' . esc_html__( 'Name', 'pluginname' ) . ':</strong> ' . esc_html( $name ) . '</li>
-                <li><strong>' . esc_html__( 'Slug', 'pluginname' ) . ':</strong> ' . esc_html( $slug ) . '</li>
+                <li><strong>' . esc_html__( 'Name', 'projectpress' ) . ':</strong> ' . esc_html( $name ) . '</li>
+                <li><strong>' . esc_html__( 'Slug', 'projectpress' ) . ':</strong> ' . esc_html( $slug ) . '</li>
             </ul>
             <p style="margin: 0;">' . esc_html( $description ) . '</p>';
 

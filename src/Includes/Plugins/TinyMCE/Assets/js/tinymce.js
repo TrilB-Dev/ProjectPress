@@ -7,8 +7,8 @@
         }
 
         var frame = window.wp.media({
-            title: window.pluginnameTinyMCE?.mediaTitle || '',
-            button: { text: window.pluginnameTinyMCE?.mediaButton || '' },
+            title: window.projectpressTinyMCE?.mediaTitle || '',
+            button: { text: window.projectpressTinyMCE?.mediaButton || '' },
             multiple: false
         });
 
@@ -28,7 +28,7 @@
             return false;
         }
 
-        document.querySelectorAll('.pluginname-tinymce-config').forEach((node) => {
+        document.querySelectorAll('.projectpress-tinymce-config').forEach((node) => {
             const editorId = node.dataset.editor;
             if (!editorId || window.tinymce.get(editorId)) {
                 return;
@@ -43,16 +43,16 @@
 
             settings.setup = (editor) => {
                 if (settings.media_buttons) {
-                    editor.ui.registry.addButton('pluginnamemedia', {
+                    editor.ui.registry.addButton('projectpressmedia', {
                         icon: 'image',
-                        tooltip: window.pluginnameTinyMCE?.mediaTooltip || '',
+                        tooltip: window.projectpressTinyMCE?.mediaTooltip || '',
                         onAction: () => insertMedia(editor)
                     });
                 }
             };
 
             window.tinymce.init(settings).catch((error) => {
-                console.error('PluginName TinyMCE initialization failed.', error);
+                console.error('ProjectPress TinyMCE initialization failed.', error);
             });
         });
 
@@ -67,7 +67,7 @@
         window.setTimeout(initializeWhenReady, 50);
     };
 
-    window.addEventListener('pluginname:settings-tab-loaded', initialize);
+    window.addEventListener('projectpress:settings-tab-loaded', initialize);
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initializeWhenReady);

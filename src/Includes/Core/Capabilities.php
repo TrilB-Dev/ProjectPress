@@ -1,6 +1,6 @@
 <?php
 
-namespace PluginName\Includes\Core;
+namespace ProjectPress\Includes\Core;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Capabilities {
 	/**
-	 * Capability definitions contributed by PluginName extensions.
+	 * Capability definitions contributed by ProjectPress extensions.
 	 *
 	 * @var array<string, array{group: string, label: string, description: string}>
 	 */
@@ -22,145 +22,145 @@ class Capabilities {
 	public static function definitions(): array {
 		return array_merge(
 			array(
-				'pluginname_admin_view'                => array(
-					'group'       => 'PluginName Licence',
-					'label'       => __( 'View Licence Administration', 'pluginname' ),
-					'description' => __( 'Allows access to the PluginName dashboard and admin pages.', 'pluginname' ),
+				'projectpress_admin_view'                => array(
+					'group'       => 'ProjectPress Licence',
+					'label'       => __( 'View Licence Administration', 'projectpress' ),
+					'description' => __( 'Allows access to the ProjectPress dashboard and admin pages.', 'projectpress' ),
 				),
-				'pluginname_dashboard_view'            => array(
-					'group'       => 'PluginName Licence',
-					'label'       => __( 'View Licence Dashboard', 'pluginname' ),
-					'description' => __( 'Allows viewing the PluginName dashboard and summary status.', 'pluginname' ),
+				'projectpress_dashboard_view'            => array(
+					'group'       => 'ProjectPress Licence',
+					'label'       => __( 'View Licence Dashboard', 'projectpress' ),
+					'description' => __( 'Allows viewing the ProjectPress dashboard and summary status.', 'projectpress' ),
 				),
-				'pluginname_settings_general_view'     => array(
-					'group'       => 'PluginName Settings',
-					'label'       => __( 'View Licence Settings', 'pluginname' ),
-					'description' => __( 'Allows viewing the general licence management settings.', 'pluginname' ),
+				'projectpress_settings_general_view'     => array(
+					'group'       => 'ProjectPress Settings',
+					'label'       => __( 'View Licence Settings', 'projectpress' ),
+					'description' => __( 'Allows viewing the general licence management settings.', 'projectpress' ),
 				),
-				'pluginname_settings_general_edit'     => array(
-					'group'       => 'PluginName Settings',
-					'label'       => __( 'Edit Licence Settings', 'pluginname' ),
-					'description' => __( 'Allows editing the licence management settings.', 'pluginname' ),
+				'projectpress_settings_general_edit'     => array(
+					'group'       => 'ProjectPress Settings',
+					'label'       => __( 'Edit Licence Settings', 'projectpress' ),
+					'description' => __( 'Allows editing the licence management settings.', 'projectpress' ),
 				),
-				'pluginname_settings_layout_view'      => array(
-					'group'       => 'PluginName Settings',
-					'label'       => __( 'View Layout Settings', 'pluginname' ),
-					'description' => __( 'Allows viewing PluginName layout and presentation settings.', 'pluginname' ),
+				'projectpress_settings_layout_view'      => array(
+					'group'       => 'ProjectPress Settings',
+					'label'       => __( 'View Layout Settings', 'projectpress' ),
+					'description' => __( 'Allows viewing ProjectPress layout and presentation settings.', 'projectpress' ),
 				),
-				'pluginname_settings_layout_edit'      => array(
-					'group'       => 'PluginName Settings',
-					'label'       => __( 'Edit Layout Settings', 'pluginname' ),
-					'description' => __( 'Allows changing PluginName layout and presentation settings.', 'pluginname' ),
+				'projectpress_settings_layout_edit'      => array(
+					'group'       => 'ProjectPress Settings',
+					'label'       => __( 'Edit Layout Settings', 'projectpress' ),
+					'description' => __( 'Allows changing ProjectPress layout and presentation settings.', 'projectpress' ),
 				),
-				'pluginname_settings_access_view'      => array(
-					'group'       => 'PluginName Settings',
-					'label'       => __( 'View Access Controls', 'pluginname' ),
-					'description' => __( 'Allows viewing who can do what inside PluginName.', 'pluginname' ),
+				'projectpress_settings_access_view'      => array(
+					'group'       => 'ProjectPress Settings',
+					'label'       => __( 'View Access Controls', 'projectpress' ),
+					'description' => __( 'Allows viewing who can do what inside ProjectPress.', 'projectpress' ),
 				),
-				'pluginname_settings_access_edit'      => array(
-					'group'       => 'PluginName Settings',
-					'label'       => __( 'Edit Access Controls', 'pluginname' ),
-					'description' => __( 'Allows changing licence access roles and permission boundaries.', 'pluginname' ),
+				'projectpress_settings_access_edit'      => array(
+					'group'       => 'ProjectPress Settings',
+					'label'       => __( 'Edit Access Controls', 'projectpress' ),
+					'description' => __( 'Allows changing licence access roles and permission boundaries.', 'projectpress' ),
 				),
-				'pluginname_settings_security_view'    => array(
-					'group'       => 'PluginName Settings',
-					'label'       => __( 'View Security Settings', 'pluginname' ),
-					'description' => __( 'Allows viewing security and export protection settings.', 'pluginname' ),
+				'projectpress_settings_security_view'    => array(
+					'group'       => 'ProjectPress Settings',
+					'label'       => __( 'View Security Settings', 'projectpress' ),
+					'description' => __( 'Allows viewing security and export protection settings.', 'projectpress' ),
 				),
-				'pluginname_settings_security_edit'    => array(
-					'group'       => 'PluginName Settings',
-					'label'       => __( 'Edit Security Settings', 'pluginname' ),
-					'description' => __( 'Allows editing export passwords, encryption controls, and security flags.', 'pluginname' ),
+				'projectpress_settings_security_edit'    => array(
+					'group'       => 'ProjectPress Settings',
+					'label'       => __( 'Edit Security Settings', 'projectpress' ),
+					'description' => __( 'Allows editing export passwords, encryption controls, and security flags.', 'projectpress' ),
 				),
-				'pluginname_tools_general'              => array(
-					'group'       => 'PluginName Tools',
-					'label'       => __( 'View General Tools', 'pluginname' ),
-					'description' => __( 'Allows viewing general tools and settings in PluginName.', 'pluginname' ),
+				'projectpress_tools_general'              => array(
+					'group'       => 'ProjectPress Tools',
+					'label'       => __( 'View General Tools', 'projectpress' ),
+					'description' => __( 'Allows viewing general tools and settings in ProjectPress.', 'projectpress' ),
 				),
-				'pluginname_tools_import'              => array(
-					'group'       => 'PluginName Tools',
-					'label'       => __( 'Import Licence Data', 'pluginname' ),
-					'description' => __( 'Allows importing licence exports into the system securely.', 'pluginname' ),
+				'projectpress_tools_import'              => array(
+					'group'       => 'ProjectPress Tools',
+					'label'       => __( 'Import Licence Data', 'projectpress' ),
+					'description' => __( 'Allows importing licence exports into the system securely.', 'projectpress' ),
 				),
-				'pluginname_tools_export'              => array(
-					'group'       => 'PluginName Tools',
-					'label'       => __( 'Export Licence Data', 'pluginname' ),
-					'description' => __( 'Allows exporting licence records using encryption and a password.', 'pluginname' ),
+				'projectpress_tools_export'              => array(
+					'group'       => 'ProjectPress Tools',
+					'label'       => __( 'Export Licence Data', 'projectpress' ),
+					'description' => __( 'Allows exporting licence records using encryption and a password.', 'projectpress' ),
 				),
-				'pluginname_tools_debug'               => array(
-					'group'       => 'PluginName Tools',
-					'label'       => __( 'View Debug Tools', 'pluginname' ),
-					'description' => __( 'Allows using PluginName debug and diagnostics tools.', 'pluginname' ),
+				'projectpress_tools_debug'               => array(
+					'group'       => 'ProjectPress Tools',
+					'label'       => __( 'View Debug Tools', 'projectpress' ),
+					'description' => __( 'Allows using ProjectPress debug and diagnostics tools.', 'projectpress' ),
 				),
-				'pluginname_tools_reset'               => array(
-					'group'       => 'PluginName Tools',
-					'label'       => __( 'Reset Licence Data', 'pluginname' ),
-					'description' => __( 'Allows resetting or clearing licence records and related data.', 'pluginname' ),
+				'projectpress_tools_reset'               => array(
+					'group'       => 'ProjectPress Tools',
+					'label'       => __( 'Reset Licence Data', 'projectpress' ),
+					'description' => __( 'Allows resetting or clearing licence records and related data.', 'projectpress' ),
 				),
-				'pluginname_settings_plugins_view'     => array(
-					'group'       => 'PluginName Settings',
-					'label'       => __( 'View Plugin Settings', 'pluginname' ),
-					'description' => __( 'Allows viewing PluginName plugin settings.', 'pluginname' ),
+				'projectpress_settings_plugins_view'     => array(
+					'group'       => 'ProjectPress Settings',
+					'label'       => __( 'View Plugin Settings', 'projectpress' ),
+					'description' => __( 'Allows viewing ProjectPress plugin settings.', 'projectpress' ),
 				),
-				'pluginname_settings_plugins_int_view' => array(
-					'group'       => 'PluginName Settings',
-					'label'       => __( 'View Internal Plugin Settings', 'pluginname' ),
-					'description' => __( 'Allows viewing settings for internal PluginName plugins.', 'pluginname' ),
+				'projectpress_settings_plugins_int_view' => array(
+					'group'       => 'ProjectPress Settings',
+					'label'       => __( 'View Internal Plugin Settings', 'projectpress' ),
+					'description' => __( 'Allows viewing settings for internal ProjectPress plugins.', 'projectpress' ),
 				),
-				'pluginname_settings_plugins_int_edit' => array(
-					'group'       => 'PluginName Settings',
-					'label'       => __( 'Edit Internal Plugin Settings', 'pluginname' ),
-					'description' => __( 'Allows editing settings for internal PluginName plugins.', 'pluginname' ),
+				'projectpress_settings_plugins_int_edit' => array(
+					'group'       => 'ProjectPress Settings',
+					'label'       => __( 'Edit Internal Plugin Settings', 'projectpress' ),
+					'description' => __( 'Allows editing settings for internal ProjectPress plugins.', 'projectpress' ),
 				),
-				'pluginname_settings_plugins_ext_view' => array(
-					'group'       => 'PluginName Settings',
-					'label'       => __( 'View External Plugin Settings', 'pluginname' ),
-					'description' => __( 'Allows viewing settings for external PluginName plugins.', 'pluginname' ),
+				'projectpress_settings_plugins_ext_view' => array(
+					'group'       => 'ProjectPress Settings',
+					'label'       => __( 'View External Plugin Settings', 'projectpress' ),
+					'description' => __( 'Allows viewing settings for external ProjectPress plugins.', 'projectpress' ),
 				),
-				'pluginname_settings_plugins_ext_edit' => array(
-					'group'       => 'PluginName Settings',
-					'label'       => __( 'Edit External Plugin Settings', 'pluginname' ),
-					'description' => __( 'Allows editing settings for external PluginName plugins.', 'pluginname' ),
+				'projectpress_settings_plugins_ext_edit' => array(
+					'group'       => 'ProjectPress Settings',
+					'label'       => __( 'Edit External Plugin Settings', 'projectpress' ),
+					'description' => __( 'Allows editing settings for external ProjectPress plugins.', 'projectpress' ),
 				),
-				'pluginname_manager_dashboard' => array(
+				'projectpress_manager_dashboard' => array(
 					'group'       => 'Mod Management',
-					'label'       => __( 'View Mod Management Dashboard', 'pluginname' ),
-					'description' => __( 'Allows viewing the PluginName Mod Management Dashboard.', 'pluginname' ),
+					'label'       => __( 'View Mod Management Dashboard', 'projectpress' ),
+					'description' => __( 'Allows viewing the ProjectPress Mod Management Dashboard.', 'projectpress' ),
 				),
-				'pluginname_manager_mods_view' => array(
+				'projectpress_manager_mods_view' => array(
 					'group'       => 'Mod Management',
-					'label'       => __( 'Manage Mods', 'pluginname' ),
-					'description' => __( 'Allows viewing mods within Mod Management.', 'pluginname' ),
+					'label'       => __( 'Manage Mods', 'projectpress' ),
+					'description' => __( 'Allows viewing mods within Mod Management.', 'projectpress' ),
 				),
-				'pluginname_manager_mods_edit' => array(
+				'projectpress_manager_mods_edit' => array(
 					'group'       => 'Mod Management',
-					'label'       => __( 'Edit Mods', 'pluginname' ),
-					'description' => __( 'Allows editing mods within Mod Management.', 'pluginname' ),
+					'label'       => __( 'Edit Mods', 'projectpress' ),
+					'description' => __( 'Allows editing mods within Mod Management.', 'projectpress' ),
 				),
-				'pluginname_manager_mods_edit_others' => array(
+				'projectpress_manager_mods_edit_others' => array(
 					'group'       => 'Mod Management',
-					'label'       => __( 'Edit Other Mods', 'pluginname' ),
-					'description' => __( 'Allows editing mods created by other users within Mod Management.', 'pluginname' ),
+					'label'       => __( 'Edit Other Mods', 'projectpress' ),
+					'description' => __( 'Allows editing mods created by other users within Mod Management.', 'projectpress' ),
 				),
-				'pluginname_manager_groups_view' => array(
+				'projectpress_manager_groups_view' => array(
 					'group'       => 'Mod Management',
-					'label'       => __( 'Manage Groups', 'pluginname' ),
-					'description' => __( 'Allows viewing user groups within Mod Management.', 'pluginname' ),
+					'label'       => __( 'Manage Groups', 'projectpress' ),
+					'description' => __( 'Allows viewing user groups within Mod Management.', 'projectpress' ),
 				),
-				'pluginname_manager_groups_edit' => array(
+				'projectpress_manager_groups_edit' => array(
 					'group'       => 'Mod Management',
-					'label'       => __( 'Edit Groups', 'pluginname' ),
-					'description' => __( 'Allows editing user groups within Mod Management.', 'pluginname' ),
+					'label'       => __( 'Edit Groups', 'projectpress' ),
+					'description' => __( 'Allows editing user groups within Mod Management.', 'projectpress' ),
 				),
-				'pluginname_manager_tags_view' => array(
+				'projectpress_manager_tags_view' => array(
 					'group'       => 'Mod Management',
-					'label'       => __( 'View Tags', 'pluginname' ),
-					'description' => __( 'Allows viewing tags within Mod Management.', 'pluginname' ),
+					'label'       => __( 'View Tags', 'projectpress' ),
+					'description' => __( 'Allows viewing tags within Mod Management.', 'projectpress' ),
 				),
-				'pluginname_manager_tags_edit' => array(
+				'projectpress_manager_tags_edit' => array(
 					'group'       => 'Mod Management',
-					'label'       => __( 'Edit Tags', 'pluginname' ),
-					'description' => __( 'Allows editing tags within Mod Management.', 'pluginname' ),
+					'label'       => __( 'Edit Tags', 'projectpress' ),
+					'description' => __( 'Allows editing tags within Mod Management.', 'projectpress' ),
 				),
 			),
 			self::$extensions

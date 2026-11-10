@@ -2,10 +2,10 @@
 /**
  * Collect and register WordPress actions and filters.
  *
- * @package PluginName\Includes\Core\WP
+ * @package ProjectPress\Includes\Core\WP
  * @since 1.0.0
  */
-namespace PluginName\Includes\Core\WP;
+namespace ProjectPress\Includes\Core\WP;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

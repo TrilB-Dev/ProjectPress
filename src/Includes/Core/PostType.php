@@ -1,19 +1,19 @@
 <?php
 /**
- * Core post type registry for PluginName.
+ * Core post type registry for ProjectPress.
  *
  * This is the single entry point for creating or registering custom post types.
  * It is intentionally generic and should not contain type-specific data.
  *
- * @package PluginName
+ * @package ProjectPress
  * @subpackage Includes\Core
  * @since 1.0.0
  */
-namespace PluginName\Includes\Core;
+namespace ProjectPress\Includes\Core;
 
-use PluginName\Includes\Functions\Helpers\PermalinkHelper;
-use PluginName\Includes\Functions\Helpers\SanitizationHelper;
-use PluginName\Includes\Settings\Settings;
+use ProjectPress\Includes\Functions\Helpers\PermalinkHelper;
+use ProjectPress\Includes\Functions\Helpers\SanitizationHelper;
+use ProjectPress\Includes\Settings\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -94,29 +94,29 @@ final class PostType {
 			'singular_name'         => $data['singular_name'] ?? self::humanize_slug( $slug, true ),
 			'menu_name'             => $data['menu_name'] ?? self::humanize_slug( $slug ),
 			'name_admin_bar'        => $data['name_admin_bar'] ?? self::humanize_slug( $slug, true ),
-			'archives'              => $data['archives'] ?? sprintf( __( 'Item Archives', 'pluginname' ) ),
-			'attributes'            => $data['attributes'] ?? sprintf( __( 'Item Attributes', 'pluginname' ) ),
-			'parent_item_colon'     => $data['parent_item_colon'] ?? sprintf( __( 'Parent Item:', 'pluginname' ) ),
-			'all_items'             => $data['all_items'] ?? sprintf( __( 'All %s', 'pluginname' ), self::humanize_slug( $slug ) ),
-			'add_new_item'          => $data['add_new_item'] ?? sprintf( __( 'Add New %s', 'pluginname' ), self::humanize_slug( $slug, true ) ),
-			'add_new'               => $data['add_new'] ?? __( 'Add New', 'pluginname' ),
-			'new_item'              => $data['new_item'] ?? sprintf( __( 'New %s', 'pluginname' ), self::humanize_slug( $slug, true ) ),
-			'edit_item'             => $data['edit_item'] ?? sprintf( __( 'Edit %s', 'pluginname' ), self::humanize_slug( $slug, true ) ),
-			'update_item'           => $data['update_item'] ?? sprintf( __( 'Update %s', 'pluginname' ), self::humanize_slug( $slug, true ) ),
-			'view_item'             => $data['view_item'] ?? sprintf( __( 'View %s', 'pluginname' ), self::humanize_slug( $slug, true ) ),
-			'view_items'            => $data['view_items'] ?? sprintf( __( 'View %s', 'pluginname' ), self::humanize_slug( $slug ) ),
-			'search_items'          => $data['search_items'] ?? sprintf( __( 'Search %s', 'pluginname' ), self::humanize_slug( $slug ) ),
-			'not_found'             => $data['not_found'] ?? __( 'Not found', 'pluginname' ),
-			'not_found_in_trash'    => $data['not_found_in_trash'] ?? __( 'Not found in Trash', 'pluginname' ),
-			'featured_image'        => $data['featured_image'] ?? __( 'Featured Image', 'pluginname' ),
-			'set_featured_image'    => $data['set_featured_image'] ?? __( 'Set featured image', 'pluginname' ),
-			'remove_featured_image' => $data['remove_featured_image'] ?? __( 'Remove featured image', 'pluginname' ),
-			'use_featured_image'    => $data['use_featured_image'] ?? __( 'Use as featured image', 'pluginname' ),
-			'insert_into_item'      => $data['insert_into_item'] ?? __( 'Insert into item', 'pluginname' ),
-			'uploaded_to_this_item' => $data['uploaded_to_this_item'] ?? __( 'Uploaded to this item', 'pluginname' ),
-			'items_list'            => $data['items_list'] ?? sprintf( __( '%s list', 'pluginname' ), self::humanize_slug( $slug ) ),
-			'items_list_navigation' => $data['items_list_navigation'] ?? sprintf( __( '%s list navigation', 'pluginname' ), self::humanize_slug( $slug ) ),
-			'filter_items_list'     => $data['filter_items_list'] ?? sprintf( __( 'Filter %s list', 'pluginname' ), self::humanize_slug( $slug ) ),
+			'archives'              => $data['archives'] ?? sprintf( __( 'Item Archives', 'projectpress' ) ),
+			'attributes'            => $data['attributes'] ?? sprintf( __( 'Item Attributes', 'projectpress' ) ),
+			'parent_item_colon'     => $data['parent_item_colon'] ?? sprintf( __( 'Parent Item:', 'projectpress' ) ),
+			'all_items'             => $data['all_items'] ?? sprintf( __( 'All %s', 'projectpress' ), self::humanize_slug( $slug ) ),
+			'add_new_item'          => $data['add_new_item'] ?? sprintf( __( 'Add New %s', 'projectpress' ), self::humanize_slug( $slug, true ) ),
+			'add_new'               => $data['add_new'] ?? __( 'Add New', 'projectpress' ),
+			'new_item'              => $data['new_item'] ?? sprintf( __( 'New %s', 'projectpress' ), self::humanize_slug( $slug, true ) ),
+			'edit_item'             => $data['edit_item'] ?? sprintf( __( 'Edit %s', 'projectpress' ), self::humanize_slug( $slug, true ) ),
+			'update_item'           => $data['update_item'] ?? sprintf( __( 'Update %s', 'projectpress' ), self::humanize_slug( $slug, true ) ),
+			'view_item'             => $data['view_item'] ?? sprintf( __( 'View %s', 'projectpress' ), self::humanize_slug( $slug, true ) ),
+			'view_items'            => $data['view_items'] ?? sprintf( __( 'View %s', 'projectpress' ), self::humanize_slug( $slug ) ),
+			'search_items'          => $data['search_items'] ?? sprintf( __( 'Search %s', 'projectpress' ), self::humanize_slug( $slug ) ),
+			'not_found'             => $data['not_found'] ?? __( 'Not found', 'projectpress' ),
+			'not_found_in_trash'    => $data['not_found_in_trash'] ?? __( 'Not found in Trash', 'projectpress' ),
+			'featured_image'        => $data['featured_image'] ?? __( 'Featured Image', 'projectpress' ),
+			'set_featured_image'    => $data['set_featured_image'] ?? __( 'Set featured image', 'projectpress' ),
+			'remove_featured_image' => $data['remove_featured_image'] ?? __( 'Remove featured image', 'projectpress' ),
+			'use_featured_image'    => $data['use_featured_image'] ?? __( 'Use as featured image', 'projectpress' ),
+			'insert_into_item'      => $data['insert_into_item'] ?? __( 'Insert into item', 'projectpress' ),
+			'uploaded_to_this_item' => $data['uploaded_to_this_item'] ?? __( 'Uploaded to this item', 'projectpress' ),
+			'items_list'            => $data['items_list'] ?? sprintf( __( '%s list', 'projectpress' ), self::humanize_slug( $slug ) ),
+			'items_list_navigation' => $data['items_list_navigation'] ?? sprintf( __( '%s list navigation', 'projectpress' ), self::humanize_slug( $slug ) ),
+			'filter_items_list'     => $data['filter_items_list'] ?? sprintf( __( 'Filter %s list', 'projectpress' ), self::humanize_slug( $slug ) ),
 		);
 
 		$config = array(
@@ -204,7 +204,7 @@ final class PostType {
 	 * @since 1.0.0
 	 */
 	public static function definitions(): array {
-		return apply_filters( 'pluginname_post_type_definitions', self::$registered );
+		return apply_filters( 'projectpress_post_type_definitions', self::$registered );
 	}
 
 	/**
@@ -224,7 +224,7 @@ final class PostType {
 	 * @since 1.0.0
 	 */
 	public static function page_rewrite_slug(): string {
-		return self::setting_slug( 'root_slug', 'pluginname' );
+		return self::setting_slug( 'root_slug', 'projectpress' );
 	}
 
 	/**
@@ -442,13 +442,13 @@ final class PostType {
 				'singular_name'         => self::humanize_slug( $slug, true ),
 				'menu_name'             => self::humanize_slug( $slug, false ),
 				'name_admin_bar'        => self::humanize_slug( $slug, true ),
-				'all_items'             => sprintf( __( 'All %s', 'pluginname' ), self::humanize_slug( $slug ) ),
-				'add_new_item'          => sprintf( __( 'Add New %s', 'pluginname' ), self::humanize_slug( $slug, true ) ),
-				'edit_item'             => sprintf( __( 'Edit %s', 'pluginname' ), self::humanize_slug( $slug, true ) ),
-				'view_item'             => sprintf( __( 'View %s', 'pluginname' ), self::humanize_slug( $slug, true ) ),
-				'search_items'          => sprintf( __( 'Search %s', 'pluginname' ), self::humanize_slug( $slug ) ),
-				'not_found'             => __( 'Not found', 'pluginname' ),
-				'not_found_in_trash'    => __( 'Not found in Trash', 'pluginname' ),
+				'all_items'             => sprintf( __( 'All %s', 'projectpress' ), self::humanize_slug( $slug ) ),
+				'add_new_item'          => sprintf( __( 'Add New %s', 'projectpress' ), self::humanize_slug( $slug, true ) ),
+				'edit_item'             => sprintf( __( 'Edit %s', 'projectpress' ), self::humanize_slug( $slug, true ) ),
+				'view_item'             => sprintf( __( 'View %s', 'projectpress' ), self::humanize_slug( $slug, true ) ),
+				'search_items'          => sprintf( __( 'Search %s', 'projectpress' ), self::humanize_slug( $slug ) ),
+				'not_found'             => __( 'Not found', 'projectpress' ),
+				'not_found_in_trash'    => __( 'Not found in Trash', 'projectpress' ),
 			),
 			'supports'              => array( 'title', 'editor' ),
 			'taxonomies'            => array(),
