@@ -43,23 +43,22 @@ const entries = {
   'admin.settings': './src/Assets/js/admin.settings.js',
   'admin.tools': './src/Assets/js/admin.tools.js',
   'admin.wpmedia': './src/Assets/js/admin.wpmedia.js',
-  'admin.mods': './src/Assets/js/admin.mods.js',
   'admin.ajax': './src/Assets/js/admin.ajax.js',
     
   'wpoverride': './src/Assets/scss/wpoverride.scss'
 };
 
 const fontAwesomeEntries = {
-  'icon-picker': [
-    './src/Includes/Plugins/FontAwesome/Assets/js/fontawesome.icon-picker.js',
-    './src/Includes/Plugins/FontAwesome/Assets/scss/fontawesome.icon-picker.scss',
+  'admin.plugins.fontawesome.icon-picker': [
+    './src/Includes/Plugins/FontAwesome/Assets/js/admin.plugins.fontawesome.icon-picker.js',
+    './src/Includes/Plugins/FontAwesome/Assets/scss/admin.plugins.fontawesome.icon-picker.scss',
   ],
   'admin.plugins.fontawesome': [
     './src/Includes/Plugins/FontAwesome/Assets/js/admin.plugins.fontawesome.js',
   ],
 };
 const tinyMCEEntries = {
-  'tinyMCE': [
+  'tinymce': [
     './src/Includes/Plugins/TinyMCE/Assets/js/tinymce.js',
     './src/Includes/Plugins/TinyMCE/Assets/scss/tinymce.scss',
   ],
@@ -146,11 +145,11 @@ module.exports = [
           to: 'src/Assets/dist/js/bootstrap-select.min.js',
         },
         {
-          from: 'node_modules/@trilbdev/boostrap-select-country-data/dist/js/bs-country-data.min.js',
+          from: 'node_modules/@trilbdev/bootstrap-select-country-data/dist/js/bs-country-data.min.js',
           to: 'src/Assets/dist/js/bs-country-data.min.js',
         },
         {
-          from: 'node_modules/@trilbdev/boostrap-select-country-data/dist/css/bs-country-data.min.css',
+          from: 'node_modules/@trilbdev/bootstrap-select-country-data/dist/css/bs-country-data.min.css',
           to: 'src/Assets/dist/css/bs-country-data.min.css',
         },
       ]),

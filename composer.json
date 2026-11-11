@@ -8,10 +8,14 @@
             "src/Includes/Plugins/PluginsInterface.php"
         ],
         "psr-4": {
-            "ProjectPress\\": "src/"
+            "ProjectPress\\Admin\\": "src/Admin/",
+            "ProjectPress\\API\\": "src/API/",
+            "ProjectPress\\Assets\\": "src/Assets/",
+            "ProjectPress\\Includes\\": "src/Includes/",
+            "ProjectPress\\Public\\": "src/Public/"
         },
         "classmap": [
-            "src/ProjectPress.php"
+            "src/Plugin.php"
         ],
         "exclude-from-classmap": [
             "src/Includes/Plugins/"

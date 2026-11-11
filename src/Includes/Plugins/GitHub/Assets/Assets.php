@@ -8,8 +8,7 @@ namespace ProjectPress\Includes\Plugins\GitHub\Assets;
 
 use ProjectPress\Assets\Assets as RootAssets;
 use ProjectPress\Includes\Functions\Helpers\LoaderHelper;
-use ProjectPress\Includes\Plugins\GitHub\Includes\Settings\Settings as GitHubSettings;
-use ProjectPress\Includes\Plugins\GitHub\Includes\IconPicker;
+
 
 final class Assets extends RootAssets {
     /**
@@ -39,7 +38,7 @@ final class Assets extends RootAssets {
     }
 
     /**
-     * Register Font Awesome asset definitions for the admin context.
+     * Register GitHub asset definitions for the admin context.
      *
      * @param array  $assets The existing asset bundle.
      * @param string $context The current asset context.
@@ -48,57 +47,6 @@ final class Assets extends RootAssets {
     public function register_admin_assets( array $assets, string $context = 'admin' ): array {
         if ( 'admin' !== $context ) {
             return $assets;
-        }
-
-        $type = GitHubSettings::get_type();
-        $kit_id = trim( GitHubSettings::get_kit_id() );
-        $cdn_technology = GitHubSettings::get_cdn_technology();
-
-        if ( 'kit' === $type && '' !== $kit_id ) {
-            $assets['scripts'][] = array(
-                'handle' => 'projectpress-github-kit',
-                'src' => 'https://kit.github.com/' . rawurlencode( $kit_id ) . '.js',
-                'deps' => array(),
-                'version' => null,
-                'in_footer' => false
-            );
-        } elseif ( 'cdn' === $type && 'webfont' === $cdn_technology ) {
-            /**$assets['styles'][] = array(
-                'handle' => 'projectpress-github-cdn-style',
-                'src' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/github.min.css'
-            );*/
-            $assets['styles'][] = array(
-                'handle' => 'projectpress-github-cdn-style',
-                'src' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/github.min.css',
-            );
-            $assets['styles'][] = array(
-                'handle' => 'projectpress-github-cdn-style-solid',
-                'src' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/solid.min.css',
-                'deps' => array( 'projectpress-github-cdn-style' ),
-            );
-            $assets['styles'][] = array(
-                'handle' => 'projectpress-github-cdn-style-brands',
-                'src' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/brands.min.css',
-                'deps' => array( 'projectpress-github-cdn-style' ),
-            );
-        } elseif ( 'cdn' === $type && 'svg' === $cdn_technology ) {
-            $assets['scripts'][] = array(
-                'handle' => 'projectpress-github-cdn-svg',
-                'src' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/js/github.min.js',
-                'in_footer' => true
-            );
-            $assets['scripts'][] = array(
-                'handle' => 'projectpress-github-cdn-svg-inline',
-                'src' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/js/solid.min.js',
-                'deps' => array( 'projectpress-github-cdn-svg' ),
-                'in_footer' => true
-            );
-            $assets['scripts'][] = array(
-                'handle' => 'projectpress-github-cdn-svg-brands',
-                'src' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/js/brands.min.js',
-                'deps' => array( 'projectpress-github-cdn-svg' ),
-                'in_footer' => true
-            );
         }
 
         $current_page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
@@ -115,91 +63,18 @@ final class Assets extends RootAssets {
             );
         }
 
-        if ( GitHubSettings::enable_icon_picker() ) {
-            $assets['styles'][] = array(
-                'handle' => 'projectpress-github-icon-picker',
-                'src' => PROJECTPRESS_PLUGINS_URL . '/GitHub/Assets/dist/css/icon-picker.css',
-                'deps' => array( 'projectpress-bootstrap' ),
-                'version' => PROJECTPRESS_VERSION,
-            );
-            $assets['scripts'][] = array(
-                'handle' => 'projectpress-github-icon-picker',
-                'src' => PROJECTPRESS_PLUGINS_URL . '/GitHub/Assets/dist/js/icon-picker.js',
-                'deps' => array( 'jquery' ),
-                'version' => PROJECTPRESS_VERSION,
-                'in_footer' => true,
-                'localize' => array(
-                    'object_name' => 'projectpress_fa_picker',
-                    'data' => array(
-                        'ajax_url' => admin_url( 'admin-ajax.php' ),
-                        'nonce' => wp_create_nonce( 'projectpress_github_picker' ),
-                        'icons' => IconPicker::get_default_icon_catalog(),
-                        'strings' => array(
-                            'search_placeholder' => __( 'Search icons...', 'projectpress' ),
-                            'no_icons_found' => __( 'No icons found', 'projectpress' ),
-                            'loading' => __( 'Loading...', 'projectpress' ),
-                            'select_icon' => __( 'Select Icon', 'projectpress' ),
-                            'close' => __( 'Close', 'projectpress' ),
-                        ),
-                    ),
-                ),
-            );
-        }
-
         return $assets;
     }
 
     /**
-     * Register Font Awesome asset definitions for the frontend context.
+     * Register GitHub asset definitions for the frontend context.
      *
      * @param array  $assets The existing asset bundle.
      * @param string $context The current asset context.
      * @return array The updated asset bundle.
      */
     public function register_frontend_assets( array $assets, string $context = 'frontend' ): array {
-        if ( 'frontend' !== $context ) {
-            return $assets;
-        }
-
-        $type = GitHubSettings::get_type();
-        $kit_id = trim( GitHubSettings::get_kit_id() );
-
-        if ( 'kit' === $type && '' !== $kit_id ) {
-            $assets['scripts'][] = array(
-                'handle' => 'projectpress-github-kit',
-                'src' => 'https://kit.github.com/' . rawurlencode( $kit_id ) . '.js',
-                'deps' => array(),
-                'in_footer' => true,
-            );
-            return $assets;
-        }
-
-        $assets['styles'][] = array(
-            'handle' => 'projectpress-github-cdn-style',
-            'src' => 'https://cdn.jsdelivr.net/npm/@fortawesome/github-free@7/css/github.min.css',
-            'deps' => array(),
-            'version' => '7.0.0',
-        );
-        $assets['scripts'][] = array(
-            'handle' => 'projectpress-github-cdn-script',
-            'src' => 'https://cdn.jsdelivr.net/npm/@fortawesome/github-free@7/js/github.min.js',
-            'deps' => array(),
-            'version' => '7.0.0',
-            'in_footer' => true,
-        );
-
-        return $assets;
-    }
-    /**
-     * Add crossorigin attribute to the script tag
-     */
-    public function add_crossorigin_attribute($tag, $handle, $src) {
-
-        if ('projectpress-github-kit' === $handle) {
-            // Add crossorigin="anonymous" safely
-            $tag = '<script src="' . esc_url($src) . '" crossorigin="anonymous"></script>' . "\n";
-        }
-        return $tag;
+       
     }
 
 }

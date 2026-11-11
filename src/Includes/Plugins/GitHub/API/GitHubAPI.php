@@ -1,32 +1,8 @@
 <?php
 
-namespace ProjectPress\Includes\Plugins\FontAwesome\API;
+namespace ProjectPress\Includes\Plugins\GitHub\API;
 
-use ProjectPress\Includes\Plugins\FontAwesome\Includes\Settings\Settings;
+use ProjectPress\Includes\Plugins\GitHub\Includes\Settings\Settings;
 
-final class FontAwesomeAPI {
-    public static function configure(): void {
-        // ProjectPress uses its own Font Awesome asset pipeline and icon picker.
-        // The official WordPress FontAwesome plugin is not required.
-    }
-
-    public static function register_preferences(): void {
-        // No plugin bridge is required.
-    }
-
-    public static function is_available(): bool {
-        return true;
-    }
-
-    public static function instance() {
-        return null;
-    }
-
-    public static function source(): string {
-        return Settings::source();
-    }
-
-    public static function kit_id(): string {
-        return Settings::kit_id();
-    }
+final class GitHubAPI {
 }

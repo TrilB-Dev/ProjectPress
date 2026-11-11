@@ -13,7 +13,6 @@ namespace ProjectPress\Includes\Core\WP;
 
 use ProjectPress\Includes\Core\Capabilities;
 use ProjectPress\Includes\Core\Roles;
-use ProjectPress\Includes\ModManagement\GroupsManager;
 use ProjectPress\Includes\Plugins\Plugins;
 use ProjectPress\Includes\Settings\SettingsManager;
 use ProjectPress\Includes\Settings\Settings;
@@ -58,7 +57,6 @@ final class Activator {
 		Plugins::get_instance()->init();
 		Database::install();
 		Database::update();
-		GroupsManager::create_default_group();
 		Roles::install();
 		Capabilities::install();
 		SettingsManager::install();

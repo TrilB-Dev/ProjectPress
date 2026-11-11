@@ -6,8 +6,15 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'PluginName\\' => array($baseDir . '/src'),
+    'ProjectPress\\Public\\' => array($baseDir . '/src/Public'),
+    'ProjectPress\\Includes\\' => array($baseDir . '/src/Includes'),
+    'ProjectPress\\Assets\\' => array($baseDir . '/src/Assets'),
+    'ProjectPress\\Admin\\' => array($baseDir . '/src/Admin'),
+    'ProjectPress\\API\\' => array($baseDir . '/src/API'),
+    'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
+    'PHPCSStandards\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => array($vendorDir . '/dealerdirect/phpcodesniffer-composer-installer/src'),
+    'Mockery\\' => array($vendorDir . '/mockery/mockery/library/Mockery'),
+    'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
+    'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
+    'Brain\\Monkey\\' => array($vendorDir . '/brain/monkey/src'),
 );
-
-
-
