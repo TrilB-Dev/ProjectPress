@@ -22,38 +22,8 @@ final class PostTypes {
 	 * @since 1.0.0
 	 */
 	public static function register(): void {
-		self::projects_posttype();
 		self::content_posttypes();
 		self::register_attachment_metadata();
-	}
-
-	/**
-	 * Register the core ProjectPress project post type.
-	 *
-	 * @return bool
-	 * @since 1.0.0
-	 */
-	public static function projects_posttype(): bool {
-		return PostType::create(
-			'projectpress_projects',
-			array(
-				'label'           => __( 'Projects', 'projectpress' ),
-				'description'     => __( 'Projects managed by ProjectPress.', 'projectpress' ),
-				'supports'        => array( 'title', 'editor', 'excerpt', 'thumbnail', 'revisions' ),
-				'taxonomies'      => array( 'projectpress_category', 'projectpress_tag' ),
-				'public'          => true,
-				'show_ui'         => true,
-				'show_in_menu'    => true,
-				'menu_position'   => 20,
-				'menu_icon'       => 'dashicons-archive',
-				'has_archive'     => true,
-				'show_in_rest'    => true,
-				'rewrite'         => array( 'slug' => 'projects' ),
-				'capability_type' => 'post',
-				'hierarchical'    => true,
-				'map_meta_cap'    => true,
-			)
-		);
 	}
 
 	/**
