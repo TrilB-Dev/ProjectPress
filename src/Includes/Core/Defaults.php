@@ -1,43 +1,33 @@
 <?php
 /**
- * Defaults class for defining plugin default values.
+ * Canonical ProjectPress default values.
  *
- * @package ProjectPress
- * @subpackage Includes\Core
- * @since 1.0.0
+ * @package ProjectPress\Includes\Core
  */
 namespace ProjectPress\Includes\Core;
-
-use ProjectPress\Includes\Functions\Helpers\DBHelper;
-use ProjectPress\Includes\Functions\Helpers\LoggerHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 final class Defaults {
-    /**
-     * Constructor for the Defaults class.
-     *
-     * @since 1.0.0
-     */
-	public function __construct() {
-		// Initialize default values here.
+	public const PROJECT_STATUS_DEFAULT = 'planning';
+	public const PROJECT_PRIORITY_DEFAULT = 'normal';
+	public const PROJECT_VISIBILITY_DEFAULT = 'private';
+
+	public static function project_statuses(): array {
+		return array( 'planning', 'pending', 'active', 'on_hold', 'in_review', 'completed', 'cancelled', 'archived' );
 	}
-    /**
-     * Install all default values for the plugin.
-     *
-     * @return void
-     * @since 1.0.0
-     */
+
+	public static function project_priorities(): array {
+		return array( 'low', 'normal', 'high', 'urgent' );
+	}
+
+	public static function project_visibilities(): array {
+		return array( 'private', 'team', 'public' );
+	}
+
 	public static function install_defaults(): void {
+		// Reserved for idempotent installation data. Canonical values live above.
 	}
-    /**
-     * Reset the default groups by deleting and recreating the groups table.
-     *
-     * @return bool True on success, false on failure.
-     * @since 1.0.0
-     */
-
 }
-
