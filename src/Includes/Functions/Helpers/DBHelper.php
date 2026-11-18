@@ -1,650 +1,106 @@
 <?php
 /**
- * Helper for querying and modifying ProjectPress custom database tables.
+ * Helper facade for ProjectPress custom database tables.
  *
  * @package ProjectPress\Includes\Functions\Helpers
- * @since 1.0.0
  */
 namespace ProjectPress\Includes\Functions\Helpers;
+
 use ProjectPress\Includes\Core\WP\Database;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
-}
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 final class DBHelper {
-	/**
-	 * Static table prefix used for all ProjectPress custom tables.
-	 *
-	 * @var string
-	 */
-	private static string $table_prefix = 'projectpress_';
+	public static function register_core_table( string $table, callable $schema ): bool { return Database::register_core_table( $table, $schema ); }
+	public static function register_plugin_table( string $table, callable $schema ): bool { return Database::register_plugin_table( $table, $schema ); }
+	public static function get_core_tables(): array { return Database::get_core_tables(); }
+	public static function get_plugin_tables(): array { return Database::get_plugin_tables(); }
+	public static function table_name( string $table ): string { return Database::table_name( $table ); }
+	public static function table( string $table ): string { return self::table_name( $table ); }
+	public static function table_exists( string $table ): bool { return Database::table_exists( $table ); }
+	public static function create_table( string $table ): bool { return Database::create_table( $table ); }
+	public static function install(): bool { return Database::install(); }
+	public static function update_schema(): bool { return Database::update(); }
+	public static function synchronise(): bool { return Database::synchronise(); }
+	public static function drop_table_contents( string $table ): bool { return Database::drop_table_contents( $table ); }
+	public static function truncate_table( string $table ): bool { return Database::truncate_table( $table ); }
+	public static function delete_table( string $table ): bool { return Database::delete_table( $table ); }
+	public static function drop_table( string $table ): bool { return Database::drop_table( $table ); }
 
-	/**
-	 * Set the ProjectPress table prefix.
-	 *
-	 * @param string $prefix Prefix to use for custom tables.
-	 * @return void
-	 */
-	public static function set_prefix( string $prefix ): void {
-		$prefix = trim( (string) $prefix );
-		$prefix = preg_replace( '/[^A-Za-z0-9_]/', '', $prefix );
-
-		if ( '' === $prefix ) {
-			self::$table_prefix = 'projectpress_';
-			return;
-		}
-
-		self::$table_prefix = rtrim( $prefix, '_' ) . '_';
-	}
-
-	/**
-	 * Get the active table prefix.
-	 *
-	 * @return string
-	 */
-	public static function get_prefix(): string {
-		return self::$table_prefix;
-	}
-
-	/**
-	 * Register a core table schema for the next installation/update.
-	 *
-	 * @param string   $table  Unprefixed ProjectPress table suffix.
-	 * @param callable $schema Schema callback.
-	 * @return bool
-	 */
-	public static function register_core_table( string $table, callable $schema ): bool {
-		return Database::register_core_table( $table, $schema );
-	}
-
-	/**
-	 * Register a plugin table schema for the next installation/update.
-	 *
-	 * @param string   $table  Unprefixed ProjectPress table suffix.
-	 * @param callable $schema Schema callback.
-	 * @return bool
-	 */
-	public static function register_plugin_table( string $table, callable $schema ): bool {
-		return Database::register_plugin_table( $table, $schema );
-	}
-
-	/**
-	 * Get the registered core ProjectPress tables.
-	 *
-	 * @return array<string, callable>
-	 */
-	public static function get_core_tables(): array {
-		return Database::get_core_tables();
-	}
-
-	/**
-	 * Get the registered plugin ProjectPress tables.
-	 *
-	 * @return array<string, callable>
-	 */
-	public static function get_plugin_tables(): array {
-		return Database::get_plugin_tables();
-	}
-
-	/**
-	 * Build a fully qualified table name from a table suffix.
-	 *
-	 * Example: DBHelper::table_name( 'settings' ) => wp_projectpress_settings
-	 *
-	 * @param string $table Table suffix only, not a full table name.
-	 * @return string
-	 */
-	public static function table_name( string $table ): string {
-		global $wpdb;
-
-		$table = trim( (string) $table );
-		$table = preg_replace( '/[^A-Za-z0-9_]/', '', $table );
-
-		if ( '' === $table ) {
-			return '';
-		}
-
-		$prefix = isset( $wpdb ) && is_object( $wpdb ) && isset( $wpdb->prefix ) ? (string) $wpdb->prefix : '';
-		return $prefix . self::$table_prefix . $table;
-	}
-
-	/**
-	 * Alias for table_name().
-	 *
-	 * @param string $table Table suffix.
-	 * @return string
-	 */
-	public static function table( string $table ): string {
-		return self::table_name( $table );
-	}
-
-	/**
-	 * Create or update a single custom ProjectPress table from the registered schema.
-	 *
-	 * @param string $table Unprefixed table suffix.
-	 * @return bool
-	 */
-	public static function create_table( string $table ): bool {
-		return Database::create_table( $table );
-	}
-
-	/**
-	 * Empty all rows from a custom ProjectPress table.
-	 *
-	 * @param string $table Unprefixed table suffix.
-	 * @return bool
-	 */
-	public static function drop_table_contents( string $table ): bool {
-		return Database::drop_table_contents( $table );
-	}
-
-	/**
-	 * Alias for dropping all rows from table contents.
-	 *
-	 * @param string $table Unprefixed table suffix.
-	 * @return bool
-	 */
-	public static function truncate_table( string $table ): bool {
-		return Database::truncate_table( $table );
-	}
-
-	/**
-	 * Delete a ProjectPress custom table.
-	 *
-	 * @param string $table Unprefixed table suffix.
-	 * @return bool
-	 */
-	public static function delete_table( string $table ): bool {
-		return Database::delete_table( $table );
-	}
-
-	/**
-	 * Alias for dropping a table.
-	 *
-	 * @param string $table Unprefixed table suffix.
-	 * @return bool
-	 */
-	public static function drop_table( string $table ): bool {
-		return Database::drop_table( $table );
-	}
-
-	/**
-	 * Install or update all registered ProjectPress tables.
-	 *
-	 * @return void
-	 */
-	public static function install(): void {
-		Database::install();
-	}
-
-	/**
-	 * Determine whether a custom ProjectPress table exists.
-	 *
-	 * @param string $table Table suffix.
-	 * @return bool
-	 */
-	public static function table_exists( string $table ): bool {
-		global $wpdb;
-
-		$table_name = self::table_name( $table );
-		if ( '' === $table_name ) {
-			return false;
-		}
-
-		if ( ! isset( $wpdb ) || ! is_object( $wpdb ) || ! method_exists( $wpdb, 'get_var' ) || ! method_exists( $wpdb, 'prepare' ) ) {
-			return false;
-		}
-
-		return $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ) === $table_name;
-	}
-
-	/**
-	 * Execute a raw SQL query.
-	 *
-	 * @param string $sql SQL statement.
-	 * @param array  $params Optional prepared statement placeholders.
-	 * @return mixed
-	 */
-	public static function query( string $sql, array $params = array() ) {
-		global $wpdb;
-
-		if ( ! empty( $params ) ) {
-			$sql = $wpdb->prepare( $sql, $params );
-		}
-
-		return $wpdb->query( $sql );
-	}
-
-	/**
-	 * Fetch a single row from a custom table.
-	 *
-	 * @param string $table Table suffix.
-	 * @param array  $where Where conditions. Example: array( 'id' => 2 ).
-	 * @param string $columns Columns to select.
-	 * @param string $order_by Optional ORDER BY clause.
-	 * @return array<string, mixed>|null
-	 */
 	public static function get_row( string $table, array $where = array(), string $columns = '*', string $order_by = '' ) {
-		global $wpdb;
-
-		$query = 'SELECT ' . $columns . ' FROM ' . self::table_name( $table );
-		$where_sql = self::build_where_clause( $where );
-		$args      = self::build_where_args( $where );
-
-		if ( '' !== $where_sql ) {
-			$query .= ' WHERE ' . $where_sql;
-		}
-
-		if ( '' !== $order_by ) {
-			$query .= ' ORDER BY ' . self::validate_order_by( $order_by );
-		}
-
-		$query .= ' LIMIT 1';
-
-		if ( ! empty( $args ) ) {
-			$query = $wpdb->prepare( $query, $args );
-		}
-
-		return $wpdb->get_row( $query, ARRAY_A );
+		$rows = self::get_results( $table, $where, $columns, $order_by, 1 );
+		return $rows[0] ?? null;
 	}
 
-	/**
-	 * Fetch multiple rows from a custom table.
-	 *
-	 * @param string $table Table suffix.
-	 * @param array  $where Where conditions.
-	 * @param string $columns Columns to select.
-	 * @param string $order_by Optional ORDER BY clause.
-	 * @param int    $limit Optional row limit.
-	 * @param int    $offset Optional row offset.
-	 * @return array<int, array<string, mixed>>
-	 */
 	public static function get_results( string $table, array $where = array(), string $columns = '*', string $order_by = '', int $limit = 0, int $offset = 0 ): array {
 		global $wpdb;
-
-		$query = 'SELECT ' . $columns . ' FROM ' . self::table_name( $table );
-		$where_sql = self::build_where_clause( $where );
-		$args      = self::build_where_args( $where );
-
-		if ( '' !== $where_sql ) {
-			$query .= ' WHERE ' . $where_sql;
-		}
-
-		if ( '' !== $order_by ) {
-			$query .= ' ORDER BY ' . self::validate_order_by( $order_by );
-		}
-
-		if ( $limit > 0 ) {
-			$query .= ' LIMIT %d';
-			$args[] = $limit;
-
-			if ( $offset > 0 ) {
-				$query .= ' OFFSET %d';
-				$args[] = $offset;
-			}
-		}
-
-		if ( ! empty( $args ) ) {
-			$query = $wpdb->prepare( $query, $args );
-		}
-
-		return $wpdb->get_results( $query, ARRAY_A );
+		$table_name = self::table_name( $table );
+		if ( '' === $table_name ) { return array(); }
+		$query = 'SELECT ' . self::sanitize_columns( $columns ) . " FROM `{$table_name}`";
+		$args = array();
+		$where_sql = self::where_sql( $where, $args );
+		if ( '' !== $where_sql ) { $query .= ' WHERE ' . $where_sql; }
+		$order_sql = self::order_sql( $order_by );
+		if ( '' !== $order_sql ) { $query .= ' ORDER BY ' . $order_sql; }
+		if ( $limit > 0 ) { $query .= ' LIMIT %d OFFSET %d'; $args[] = $limit; $args[] = max( 0, $offset ); }
+		if ( $args ) { $query = $wpdb->prepare( $query, $args ); }
+		$rows = $wpdb->get_results( $query, ARRAY_A );
+		return is_array( $rows ) ? $rows : array();
 	}
 
-	/**
-	 * Fetch a single value from a custom table.
-	 *
-	 * @param string $table Table suffix.
-	 * @param string $column Column to fetch.
-	 * @param array  $where Where conditions.
-	 * @param mixed  $default Default value if nothing is found.
-	 * @return mixed
-	 */
 	public static function get_var( string $table, string $column, array $where = array(), $default = null ) {
-		global $wpdb;
-
-		$query = 'SELECT ' . self::escape_column( $column ) . ' FROM ' . self::table_name( $table );
-		$where_sql = self::build_where_clause( $where );
-		$args      = self::build_where_args( $where );
-
-		if ( '' !== $where_sql ) {
-			$query .= ' WHERE ' . $where_sql;
-		}
-
-		$query .= ' LIMIT 1';
-
-		if ( ! empty( $args ) ) {
-			$query = $wpdb->prepare( $query, $args );
-		}
-
-		$value = $wpdb->get_var( $query );
-		return null === $value ? $default : $value;
+		$row = self::get_row( $table, $where, $column );
+		if ( ! is_array( $row ) || ! array_key_exists( $column, $row ) ) { return $default; }
+		return $row[ $column ];
 	}
+	public static function get_all( string $table, array $where = array(), string $columns = '*', string $order_by = '' ): array { return self::get_results( $table, $where, $columns, $order_by ); }
+	public static function count( string $table, array $where = array() ): int { return (int) self::get_var( $table, 'COUNT(*) AS total', $where, 0 ); }
+	public static function exists( string $table, array $where = array() ): bool { return self::count( $table, $where ) > 0; }
 
-	/**
-	 * Fetch all rows from a table using a simple where array.
-	 *
-	 * @param string $table Table suffix.
-	 * @param array  $where Where conditions.
-	 * @param string $columns Columns to select.
-	 * @param string $order_by Optional ORDER BY clause.
-	 * @return array<int, array<string, mixed>>
-	 */
-	public static function get_all( string $table, array $where = array(), string $columns = '*', string $order_by = '' ): array {
-		return self::get_results( $table, $where, $columns, $order_by );
-	}
-
-	/**
-	 * Return the number of rows in a table matching the provided where conditions.
-	 *
-	 * @param string $table Table suffix.
-	 * @param array  $where Where conditions.
-	 * @return int
-	 */
-	public static function count( string $table, array $where = array() ): int {
-		global $wpdb;
-
-		$query = 'SELECT COUNT(*) FROM ' . self::table_name( $table );
-		$where_sql = self::build_where_clause( $where );
-		$args      = self::build_where_args( $where );
-
-		if ( '' !== $where_sql ) {
-			$query .= ' WHERE ' . $where_sql;
-		}
-
-		if ( ! empty( $args ) ) {
-			$query = $wpdb->prepare( $query, $args );
-		}
-
-		return (int) $wpdb->get_var( $query );
-	}
-
-	/**
-	 * Check whether a matching row exists.
-	 *
-	 * @param string $table Table suffix.
-	 * @param array  $where Where conditions.
-	 * @return bool
-	 */
-	public static function exists( string $table, array $where = array() ): bool {
-		return self::count( $table, $where ) > 0;
-	}
-
-	/**
-	 * Insert a row into a custom table.
-	 *
-	 * @param string $table Table suffix.
-	 * @param array  $data Row data to insert.
-	 * @param array  $formats Optional column value format array.
-	 * @return int|false Inserted row id or false on failure.
-	 */
 	public static function insert( string $table, array $data, array $formats = array() ) {
 		global $wpdb;
-
-		$table_name = self::table_name( $table );
-		if ( empty( $data ) || '' === $table_name ) {
-			return false;
-		}
-
-		$columns = array();
-		$values  = array();
-		$placeholders = array();
-		$formats = empty( $formats ) ? array_fill( 0, count( $data ), '%s' ) : $formats;
-
-		foreach ( $data as $column => $value ) {
-			$columns[] = self::escape_column( $column );
-			$values[] = $value;
-			$placeholders[] = $formats[ count( $placeholders ) ] ?? '%s';
-		}
-
-		$query = 'INSERT INTO ' . $table_name . ' (' . implode( ', ', $columns ) . ') VALUES (' . implode( ', ', $placeholders ) . ')';
-		$prepared = $wpdb->prepare( $query, $values );
-		$inserted = $wpdb->query( $prepared );
-
-		return false !== $inserted ? (int) $wpdb->insert_id : false;
+		$name = self::table_name( $table );
+		if ( '' === $name || empty( $data ) ) { return false; }
+		$result = $wpdb->insert( $name, $data, $formats ?: null );
+		return false === $result ? false : (int) $wpdb->insert_id;
 	}
-
-	/**
-	 * Update data in a custom table.
-	 *
-	 * @param string $table Table suffix.
-	 * @param array  $data Row data to update.
-	 * @param array  $where Update conditions.
-	 * @param array  $formats Optional value formats for data columns.
-	 * @param array  $where_formats Optional value formats for where columns.
-	 * @return bool
-	 */
-	public static function update( string $table, array $data, array $where = array(), array $formats = array(), array $where_formats = array() ): bool {
+	public static function update( string $table, array $data, array $where, array $formats = array(), array $where_formats = array() ): bool {
 		global $wpdb;
-
-		$table_name = self::table_name( $table );
-		if ( empty( $data ) || '' === $table_name ) {
-			return false;
-		}
-
-		$set_values = array();
-		$values     = array();
-		$formats    = empty( $formats ) ? array_fill( 0, count( $data ), '%s' ) : $formats;
-
-		foreach ( $data as $column => $value ) {
-			$set_values[] = self::escape_column( $column ) . ' = ' . ( $formats[ count( $set_values ) ] ?? '%s' );
-			$values[] = $value;
-		}
-
-		$where_sql = self::build_where_clause( $where, $where_formats );
-		$where_args = self::build_where_args( $where, $where_formats );
-
-		$query = 'UPDATE ' . $table_name . ' SET ' . implode( ', ', $set_values );
-		if ( '' !== $where_sql ) {
-			$query .= ' WHERE ' . $where_sql;
-		}
-
-		$prepared = $wpdb->prepare( $query, array_merge( $values, $where_args ) );
-		$executed = $wpdb->query( $prepared );
-		if ( false === $executed ) {
-			return false;
-		}
-
-		if ( property_exists( $wpdb, 'rows_affected' ) ) {
-			return (int) $wpdb->rows_affected > 0;
-		}
-
-		return true;
+		$name = self::table_name( $table );
+		return '' !== $name && ! empty( $data ) && ! empty( $where ) && false !== $wpdb->update( $name, $data, $where, $formats ?: null, $where_formats ?: null );
 	}
-
-	/**
-	 * Delete rows from a custom table.
-	 *
-	 * @param string $table Table suffix.
-	 * @param array  $where Delete conditions.
-	 * @param array  $where_formats Optional value formats for where conditions.
-	 * @return bool
-	 */
-	public static function delete( string $table, array $where = array(), array $where_formats = array() ): bool {
+	public static function delete( string $table, array $where, array $where_formats = array() ): bool {
 		global $wpdb;
-
-		$table_name = self::table_name( $table );
-		if ( '' === $table_name ) {
-			return false;
-		}
-
-		$where_sql = self::build_where_clause( $where, $where_formats );
-		$where_args = self::build_where_args( $where, $where_formats );
-
-		$query = 'DELETE FROM ' . $table_name;
-		if ( '' !== $where_sql ) {
-			$query .= ' WHERE ' . $where_sql;
-		}
-
-		if ( ! empty( $where_args ) ) {
-			$query = $wpdb->prepare( $query, $where_args );
-		}
-
-		$executed = $wpdb->query( $query );
-		if ( false === $executed ) {
-			return false;
-		}
-
-		if ( property_exists( $wpdb, 'rows_affected' ) ) {
-			return (int) $wpdb->rows_affected > 0;
-		}
-
-		return true;
+		$name = self::table_name( $table );
+		return '' !== $name && ! empty( $where ) && false !== $wpdb->delete( $name, $where, $where_formats ?: null );
 	}
-
-	/**
-	 * Insert a row, or update it if it already exists.
-	 *
-	 * @param string $table Table suffix.
-	 * @param array  $data Row data.
-	 * @param array  $where Unique conditions used to match an existing row.
-	 * @return int|false
-	 */
 	public static function insert_or_update( string $table, array $data, array $where = array() ) {
-		if ( empty( $where ) ) {
-			return self::insert( $table, $data );
-		}
-
-		if ( self::exists( $table, $where ) ) {
-			self::update( $table, $data, $where );
-			return self::get_var( $table, 'id', $where );
-		}
-
-		return self::insert( $table, $data );
+		if ( empty( $where ) ) { return self::insert( $table, $data ); }
+		if ( self::exists( $table, $where ) ) { return self::update( $table, $data, $where ) ? ( self::get_var( $table, 'id', $where, true ) ) : false; }
+		return self::insert( $table, array_merge( $data, $where ) );
 	}
+	public static function get_by_id( string $table, int $id, string $id_column = 'id' ) { return self::get_row( $table, array( $id_column => $id ) ); }
 
-	/**
-	 * Get a row by id.
-	 *
-	 * @param string $table Table suffix.
-	 * @param int    $id Row id.
-	 * @param string $id_column Primary key column.
-	 * @return array<string, mixed>|null
-	 */
-	public static function get_by_id( string $table, int $id, string $id_column = 'id' ) {
-		return self::get_row( $table, array( $id_column => $id ) );
-	}
-
-	/**
-	 * Validate and sanitize an ORDER BY clause.
-	 *
-	 * @param string $order_by Raw ORDER BY value.
-	 * @return string
-	 */
-	private static function validate_order_by( string $order_by ): string {
-		$order_by = trim( $order_by );
-		if ( '' === $order_by ) {
-			return '';
+	private static function where_sql( array $where, array &$args ): string {
+		$parts = array();
+		foreach ( $where as $column => $value ) {
+			$column = self::identifier( (string) $column );
+			if ( '' === $column ) { continue; }
+			if ( is_array( $value ) && $value ) { $parts[] = "`{$column}` IN (" . implode( ',', array_fill( 0, count( $value ), '%s' ) ) . ')'; array_push( $args, ...array_values( $value ) ); }
+			else { $parts[] = "`{$column}` = %s"; $args[] = $value; }
 		}
-
-		$parts = preg_split( '/\s*,\s*/', $order_by );
-		$sanitized = array();
-
-		foreach ( $parts as $part ) {
-			if ( '' === $part ) {
-				continue;
-			}
-
-			$matches = array();
-			preg_match( '/^([A-Za-z0-9_\.]+)\s*(ASC|DESC)?$/i', trim( $part ), $matches );
-			if ( empty( $matches ) ) {
-				continue;
-			}
-
-			$sanitized[] = self::escape_column( $matches[1] ) . ( ! empty( $matches[2] ) ? ' ' . strtoupper( $matches[2] ) : '' );
-		}
-
-		return implode( ', ', $sanitized );
+		return implode( ' AND ', $parts );
 	}
-
-	/**
-	 * Build a WHERE clause from a flat where array.
-	 *
-	 * @param array $where Where conditions.
-	 * @param array $formats Optional formats for each value.
-	 * @return string
-	 */
-	private static function build_where_clause( array $where, array $formats = array() ): string {
-		$clauses = array();
-		$index = 0;
-
-		foreach ( $where as $key => $value ) {
-			$column = self::normalize_where_key( $key );
-			if ( '' === $column ) {
-				continue;
-			}
-
-			if ( is_array( $value ) ) {
-				$placeholder = implode( ', ', array_fill( 0, count( $value ), '%s' ) );
-				$clauses[] = self::escape_column( $column ) . ' IN (' . $placeholder . ')';
-				continue;
-			}
-
-			$format = $formats[ $index ] ?? '%s';
-			$clauses[] = self::escape_column( $column ) . ' = ' . $format;
-			$index++;
-		}
-
-		return implode( ' AND ', $clauses );
+	private static function sanitize_columns( string $columns ): string {
+		if ( '*' === trim( $columns ) ) { return '*'; }
+		$clean = array();
+		foreach ( explode( ',', $columns ) as $column ) { $column = trim( $column ); if ( preg_match( '/^COUNT\(\*\) AS ([A-Za-z0-9_]+)$/i', $column, $m ) ) { $clean[] = 'COUNT(*) AS `' . $m[1] . '`'; continue; } $id = self::identifier( $column ); if ( '' !== $id ) { $clean[] = "`{$id}`"; } }
+		return $clean ? implode( ', ', $clean ) : '*';
 	}
-
-	/**
-	 * Build the values for a WHERE clause.
-	 *
-	 * @param array $where Where conditions.
-	 * @param array $formats Optional formats for each value.
-	 * @return array<int, mixed>
-	 */
-	private static function build_where_args( array $where, array $formats = array() ): array {
-		$args = array();
-		$index = 0;
-
-		foreach ( $where as $key => $value ) {
-			if ( '' === self::normalize_where_key( $key ) ) {
-				continue;
-			}
-
-			if ( is_array( $value ) ) {
-				foreach ( $value as $item ) {
-					$args[] = $item;
-				}
-				continue;
-			}
-
-			$args[] = $value;
-			$index++;
-		}
-
-		return $args;
+	private static function order_sql( string $order_by ): string {
+		$parts = array();
+		foreach ( explode( ',', $order_by ) as $part ) { if ( preg_match( '/^\s*([A-Za-z0-9_]+)(?:\s+(ASC|DESC))?\s*$/i', $part, $m ) ) { $parts[] = '`' . $m[1] . '`' . ( isset( $m[2] ) ? ' ' . strtoupper( $m[2] ) : '' ); } }
+		return implode( ', ', $parts );
 	}
-
-	/**
-	 * Normalize a where key such as `status` or `status__not` into a safe column name.
-	 *
-	 * @param string $key Raw where key.
-	 * @return string
-	 */
-	private static function normalize_where_key( string $key ): string {
-		$key = trim( (string) $key );
-		if ( '' === $key ) {
-			return '';
-		}
-
-		$parts = explode( '__', $key );
-		return self::escape_column( $parts[0] );
-	}
-
-	/**
-	 * Escape and normalize a column name.
-	 *
-	 * @param string $column Raw column name.
-	 * @return string
-	 */
-	private static function escape_column( string $column ): string {
-		$column = trim( (string) $column );
-		$column = preg_replace( '/[^A-Za-z0-9_\.]/', '', $column );
-		return '' === $column ? '*' : '`' . $column . '`';
-	}
+	private static function identifier( string $value ): string { return preg_match( '/^[A-Za-z0-9_]+$/', $value ) ? $value : ''; }
 }
-
