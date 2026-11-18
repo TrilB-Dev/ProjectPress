@@ -1,157 +1,39 @@
 <?php
 /**
- * Project manager service.
+ * High-level facade for the ProjectPress project domain.
  *
  * @package ProjectPress\Includes\Project
  */
-
 namespace ProjectPress\Includes\Project;
 
-use ProjectPress\Includes\Project\Core\Project;
-use ProjectPress\Includes\Project\Core\Workspace;
+use ProjectPress\Includes\Project\Core\ProjectContext;
+use ProjectPress\Includes\Project\Core\ProjectPermissions;
+use ProjectPress\Includes\Project\Core\ProjectQuery;
+use ProjectPress\Includes\Project\Core\ProjectRepository;
+use ProjectPress\Includes\Project\Core\ProjectService;
+use ProjectPress\Includes\Project\Core\ProjectValidator;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 final class ProjectManager {
 	private static ?self $instance = null;
+	private ProjectRepository $repository;
+	private ProjectService $service;
+	private ProjectContext $context;
 
-	private array $projects = array();
-	private array $workspaces = array();
-	private int $next_project_number = 1;
-	private int $next_workspace_number = 1;
-
-	private function __construct() {}
-
-	public static function get_instance(): self {
-		if ( null === self::$instance ) {
-			self::$instance = new self();
-		}
-
-		return self::$instance;
+	private function __construct() {
+		$permissions = new ProjectPermissions();
+		$this->repository = new ProjectRepository();
+		$this->service = new ProjectService( $this->repository, new ProjectValidator(), $permissions );
+		$this->context = new ProjectContext( $this->repository, $permissions );
 	}
 
-	public function create_workspace( string $name, string $description = '', ?string $slug = null ): Workspace {
-		$id = 'workspace-' . $this->next_workspace_number;
-		$this->next_workspace_number++;
-
-		$workspace = new Workspace( $id, $name, $slug ?: '', $description );
-		$this->workspaces[ $id ] = $workspace;
-
-		return $workspace;
-	}
-
-	public function create_project( string $title, array $attributes = array() ): Project {
-		$id = 'project-' . $this->next_project_number;
-		$this->next_project_number++;
-
-		$workspace_id = $attributes['workspace_id'] ?? '';
-		$project = new Project(
-			$id,
-			$title,
-			$attributes['description'] ?? '',
-			$attributes['status'] ?? Project::STATUS_DRAFT,
-			$workspace_id,
-			$attributes['metadata'] ?? array()
-		);
-
-		$this->projects[ $id ] = $project;
-
-		if ( '' !== $workspace_id && isset( $this->workspaces[ $workspace_id ] ) ) {
-			$this->workspaces[ $workspace_id ]->add_project_id( $id );
-		}
-
-		return $project;
-	}
-
-	public function register_project( Project $project ): self {
-		$this->projects[ $project->get_id() ] = $project;
-
-		if ( '' !== $project->get_workspace_id() && isset( $this->workspaces[ $project->get_workspace_id() ] ) ) {
-			$this->workspaces[ $project->get_workspace_id() ]->add_project_id( $project->get_id() );
-		}
-
-		return $this;
-	}
-
-	public function register_workspace( Workspace $workspace ): self {
-		$this->workspaces[ $workspace->get_id() ] = $workspace;
-		return $this;
-	}
-
-	public function get_project( string $id ): ?Project {
-		return $this->projects[ $id ] ?? null;
-	}
-
-	public function get_workspace( string $id ): ?Workspace {
-		return $this->workspaces[ $id ] ?? null;
-	}
-
-	public function get_projects(): array {
-		return $this->projects;
-	}
-
-	public function get_workspaces(): array {
-		return $this->workspaces;
-	}
-
-	public function get_projects_by_workspace( string $workspace_id ): array {
-		return array_values(
-			array_filter(
-				$this->projects,
-				static fn( Project $project ): bool => $project->get_workspace_id() === $workspace_id
-			)
-		);
-	}
-
-	public function get_projects_by_status( string $status ): array {
-		return array_values(
-			array_filter(
-				$this->projects,
-				static fn( Project $project ): bool => $project->get_status() === $status
-			)
-		);
-	}
-
-	public function find_project_by_title( string $title ): ?Project {
-		foreach ( $this->projects as $project ) {
-			if ( $project->get_title() === $title ) {
-				return $project;
-			}
-		}
-
-		return null;
-	}
-
-	public function delete_project( string $id ): bool {
-		if ( ! isset( $this->projects[ $id ] ) ) {
-			return false;
-		}
-
-		$project = $this->projects[ $id ];
-		$workspace_id = $project->get_workspace_id();
-		if ( '' !== $workspace_id && isset( $this->workspaces[ $workspace_id ] ) ) {
-			$this->workspaces[ $workspace_id ]->remove_project_id( $id );
-		}
-
-		unset( $this->projects[ $id ] );
-		return true;
-	}
-
-	public function delete_workspace( string $id ): bool {
-		if ( ! isset( $this->workspaces[ $id ] ) ) {
-			return false;
-		}
-
-		$workspace = $this->workspaces[ $id ];
-		foreach ( $workspace->get_project_ids() as $project_id ) {
-			if ( isset( $this->projects[ $project_id ] ) ) {
-				$this->projects[ $project_id ]->set_workspace_id( '' );
-			}
-		}
-
-		unset( $this->workspaces[ $id ] );
-		return true;
-	}
+	public static function get_instance(): self { return self::$instance ??= new self(); }
+	public function repository(): ProjectRepository { return $this->repository; }
+	public function service(): ProjectService { return $this->service; }
+	public function context(): ProjectContext { return $this->context; }
+	public function find( int $id ) { return $this->repository->find( $id ); }
+	public function query( array $arguments = array() ): array { return $this->repository->query( new ProjectQuery( $arguments ) ); }
+	public function create( array $data ) { return $this->service->create( $data ); }
+	public function resolve( $identifier ) { return $this->context->resolve( $identifier ); }
 }
