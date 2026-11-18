@@ -20,6 +20,7 @@ use ProjectPress\Assets\Assets;
 use ProjectPress\Admin\Manager\Manager;
 use ProjectPress\Admin\Manager\Tools\ToolsManager;
 use ProjectPress\Admin\Manager\Dashboard\DashboardManager;
+use ProjectPress\Admin\Manager\ProjectManager\ProjectsManager;
 use ProjectPress\Admin\Manager\Mods\ModManager;
 use ProjectPress\Admin\Manager\Settings\SettingsManager;
 use ProjectPress\Admin\Manager\Tools\Export;
@@ -27,263 +28,74 @@ use ProjectPress\Admin\Manager\Tools\General;
 use ProjectPress\Admin\Manager\Tools\Import;
 use ProjectPress\Admin\Manager\Tools\Reset;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 final class Admin {
-	/**
-	 * The DashboardManager instance for managing the dashboard page.
-	 *
-	 * @var DashboardManager
-	 * */
 	private DashboardManager $dashboard_manager;
-	/**
-	 * SettingsManager instance for managing settings-related admin pages.
-	 *
-	 * @var SettingsManager
-	 */
 	private SettingsManager $settings_manager;
-	/**
-	 * LicencesManager instance for managing licence-type and issued licence pages.
-	 *
-	 * @var ModManager
-	 */
 	private ModManager $mod_manager;
-	/**
-	 * ToolsManager instance for managing tools-related admin pages.
-	 *
-	 * @var ToolsManager
-	 */
+	private ProjectsManager $projects_manager;
 	private ToolsManager $tools_manager;
-	/**
-	 * Registry of the admin managers.
-	 *
-	 * @var array<string, Manager>
-	 */
+	/** @var array<string, Manager> */
 	private array $managers;
-	/**
-	 * LoaderHelper instance for managing action and filter hooks.
-	 *
-	 * @var LoaderHelper
-	 */
 	private LoaderHelper $loader;
-	/**
-	 * Assets instance for managing admin assets.
-	 *
-	 * @var Assets
-	 */
 	private Assets $assets;
-	/**
-	 * Constructor for the Admin class.
-	 *
-	 * Initializes the various admin managers and registers their assets.
-	 *
-	 * @param Assets $assets The Assets instance for managing admin assets.
-	 */
+
 	public function __construct( Assets $assets ) {
 		$this->managers = array(
-			'dashboard' 		=> new DashboardManager(),
-			'settings'  		=> new SettingsManager(),
-			'mod-manager'      	=> new ModManager(),
-			'tools'     		=> new ToolsManager(),
+			'dashboard' => new DashboardManager(),
+			'project-manager' => new ProjectsManager(),
+			'settings' => new SettingsManager(),
+			'mod-manager' => new ModManager(),
+			'tools' => new ToolsManager(),
 		);
-		/**
-		 * Initialize the individual manager instances from the registry.
-		 */
 		$this->dashboard_manager = $this->managers['dashboard'];
-		/**
-		 * Initialize the settings manager instance from the registry.
-		 */
-		$this->settings_manager  = $this->managers['settings'];
-		/**
-		 * Initialize the mod manager instance from the registry.
-		 */
-		$this->mod_manager      = $this->managers['mod-manager'];
-		/**
-		 * Initialize the tools manager instance from the registry.
-		 */
-		$this->tools_manager     = $this->managers['tools'];
-		/**
-		 * Initialize the loader helper.
-		 */
+		$this->projects_manager = $this->managers['project-manager'];
+		$this->settings_manager = $this->managers['settings'];
+		$this->mod_manager = $this->managers['mod-manager'];
+		$this->tools_manager = $this->managers['tools'];
 		$this->loader = new LoaderHelper();
-		new General( $this->loader );
-		new Reset( $this->loader );
-		new Import( $this->loader );
-		new Export( $this->loader );
-		/**
-		 * Initialize the assets manager.
-		 */
+		new General( $this->loader ); new Reset( $this->loader ); new Import( $this->loader ); new Export( $this->loader );
 		$this->assets = $assets;
-		/**
-		 * Register assets for the admin managers.
-		 */
-		foreach ( $this->managers as $manager ) {
-			$manager->register_assets( $assets );
-		}
-		/**
-		 * Register assets for the plugin functions manager.
-		 */
-		$this->loader->register_component(
-			$this,
-			array(
-				array(
-					'type'     => 'action',
-					'hook'     => 'wp_ajax_projectpress_dismiss_onboarding',
-					'callback' => 'dismiss_onboarding',
-				),
-			)
-		);
+		foreach ( $this->managers as $manager ) { $manager->register_assets( $assets ); }
+		$this->loader->register_component( $this, array( array( 'type' => 'action', 'hook' => 'wp_ajax_projectpress_dismiss_onboarding', 'callback' => 'dismiss_onboarding' ) ) );
 		$this->loader->run();
 	}
-	/**
-	 * Register admin menu pages and subpages.
-	 *
-	 * @since 1.0.0
-	 */
+
 	public function register_admin_menu(): void {
 		LoggerHelper::write_log( 'ProjectPress admin menu registration started.' );
-
-		try {
-			FunctionsSidebar::register_admin_menu( $this );
-			LoggerHelper::write_log( 'ProjectPress admin menu registration complete.' );
-		} catch ( \Throwable $e ) {
-			LoggerHelper::write_log( 'ProjectPress admin menu registration failed: ' . $e->getMessage() );
-			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				wp_die( esc_html( $e->getMessage() ), __( 'ProjectPress admin menu error', 'projectpress' ), array( 'back_link' => true ) );
-			}
-		}
-	}
-	/**
-	 * Render the dashboard page.
-	 *
-	 * This method is responsible for rendering the dashboard page of the ProjectPress plugin.
-	 * It delegates the rendering to the DashboardManager instance.
-	 */
-	public function render_dashboard(): void {
-		$group = RequestHelper::get_key( 'group', '' );
-		$tab   = RequestHelper::get_key( 'tab', '' );
-		$this->route_manager( $group, $tab );
+		try { FunctionsSidebar::register_admin_menu( $this ); LoggerHelper::write_log( 'ProjectPress admin menu registration complete.' ); }
+		catch ( \Throwable $e ) { LoggerHelper::write_log( 'ProjectPress admin menu registration failed: ' . $e->getMessage() ); if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { wp_die( esc_html( $e->getMessage() ), __( 'ProjectPress admin menu error', 'projectpress' ), array( 'back_link' => true ) ); } }
 	}
 
-	/**
-	 * Dispatch the admin request to the correct manager.
-	 *
-	 * @param string $group Requested group slug.
-	 * @param string $tab Requested tab slug.
-	 * @return void
-	 */
+	public function render_dashboard(): void { $this->route_manager( RequestHelper::get_key( 'group', '' ), RequestHelper::get_key( 'tab', '' ) ); }
+
 	public function route_manager( string $group, string $tab = '', string $form = '' ): void {
-		$group = sanitize_key( $group );
-		$tab = sanitize_key( $tab );
-		$form = sanitize_key( $form );
-		$normalized_group = array(
-			'projectpress'        => 'dashboard',
-			'dashboard'       => 'dashboard',
-			'mods'            => 'mods',
-			'mod-manager'     => 'mods',
-			'manage-mod'      => 'mods',
-			'manage-mods'     => 'mods',
-			'settings'        => 'settings',
-			'tools'           => 'tools',
-			'reports'         => 'reports',
-		)[ $group ] ?? 'dashboard';
-
-		LoggerHelper::write_log( sprintf( 'ProjectPress dashboard render triggered. Group=%s Tab=%s Form=%s', $group, $tab, $form ) );
-
+		$group = sanitize_key( $group ); $tab = sanitize_key( $tab ); $form = sanitize_key( $form );
+		$normalized_group = array( 'projectpress' => 'dashboard', 'dashboard' => 'dashboard', 'projects' => 'project-manager', 'project-manager' => 'project-manager', 'mods' => 'mods', 'mod-manager' => 'mods', 'manage-mod' => 'mods', 'manage-mods' => 'mods', 'settings' => 'settings', 'tools' => 'tools', 'reports' => 'reports' )[ $group ] ?? 'dashboard';
 		try {
 			switch ( $normalized_group ) {
-				case 'mods':
-					LoggerHelper::write_log( 'ProjectPress dashboard routed to mods page.' );
-					$this->render_mods( $tab, $form );
-					return;
-				case 'settings':
-					LoggerHelper::write_log( 'ProjectPress dashboard routed to settings page.' );
-					$this->render_settings();
-					return;
-				case 'tools':
-					LoggerHelper::write_log( 'ProjectPress dashboard routed to tools page.' );
-					$this->render_tools();
-					return;
-				default:
-					LoggerHelper::write_log( 'ProjectPress dashboard default render path selected.' );
-					$this->dashboard_manager->render();
+				case 'project-manager': $this->render_projects( $tab, $form ); return;
+				case 'mods': $this->render_mods( $tab, $form ); return;
+				case 'settings': $this->render_settings(); return;
+				case 'tools': $this->render_tools(); return;
+				default: $this->dashboard_manager->render();
 			}
-		} catch ( \Throwable $e ) {
-			LoggerHelper::write_log( 'ProjectPress dashboard render failed: ' . $e->getMessage() );
-			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				wp_die( esc_html( $e->getMessage() ), __( 'ProjectPress dashboard error', 'projectpress' ), array( 'back_link' => true ) );
-			}
-		}
+		} catch ( \Throwable $e ) { LoggerHelper::write_log( 'ProjectPress dashboard render failed: ' . $e->getMessage() ); if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) { wp_die( esc_html( $e->getMessage() ), __( 'ProjectPress dashboard error', 'projectpress' ), array( 'back_link' => true ) ); } }
 	}
-	/**
-	 * Dismiss the onboarding modal.
-	 *
-	 * This method handles the AJAX request to dismiss the onboarding modal for the ProjectPress plugin.
-	 */
+
 	public function dismiss_onboarding(): void {
-		if ( ! AjaxHelper::authorized( 'projectpress_dismiss_onboarding', 'manage_options' ) ) {
-			AjaxHelper::unauthorized( __( 'You are not authorized to dismiss the ProjectPress onboarding modal.', 'projectpress' ) );
-		}
-
-		Settings::register_group( 'setup', array( 'first_install_complete' => false ) );
-		Settings::set( 'first_install_complete', true );
-		Settings::set( 'onboarding_steps_complete', 3 );
-
-		AjaxHelper::success( array( 'dismissed' => true ) );
+		if ( ! AjaxHelper::authorized( 'projectpress_dismiss_onboarding', 'manage_options' ) ) { AjaxHelper::unauthorized( __( 'You are not authorized to dismiss the ProjectPress onboarding modal.', 'projectpress' ) ); }
+		Settings::register_group( 'setup', array( 'first_install_complete' => false ) ); Settings::set( 'first_install_complete', true ); Settings::set( 'onboarding_steps_complete', 3 ); AjaxHelper::success( array( 'dismissed' => true ) );
 	}
-	/**
-	 * Render ProjectPress mods page.
-	 *
-	 * This method is responsible for rendering the mods page of the ProjectPress plugin.
-	 * It delegates the rendering to the ModManager instance.
-	 */
-	public function render_mods( string $tab = '', string $form = '' ): void {
-		LoggerHelper::write_log( 'ProjectPress mods render started.' );
-		$this->mod_manager->render( $tab, $form );
-		LoggerHelper::write_log( 'ProjectPress mods render complete.' );
-	}
-	/**
-	 * Render the settings page.
-	 *
-	 * This method is responsible for rendering the settings page of the ProjectPress plugin.
-	 * It delegates the rendering to the SettingsManager instance.
-	 */
-	public function render_settings(): void {
-		LoggerHelper::write_log( 'ProjectPress settings page render started.' );
-		$this->settings_manager->render();
-		LoggerHelper::write_log( 'ProjectPress settings page render complete.' );
-	}
-	/**
-	 * Render the tools page.
-	 *
-	 * @return void
-	 */
-	public function render_tools(): void {
-		LoggerHelper::write_log( 'ProjectPress tools page render started.' );
-		$this->tools_manager->render();
-		LoggerHelper::write_log( 'ProjectPress tools page render complete.' );
-	}
-	/**
-	 * Get the capability for a given key, with a fallback.
-	 *
-	 * @param string $key The settings key to retrieve the capability for.
-	 * @param string $fallback The fallback capability if the key is not set or invalid.
-	 * @return string The capability associated with the key, or the fallback if not valid.
-	 */
+	public function render_projects( string $tab = '', string $form = '' ): void { $this->projects_manager->render( $tab, $form ); }
+	public function render_mods( string $tab = '', string $form = '' ): void { $this->mod_manager->render( $tab, $form ); }
+	public function render_settings(): void { $this->settings_manager->render(); }
+	public function render_tools(): void { $this->tools_manager->render(); }
 	public function capability( string $key, string $fallback ): string {
-		$value   = Settings::get( $key, $fallback );
-		$values  = is_array( $value ) ? $value : array( $value );
+		$value = Settings::get( $key, $fallback ); $values = is_array( $value ) ? $value : array( $value );
 		$allowed = array_merge( array( 'manage_options', 'edit_posts', 'publish_posts', 'manage_categories', 'delete_posts' ), array_keys( Capabilities::definitions() ) );
-		foreach ( $values as $value ) {
-			$capability = SanitizationHelper::key( $value, $fallback );
-			if ( in_array( $capability, $allowed, true ) ) {
-				return $capability;
-			}
-		}
+		foreach ( $values as $value ) { $capability = SanitizationHelper::key( $value, $fallback ); if ( in_array( $capability, $allowed, true ) ) { return $capability; } }
 		return $fallback;
 	}
 }
-
-
