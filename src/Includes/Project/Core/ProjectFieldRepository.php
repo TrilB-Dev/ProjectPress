@@ -1,8 +1,14 @@
 <?php
 namespace ProjectPress\Includes\Project\Core;
-use ProjectPress\Includes\Core\WP\Database;
-if ( ! defined( 'ABSPATH' ) ) { exit; }
-final class ProjectFieldRepository {
-	public function all(): array { global $wpdb; return (array) $wpdb->get_results( 'SELECT * FROM ' . Database::table_name( 'project_fields' ) . ' ORDER BY sort_order ASC, field_name ASC', ARRAY_A ); }
-	public function create( array $data ) { global $wpdb; $types = array( 'text', 'textarea', 'integer', 'decimal', 'boolean', 'date', 'datetime', 'select', 'multi_select', 'user', 'url', 'email' ); $type = sanitize_key( $data['type'] ?? 'text' ); if ( ! in_array( $type, $types, true ) ) { return false; } $row = array( 'field_key' => sanitize_key( $data['key'] ?? $data['name'] ?? '' ), 'field_name' => sanitize_text_field( $data['name'] ?? '' ), 'field_description' => sanitize_textarea_field( $data['description'] ?? '' ), 'field_type' => $type, 'configuration' => wp_json_encode( is_array( $data['configuration'] ?? null ) ? $data['configuration'] : array() ), 'is_required' => empty( $data['required'] ) ? 0 : 1, 'is_enabled' => empty( $data['enabled'] ) ? 0 : 1, 'sort_order' => absint( $data['sort_order'] ?? 0 ), 'created_by' => get_current_user_id(), 'created_at' => current_time( 'mysql', true ), 'updated_by' => get_current_user_id(), 'updated_at' => current_time( 'mysql', true ) ); if ( '' === $row['field_key'] || '' === $row['field_name'] ) { return false; } return false === $wpdb->insert( Database::table_name( 'project_fields' ), $row ) ? false : (int) $wpdb->insert_id; }
+use ProjectPress\Includes\Functions\Helpers\DBHelper;
+if(!defined('ABSPATH')){exit;}
+final class ProjectFieldRepository{
+ public function all(bool $enabled_only=false):array{return DBHelper::get_all('project_fields',$enabled_only?array('is_enabled'=>1):array(),'*','sort_order ASC, field_name ASC');}
+ public function find(int $id):?array{return DBHelper::get_by_id('project_fields',absint($id));}
+ public function create(array $data){return DBHelper::insert('project_fields',$data);}
+ public function update(int $id,array $data):bool{return DBHelper::update('project_fields',$data,array('id'=>absint($id)));}
+ public function values(int $project_id):array{$rows=DBHelper::get_all('project_field_values',array('project_id'=>absint($project_id)));$values=array();foreach($rows as $row){$values[(int)$row['field_id']]=$row;}return $values;}
+ public function value(int $project_id,int $field_id):?array{return DBHelper::get_row('project_field_values',array('project_id'=>absint($project_id),'field_id'=>absint($field_id)));}
+ public function save_value(int $project_id,int $field_id,array $data):bool{$existing=$this->value($project_id,$field_id);$data=array_merge($data,array('updated_by'=>get_current_user_id(),'updated_at'=>current_time('mysql',true)));if($existing)return DBHelper::update('project_field_values',$data,array('id'=>(int)$existing['id']));$data=array_merge(array('project_id'=>$project_id,'field_id'=>$field_id,'created_at'=>current_time('mysql',true)),$data);return false!==DBHelper::insert('project_field_values',$data);}
+ public function delete_value(int $project_id,int $field_id):bool{return DBHelper::delete('project_field_values',array('project_id'=>$project_id,'field_id'=>$field_id));}
 }
