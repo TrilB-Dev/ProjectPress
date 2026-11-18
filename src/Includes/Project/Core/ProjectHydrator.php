@@ -1,31 +1,7 @@
 <?php
 namespace ProjectPress\Includes\Project\Core;
-
 if ( ! defined( 'ABSPATH' ) ) { exit; }
-
 final class ProjectHydrator {
-	public function hydrate( array $row ): Project {
-		return new Project( $row );
-	}
-
-	public function extract( Project $project ): array {
-		$data = $project->to_array();
-		return array(
-			'project_name' => $data['name'],
-			'project_slug' => $data['slug'],
-			'project_key' => $data['key'],
-			'project_description' => $data['description'],
-			'parent_id' => $data['parent_id'],
-			'owner_id' => $data['owner_id'],
-			'type_id' => $data['type_id'],
-			'status' => $data['status'],
-			'priority' => $data['priority'],
-			'visibility' => $data['visibility'],
-			'start_date' => $data['start_date'],
-			'target_end_date' => $data['target_end_date'],
-			'actual_end_date' => $data['actual_end_date'],
-			'created_by' => $data['created_by'],
-			'updated_by' => $data['updated_by'],
-		);
-	}
+ public function hydrate(array $row):Project{return new Project($row);}
+ public function extract(Project $project):array{$d=$project->to_array();return array('project_name'=>$d['name'],'project_slug'=>$d['slug'],'project_key'=>$d['key'],'project_description'=>$d['description'],'parent_id'=>$d['parent_id'],'owner_id'=>$d['owner_id'],'status'=>$d['status'],'priority'=>$d['priority'],'visibility'=>$d['visibility'],'start_date'=>$d['start_date'],'target_end_date'=>$d['target_end_date'],'actual_end_date'=>$d['actual_end_date'],'created_by'=>$d['created_by'],'updated_by'=>$d['updated_by']);}
 }

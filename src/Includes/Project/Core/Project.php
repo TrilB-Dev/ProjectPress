@@ -1,119 +1,12 @@
 <?php
-/**
- * Project domain entity.
- *
- * @package ProjectPress\Includes\Project\Core
- */
 namespace ProjectPress\Includes\Project\Core;
-
 use DateTimeImmutable;
 use ProjectPress\Includes\Core\Defaults;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 final class Project {
-	private int $id;
-	private string $name;
-	private string $slug;
-	private string $key;
-	private string $description;
-	private ?int $parent_id;
-	private ?int $owner_id;
-	private ?int $type_id;
-	private string $status;
-	private string $priority;
-	private string $visibility;
-	private ?DateTimeImmutable $start_date;
-	private ?DateTimeImmutable $target_end_date;
-	private ?DateTimeImmutable $actual_end_date;
-	private ?int $created_by;
-	private ?DateTimeImmutable $created_at;
-	private ?int $updated_by;
-	private ?DateTimeImmutable $updated_at;
-
-	public function __construct( array $data = array() ) {
-		$this->id = absint( $data['id'] ?? 0 );
-		$this->name = (string) ( $data['name'] ?? $data['project_name'] ?? '' );
-		$this->slug = (string) ( $data['slug'] ?? $data['project_slug'] ?? '' );
-		$this->key = (string) ( $data['key'] ?? $data['project_key'] ?? '' );
-		$this->description = (string) ( $data['description'] ?? $data['project_description'] ?? '' );
-		$this->parent_id = self::nullable_id( $data['parent_id'] ?? null );
-		$this->owner_id = self::nullable_id( $data['owner_id'] ?? null );
-		$this->type_id = self::nullable_id( $data['type_id'] ?? null );
-		$this->status = (string) ( $data['status'] ?? Defaults::PROJECT_STATUS_DEFAULT );
-		$this->priority = (string) ( $data['priority'] ?? Defaults::PROJECT_PRIORITY_DEFAULT );
-		$this->visibility = (string) ( $data['visibility'] ?? Defaults::PROJECT_VISIBILITY_DEFAULT );
-		$this->start_date = self::date( $data['start_date'] ?? null );
-		$this->target_end_date = self::date( $data['target_end_date'] ?? null );
-		$this->actual_end_date = self::date( $data['actual_end_date'] ?? null );
-		$this->created_by = self::nullable_id( $data['created_by'] ?? null );
-		$this->created_at = self::date( $data['created_at'] ?? null );
-		$this->updated_by = self::nullable_id( $data['updated_by'] ?? null );
-		$this->updated_at = self::date( $data['updated_at'] ?? null );
-	}
-
-	private static function nullable_id( $value ): ?int {
-		$value = absint( $value );
-		return $value > 0 ? $value : null;
-	}
-
-	private static function date( $value ): ?DateTimeImmutable {
-		if ( $value instanceof DateTimeImmutable ) {
-			return $value;
-		}
-		if ( ! is_string( $value ) || '' === trim( $value ) ) {
-			return null;
-		}
-		try {
-			return new DateTimeImmutable( $value );
-		} catch ( \Exception $exception ) {
-			return null;
-		}
-	}
-
-	public function get_id(): int { return $this->id; }
-	public function set_id( int $id ): self { $this->id = absint( $id ); return $this; }
-	public function get_name(): string { return $this->name; }
-	public function get_title(): string { return $this->name; }
-	public function get_slug(): string { return $this->slug; }
-	public function get_key(): string { return $this->key; }
-	public function get_description(): string { return $this->description; }
-	public function get_parent_id(): ?int { return $this->parent_id; }
-	public function get_owner_id(): ?int { return $this->owner_id; }
-	public function get_type_id(): ?int { return $this->type_id; }
-	public function get_status(): string { return $this->status; }
-	public function get_priority(): string { return $this->priority; }
-	public function get_visibility(): string { return $this->visibility; }
-	public function get_start_date(): ?DateTimeImmutable { return $this->start_date; }
-	public function get_target_end_date(): ?DateTimeImmutable { return $this->target_end_date; }
-	public function get_actual_end_date(): ?DateTimeImmutable { return $this->actual_end_date; }
-	public function get_created_by(): ?int { return $this->created_by; }
-	public function get_created_at(): ?DateTimeImmutable { return $this->created_at; }
-	public function get_updated_by(): ?int { return $this->updated_by; }
-	public function get_updated_at(): ?DateTimeImmutable { return $this->updated_at; }
-
-	public function to_array(): array {
-		return array(
-			'id' => $this->id,
-			'name' => $this->name,
-			'slug' => $this->slug,
-			'key' => $this->key,
-			'description' => $this->description,
-			'parent_id' => $this->parent_id,
-			'owner_id' => $this->owner_id,
-			'type_id' => $this->type_id,
-			'status' => $this->status,
-			'priority' => $this->priority,
-			'visibility' => $this->visibility,
-			'start_date' => $this->start_date ? $this->start_date->format( 'Y-m-d H:i:s' ) : null,
-			'target_end_date' => $this->target_end_date ? $this->target_end_date->format( 'Y-m-d H:i:s' ) : null,
-			'actual_end_date' => $this->actual_end_date ? $this->actual_end_date->format( 'Y-m-d H:i:s' ) : null,
-			'created_by' => $this->created_by,
-			'created_at' => $this->created_at ? $this->created_at->format( 'Y-m-d H:i:s' ) : null,
-			'updated_by' => $this->updated_by,
-			'updated_at' => $this->updated_at ? $this->updated_at->format( 'Y-m-d H:i:s' ) : null,
-		);
-	}
+ private int $id; private string $name; private string $slug; private string $key; private string $description; private ?int $parent_id; private ?int $owner_id; private string $status; private string $priority; private string $visibility; private ?DateTimeImmutable $start_date; private ?DateTimeImmutable $target_end_date; private ?DateTimeImmutable $actual_end_date; private ?int $created_by; private ?DateTimeImmutable $created_at; private ?int $updated_by; private ?DateTimeImmutable $updated_at;
+ public function __construct(array $data=array()){ $this->id=absint($data['id']??0); $this->name=(string)($data['name']??$data['project_name']??''); $this->slug=(string)($data['slug']??$data['project_slug']??''); $this->key=(string)($data['key']??$data['project_key']??''); $this->description=(string)($data['description']??$data['project_description']??''); $this->parent_id=self::nullable_id($data['parent_id']??null); $this->owner_id=self::nullable_id($data['owner_id']??null); $this->status=(string)($data['status']??Defaults::PROJECT_STATUS_DEFAULT); $this->priority=(string)($data['priority']??Defaults::PROJECT_PRIORITY_DEFAULT); $this->visibility=(string)($data['visibility']??Defaults::PROJECT_VISIBILITY_DEFAULT); $this->start_date=self::date($data['start_date']??null); $this->target_end_date=self::date($data['target_end_date']??null); $this->actual_end_date=self::date($data['actual_end_date']??null); $this->created_by=self::nullable_id($data['created_by']??null); $this->created_at=self::date($data['created_at']??null); $this->updated_by=self::nullable_id($data['updated_by']??null); $this->updated_at=self::date($data['updated_at']??null); }
+ private static function nullable_id($v):?int{$v=absint($v);return $v>0?$v:null;} private static function date($v):?DateTimeImmutable{if($v instanceof DateTimeImmutable)return $v;if(!is_string($v)||''===trim($v))return null;try{return new DateTimeImmutable($v);}catch(\Exception $e){return null;}}
+ public function get_id():int{return $this->id;} public function set_id(int $id):self{$this->id=absint($id);return $this;} public function get_name():string{return $this->name;} public function get_title():string{return $this->name;} public function get_slug():string{return $this->slug;} public function get_key():string{return $this->key;} public function get_description():string{return $this->description;} public function get_parent_id():?int{return $this->parent_id;} public function get_owner_id():?int{return $this->owner_id;} public function get_status():string{return $this->status;} public function get_priority():string{return $this->priority;} public function get_visibility():string{return $this->visibility;} public function get_start_date():?DateTimeImmutable{return $this->start_date;} public function get_target_end_date():?DateTimeImmutable{return $this->target_end_date;} public function get_actual_end_date():?DateTimeImmutable{return $this->actual_end_date;} public function get_created_by():?int{return $this->created_by;} public function get_created_at():?DateTimeImmutable{return $this->created_at;} public function get_updated_by():?int{return $this->updated_by;} public function get_updated_at():?DateTimeImmutable{return $this->updated_at;}
+ public function to_array():array{return array('id'=>$this->id,'name'=>$this->name,'slug'=>$this->slug,'key'=>$this->key,'description'=>$this->description,'parent_id'=>$this->parent_id,'owner_id'=>$this->owner_id,'status'=>$this->status,'priority'=>$this->priority,'visibility'=>$this->visibility,'start_date'=>$this->start_date?$this->start_date->format('Y-m-d H:i:s'):null,'target_end_date'=>$this->target_end_date?$this->target_end_date->format('Y-m-d H:i:s'):null,'actual_end_date'=>$this->actual_end_date?$this->actual_end_date->format('Y-m-d H:i:s'):null,'created_by'=>$this->created_by,'created_at'=>$this->created_at?$this->created_at->format('Y-m-d H:i:s'):null,'updated_by'=>$this->updated_by,'updated_at'=>$this->updated_at?$this->updated_at->format('Y-m-d H:i:s'):null);}
 }

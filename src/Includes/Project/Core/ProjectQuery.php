@@ -1,29 +1,5 @@
 <?php
 namespace ProjectPress\Includes\Project\Core;
-
 use ProjectPress\Includes\Functions\Helpers\SanitizationHelper;
-
-if ( ! defined( 'ABSPATH' ) ) { exit; }
-
-final class ProjectQuery {
-	private array $arguments;
-
-	public function __construct( array $arguments = array() ) {
-		$this->arguments = array(
-			'status' => SanitizationHelper::key( $arguments['status'] ?? '' ),
-			'priority' => SanitizationHelper::key( $arguments['priority'] ?? '' ),
-			'visibility' => SanitizationHelper::key( $arguments['visibility'] ?? '' ),
-			'owner_id' => SanitizationHelper::integer( $arguments['owner_id'] ?? 0 ),
-			'type_id' => SanitizationHelper::integer( $arguments['type_id'] ?? 0 ),
-			'parent_id' => SanitizationHelper::integer( $arguments['parent_id'] ?? 0 ),
-			'search' => SanitizationHelper::text( $arguments['search'] ?? '' ),
-			'order_by' => SanitizationHelper::key( $arguments['order_by'] ?? 'updated_at', 'updated_at' ),
-			'order' => 'ASC' === strtoupper( (string) ( $arguments['order'] ?? 'DESC' ) ) ? 'ASC' : 'DESC',
-			'per_page' => SanitizationHelper::integer_range( $arguments['per_page'] ?? 20, 1, 100, 20 ),
-			'page' => SanitizationHelper::integer_range( $arguments['page'] ?? 1, 1, PHP_INT_MAX, 1 ),
-		);
-	}
-
-	public function get( string $key, $default = null ) { return $this->arguments[ $key ] ?? $default; }
-	public function to_array(): array { return $this->arguments; }
-}
+if(!defined('ABSPATH')){exit;}
+final class ProjectQuery{private array $arguments;public function __construct(array $arguments=array()){$this->arguments=array('status'=>SanitizationHelper::key($arguments['status']??''),'priority'=>SanitizationHelper::key($arguments['priority']??''),'visibility'=>SanitizationHelper::key($arguments['visibility']??''),'owner_id'=>SanitizationHelper::integer($arguments['owner_id']??0),'parent_id'=>SanitizationHelper::integer($arguments['parent_id']??0),'search'=>SanitizationHelper::text($arguments['search']??''),'order_by'=>SanitizationHelper::key($arguments['order_by']??'updated_at','updated_at'),'order'=>'ASC'===strtoupper((string)($arguments['order']??'DESC'))?'ASC':'DESC','per_page'=>SanitizationHelper::integer_range($arguments['per_page']??20,1,100,20),'page'=>SanitizationHelper::integer_range($arguments['page']??1,1,PHP_INT_MAX,1));}public function get(string $key,$default=null){return $this->arguments[$key]??$default;}public function to_array():array{return $this->arguments;}}
