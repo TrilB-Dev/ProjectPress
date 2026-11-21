@@ -1,12 +1,8 @@
 <?php
-/**
- * The core ProjectPress plugin class.
- *
- * @package ProjectPress
- */
+/** Core ProjectPress plugin class. @package ProjectPress */
 namespace ProjectPress;
-
 use ProjectPress\Admin\Admin;
+use ProjectPress\API\ProjectMembersRoutes;
 use ProjectPress\API\Routes;
 use ProjectPress\Assets\Assets;
 use ProjectPress\Includes\Core\WP\I18n;
@@ -14,66 +10,11 @@ use ProjectPress\Includes\Functions\Helpers\LoaderHelper;
 use ProjectPress\Includes\Includes;
 use ProjectPress\Includes\Plugins\Plugins;
 use ProjectPress\Public\Frontend;
-
 class Plugin {
-	protected LoaderHelper $loader;
-	protected string $plugin_file;
-	protected string $plugin_name;
-	protected Includes $includes;
-	protected Assets $assets;
-	protected Admin $admin;
-	protected Frontend $frontend;
-	protected Plugins $plugins;
-	protected string $version;
-
-	public function __construct( string $plugin_file = PROJECTPRESS_FILE, string $plugin_name = PROJECTPRESS_NAME, string $version = PROJECTPRESS_VERSION ) {
-		$this->plugin_file = $plugin_file;
-		$this->plugin_name = sanitize_key( $plugin_name );
-		$this->version = $version;
-		$this->load_dependencies();
-		$this->set_locale();
-		$this->define_core_hooks();
-	}
-
-	private function load_dependencies() {
-		$this->loader = new LoaderHelper();
-	}
-
-	private function set_locale() {
-		$plugin_i18n = new I18n( $this->plugin_name, null, $this->plugin_file );
-		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
-	}
-
-	private function define_core_hooks() {
-		$this->includes = Includes::get_instance();
-		$this->assets = new Assets();
-		$this->assets->register();
-		$this->admin = new Admin( $this->assets );
-		$this->frontend = new Frontend();
-		$this->plugins = Plugins::get_instance();
-
-		$this->loader->add_action( 'init', $this->includes, 'init' );
-		$this->loader->add_action( 'init', $this->plugins, 'init', -10 );
-		$this->loader->add_action( 'rest_api_init', Routes::class, 'register_routes' );
-		$this->loader->add_action( 'admin_menu', $this->admin, 'register_admin_menu' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $this->assets, 'enqueue_admin' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $this->assets, 'enqueue_frontend' );
-		$this->loader->add_filter( 'the_content', $this->frontend, 'filter_content' );
-		$this->loader->add_filter( 'body_class', $this->frontend, 'body_classes' );
-	}
-
-	public function run() {
-		$this->loader->run();
-	}
-
-	public function get_plugin_name() { return $this->plugin_name; }
-	public function get_plugin_file(): string { return $this->plugin_file; }
-	public function get_includes(): Includes { return $this->includes; }
-	public function get_assets(): Assets { return $this->assets; }
-	public function get_admin(): Admin { return $this->admin; }
-	public function get_frontend(): Frontend { return $this->frontend; }
-	public function get_plugins(): Plugins { return $this->plugins; }
-	public function register_extension( callable $extension ): self { $this->includes->register_extension( $extension ); return $this; }
-	public function get_loader() { return $this->loader; }
-	public function get_version() { return $this->version; }
+ protected LoaderHelper $loader; protected string $plugin_file; protected string $plugin_name; protected Includes $includes; protected Assets $assets; protected Admin $admin; protected Frontend $frontend; protected Plugins $plugins; protected string $version;
+ public function __construct(string $plugin_file=PROJECTPRESS_FILE,string $plugin_name=PROJECTPRESS_NAME,string $version=PROJECTPRESS_VERSION){$this->plugin_file=$plugin_file;$this->plugin_name=sanitize_key($plugin_name);$this->version=$version;$this->load_dependencies();$this->set_locale();$this->define_core_hooks();}
+ private function load_dependencies(){$this->loader=new LoaderHelper();}
+ private function set_locale(){$plugin_i18n=new I18n($this->plugin_name,null,$this->plugin_file);$this->loader->add_action('plugins_loaded',$plugin_i18n,'load_plugin_textdomain');}
+ private function define_core_hooks(){$this->includes=Includes::get_instance();$this->assets=new Assets();$this->assets->register();$this->admin=new Admin($this->assets);$this->frontend=new Frontend();$this->plugins=Plugins::get_instance();$this->loader->add_action('init',$this->includes,'init');$this->loader->add_action('init',$this->plugins,'init',-10);$this->loader->add_action('rest_api_init',Routes::class,'register_routes');$this->loader->add_action('rest_api_init',ProjectMembersRoutes::class,'register_routes');$this->loader->add_action('admin_menu',$this->admin,'register_admin_menu');$this->loader->add_action('admin_enqueue_scripts',$this->assets,'enqueue_admin');$this->loader->add_action('wp_enqueue_scripts',$this->assets,'enqueue_frontend');$this->loader->add_filter('the_content',$this->frontend,'filter_content');$this->loader->add_filter('body_class',$this->frontend,'body_classes');}
+ public function run(){$this->loader->run();} public function get_plugin_name(){return $this->plugin_name;} public function get_plugin_file():string{return $this->plugin_file;} public function get_includes():Includes{return $this->includes;} public function get_assets():Assets{return $this->assets;} public function get_admin():Admin{return $this->admin;} public function get_frontend():Frontend{return $this->frontend;} public function get_plugins():Plugins{return $this->plugins;} public function register_extension(callable $extension):self{$this->includes->register_extension($extension);return $this;} public function get_loader(){return $this->loader;} public function get_version(){return $this->version;}
 }
