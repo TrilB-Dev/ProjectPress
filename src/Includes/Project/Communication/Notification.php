@@ -1,0 +1,2 @@
+<?php
+namespace ProjectPress\Includes\Project\Communication;use ProjectPress\Includes\Project\Core\ProjectRecord;if(!defined('ABSPATH')){exit;}final class Notification extends ProjectRecord{public function get_recipient_id():int{return absint($this->get('recipient_id',0));}public function get_message():string{return(string)$this->get('message','');}public function is_read():bool{return(bool)$this->get('is_read',false);}}

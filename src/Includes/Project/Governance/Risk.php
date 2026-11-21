@@ -1,0 +1,2 @@
+<?php
+namespace ProjectPress\Includes\Project\Governance;use ProjectPress\Includes\Project\Core\ProjectRecord;if(!defined('ABSPATH')){exit;}final class Risk extends ProjectRecord{public function get_title():string{return(string)$this->get('title','');}public function get_probability():string{return(string)$this->get('probability','');}public function get_impact():string{return(string)$this->get('impact','');}}
