@@ -1,6 +1,15 @@
 <?php
+/**
+ * Legacy workspace section bridge.
+ *
+ * Milestones remain here until they are moved into a dedicated admin
+ * controller. Other workspace concerns are owned by their dedicated
+ * collaboration/content controllers.
+ *
+ * @package ProjectPress\Admin\Manager\Projects
+ */
 namespace ProjectPress\Admin\Manager\Projects;
-use ProjectPress\Includes\Functions\Helpers\DBHelper;
+
 use ProjectPress\Includes\Functions\Helpers\RequestHelper;
 use ProjectPress\Includes\Project\Core\Project;
 use ProjectPress\Includes\Project\Core\ProjectPermissions;
@@ -8,20 +17,91 @@ use ProjectPress\Includes\Project\ProjectManager as DomainProjectManager;
 use ProjectPress\Includes\Project\Work\MilestoneRepository;
 use ProjectPress\Includes\Project\Work\MilestoneService;
 use WP_Error;
-if(!defined('ABSPATH')){exit;}
-final class WorkspaceSections{
- private DomainProjectManager $projects;private ProjectPermissions $permissions;private MilestoneRepository $milestones;private MilestoneService $milestone_service;
- private const TABLES=array('discussions'=>'discussions','notes'=>'notes','files'=>'files','settings'=>'project_settings');
- public function __construct(?DomainProjectManager $projects=null,?ProjectPermissions $permissions=null){$this->projects=$projects??DomainProjectManager::get_instance();$this->permissions=$permissions??new ProjectPermissions();$this->milestones=new MilestoneRepository();$this->milestone_service=new MilestoneService($this->milestones,$this->projects->repository(),$this->permissions);}
- public function render(Project $project,string $section):void{if('activity'===$section){$this->render_activity($project);return;}if('milestones'===$section){$this->render_milestones($project);return;}if(!isset(self::TABLES[$section]))return;$order='settings'===$section?'updated_at DESC':'created_at DESC';$rows=DBHelper::get_all(self::TABLES[$section],array('project_id'=>$project->get_id()),'*',$order);$can_edit=$this->permissions->can_edit($project);?><div class="row g-4"><div class="col-xl-8"><div class="card card-body"><h2 class="h4"><?php echo esc_html($this->label($section));?></h2><?php if(empty($rows)):?><p class="text-secondary mb-0"><?php esc_html_e('Nothing has been added yet.','projectpress');?></p><?php endif;foreach($rows as $row):?><div class="border rounded p-3 mb-3"><strong><?php echo esc_html($this->row_title($section,$row));?></strong><?php if($this->row_body($section,$row)):?><div class="text-secondary small mt-1"><?php echo esc_html($this->row_body($section,$row));?></div><?php endif;?><?php if($can_edit):?><?php $this->delete_form($project,$section,(int)$row['id']);?><?php endif;?></div><?php endforeach;?></div></div><div class="col-xl-4"><div class="card card-body"><h2 class="h4"><?php echo esc_html(sprintf(__('Add %s','projectpress'),$this->singular($section)));?></h2><?php if(!$can_edit):?><p class="text-secondary mb-0"><?php esc_html_e('This section is read only.','projectpress');?></p><?php else:$this->render_form($project,$section);endif;?></div></div></div><?php }
- private function render_milestones(Project $project):void{$rows=$this->milestones->for_project($project->get_id());$can_edit=$this->permissions->can_edit($project);?><div class="row g-4"><div class="col-xl-8"><div class="card card-body"><h2 class="h4"><?php esc_html_e('Milestones','projectpress');?></h2><?php if(empty($rows)):?><p class="text-secondary mb-0"><?php esc_html_e('No milestones have been added yet.','projectpress');?></p><?php endif;foreach($rows as $milestone):?><div class="border rounded p-3 mb-3"><strong><?php echo esc_html($milestone->get_title());?></strong><div class="text-secondary small mt-1"><?php echo esc_html(ucwords(str_replace('_',' ',$milestone->get_status())));?><?php if($milestone->get_target_date()):?> · <?php echo esc_html(sprintf(__('Target %s','projectpress'),substr($milestone->get_target_date(),0,10)));?><?php endif;?></div><?php if($can_edit):?><?php $this->delete_form($project,'milestones',$milestone->get_id());?><?php endif;?></div><?php endforeach;?></div></div><div class="col-xl-4"><div class="card card-body"><h2 class="h4"><?php esc_html_e('Add Milestone','projectpress');?></h2><?php if(!$can_edit):?><p class="text-secondary mb-0"><?php esc_html_e('This section is read only.','projectpress');?></p><?php else:$this->render_form($project,'milestones');endif;?></div></div></div><?php }
- private function delete_form(Project $project,string $section,int $id):void{?><form class="mt-2" method="post" action="<?php echo esc_url(admin_url('admin-post.php'));?>"><input type="hidden" name="action" value="projectpress_workspace_section_delete"/><input type="hidden" name="project_id" value="<?php echo esc_attr((string)$project->get_id());?>"/><input type="hidden" name="section" value="<?php echo esc_attr($section);?>"/><input type="hidden" name="record_id" value="<?php echo esc_attr((string)$id);?>"/><?php wp_nonce_field('projectpress_workspace_section_delete');?><button class="btn btn-sm btn-outline-danger" type="submit"><?php esc_html_e('Delete','projectpress');?></button></form><?php }
- private function render_form(Project $project,string $section):void{?><form method="post" action="<?php echo esc_url(admin_url('admin-post.php'));?>"><input type="hidden" name="action" value="projectpress_workspace_section_save"/><input type="hidden" name="project_id" value="<?php echo esc_attr((string)$project->get_id());?>"/><input type="hidden" name="section" value="<?php echo esc_attr($section);?>"/><?php wp_nonce_field('projectpress_workspace_section_save');?><?php if('files'===$section):?><label class="form-label" for="ws-attachment"><?php esc_html_e('WordPress attachment ID','projectpress');?></label><input class="form-control" type="number" min="1" id="ws-attachment" name="attachment_id" required/><label class="form-label mt-3" for="ws-label"><?php esc_html_e('Label','projectpress');?></label><input class="form-control" id="ws-label" name="title"/><?php elseif('settings'===$section):?><label class="form-label" for="ws-key"><?php esc_html_e('Setting key','projectpress');?></label><input class="form-control" id="ws-key" name="title" required/><label class="form-label mt-3" for="ws-value"><?php esc_html_e('Value','projectpress');?></label><textarea class="form-control" id="ws-value" name="content"></textarea><?php else:?><label class="form-label" for="ws-title"><?php esc_html_e('Title','projectpress');?></label><input class="form-control" id="ws-title" name="title" required/><label class="form-label mt-3" for="ws-content"><?php esc_html_e('Description','projectpress');?></label><textarea class="form-control" id="ws-content" name="content"></textarea><?php if('milestones'===$section):?><label class="form-label mt-3" for="ws-status"><?php esc_html_e('Status','projectpress');?></label><select class="form-select" id="ws-status" name="status"><?php foreach(MilestoneService::statuses() as $status):?><option value="<?php echo esc_attr($status);?>"><?php echo esc_html(ucwords(str_replace('_',' ',$status)));?></option><?php endforeach;?></select><label class="form-label mt-3" for="ws-target"><?php esc_html_e('Target date','projectpress');?></label><input class="form-control" type="date" id="ws-target" name="target_date"/><?php endif;endif;?><button class="btn btn-primary mt-3" type="submit"><?php esc_html_e('Add','projectpress');?></button></form><?php }
- public function handle_save():void{check_admin_referer('projectpress_workspace_section_save');$project_id=RequestHelper::integer($_POST,'project_id',0);$section=RequestHelper::key($_POST,'section','');if('milestones'===$section){$result=$this->milestone_service->create($project_id,array('title'=>RequestHelper::text($_POST,'title',''),'description'=>RequestHelper::text($_POST,'content',''),'status'=>RequestHelper::key($_POST,'status','planned'),'target_date'=>RequestHelper::text($_POST,'target_date','')));$this->redirect($project_id,$section,$result);}$project=$this->projects->find($project_id);if(!$project||!$this->permissions->can_edit($project)||!isset(self::TABLES[$section]))$this->redirect($project_id,$section,new WP_Error('projectpress_workspace_forbidden',__('You cannot change this project section.','projectpress')));$now=current_time('mysql',true);if('files'===$section){$attachment_id=RequestHelper::integer($_POST,'attachment_id',0);if('attachment'!==get_post_type($attachment_id))$this->redirect($project_id,$section,new WP_Error('projectpress_file_invalid',__('Select a valid WordPress media attachment.','projectpress')));$data=array('project_id'=>$project_id,'attachment_id'=>$attachment_id,'file_label'=>RequestHelper::text($_POST,'title',''),'created_by'=>get_current_user_id(),'created_at'=>$now);}elseif('settings'===$section){$key=sanitize_key(RequestHelper::text($_POST,'title',''));if(''===$key)$this->redirect($project_id,$section,new WP_Error('projectpress_setting_key_required',__('A setting key is required.','projectpress')));$existing=DBHelper::get_row('project_settings',array('project_id'=>$project_id,'setting_key'=>$key));$data=array('setting_value'=>RequestHelper::text($_POST,'content',''),'updated_by'=>get_current_user_id(),'updated_at'=>$now);$result=$existing?DBHelper::update('project_settings',$data,array('id'=>(int)$existing['id'])):DBHelper::insert('project_settings',array_merge(array('project_id'=>$project_id,'setting_key'=>$key),$data));$this->redirect($project_id,$section,$result);}else{$title=RequestHelper::text($_POST,'title','');if(''===$title)$this->redirect($project_id,$section,new WP_Error('projectpress_workspace_title_required',__('A title is required.','projectpress')));$data=array('project_id'=>$project_id,'title'=>$title,'description'=>RequestHelper::text($_POST,'content',''),'created_by'=>get_current_user_id(),'created_at'=>$now,'updated_at'=>$now);if(in_array($section,array('discussions','notes'),true)){$data['content']=$data['description'];unset($data['description']);$data['status']='open';}}$result=DBHelper::insert(self::TABLES[$section],$data);$this->redirect($project_id,$section,$result);}
- public function handle_delete():void{check_admin_referer('projectpress_workspace_section_delete');$project_id=RequestHelper::integer($_POST,'project_id',0);$section=RequestHelper::key($_POST,'section','');$id=RequestHelper::integer($_POST,'record_id',0);if('milestones'===$section){$milestone=$this->milestones->find($id);$result=$milestone&&$milestone->get_project_id()===$project_id?$this->milestone_service->delete($milestone):new WP_Error('projectpress_milestone_not_found',__('Milestone not found.','projectpress'));$this->redirect($project_id,$section,$result);}$project=$this->projects->find($project_id);if(!$project||!$this->permissions->can_edit($project)||!isset(self::TABLES[$section]))$this->redirect($project_id,$section,new WP_Error('projectpress_workspace_forbidden',__('You cannot change this project section.','projectpress')));$row=DBHelper::get_by_id(self::TABLES[$section],$id);$result=$row&&(int)$row['project_id']===$project_id?DBHelper::delete(self::TABLES[$section],array('id'=>$id)):false;$this->redirect($project_id,$section,$result);}
- private function render_activity(Project $project):void{$rows=DBHelper::get_all('activity',array('project_id'=>$project->get_id()),'*','created_at DESC');?><div class="card card-body"><h2 class="h4"><?php esc_html_e('Activity','projectpress');?></h2><?php if(empty($rows)):?><p class="text-secondary mb-0"><?php esc_html_e('No project activity has been recorded yet.','projectpress');?></p><?php endif;foreach($rows as $row):?><div class="border-bottom py-2"><strong><?php echo esc_html((string)($row['activity_summary']?:ucwords(str_replace('_',' ',(string)$row['action']))));?></strong><small class="d-block text-secondary"><?php echo esc_html((string)$row['created_at']);?></small></div><?php endforeach;?></div><?php }
- private function row_title(string $section,array $row):string{if('files'===$section){$id=(int)$row['attachment_id'];return(string)($row['file_label']?:get_the_title($id)?:sprintf(__('Attachment #%d','projectpress'),$id));}if('settings'===$section)return(string)$row['setting_key'];return(string)$row['title'];}
- private function row_body(string $section,array $row):string{if('settings'===$section)return(string)($row['setting_value']??'');if(in_array($section,array('discussions','notes'),true))return(string)($row['content']??'');return(string)($row['description']??'');}
- private function label(string $section):string{return ucwords(str_replace('_',' ',$section));}private function singular(string $section):string{return rtrim($this->label($section),'s');}
- private function redirect(int $project_id,string $section,$result):void{$valid=array_merge(array_keys(self::TABLES),array('milestones'));$section=in_array($section,$valid,true)?$section:'overview';$url=add_query_arg(array('page'=>'projectpress','group'=>'projects','project_id'=>absint($project_id),'tab'=>$section),admin_url('admin.php'));$url=is_wp_error($result)||false===$result?add_query_arg('project_error',rawurlencode(is_wp_error($result)?$result->get_error_message():__('The change could not be saved.','projectpress')),$url):add_query_arg('project_saved','1',$url);wp_safe_redirect($url);exit;}
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+final class WorkspaceSections {
+	private DomainProjectManager $projects;
+	private ProjectPermissions $permissions;
+	private MilestoneRepository $milestones;
+	private MilestoneService $milestone_service;
+
+	public function __construct( ?DomainProjectManager $projects = null, ?ProjectPermissions $permissions = null ) {
+		$this->projects = $projects ?? DomainProjectManager::get_instance();
+		$this->permissions = $permissions ?? new ProjectPermissions();
+		$this->milestones = new MilestoneRepository();
+		$this->milestone_service = new MilestoneService( $this->milestones, $this->projects->repository(), $this->permissions );
+	}
+
+	public function render( Project $project, string $section ): void {
+		if ( 'milestones' !== $section ) {
+			return;
+		}
+
+		$rows = $this->milestones->for_project( $project->get_id() );
+		$can_edit = $this->permissions->can_edit( $project );
+		?>
+		<div class="row g-4">
+			<div class="col-xl-8">
+				<div class="card card-body">
+					<h2 class="h4"><?php esc_html_e( 'Milestones', 'projectpress' ); ?></h2>
+					<?php if ( empty( $rows ) ) : ?><p class="text-secondary mb-0"><?php esc_html_e( 'No milestones have been added yet.', 'projectpress' ); ?></p><?php endif; ?>
+					<?php foreach ( $rows as $milestone ) : ?>
+						<div class="border rounded p-3 mb-3">
+							<strong><?php echo esc_html( $milestone->get_title() ); ?></strong>
+							<div class="text-secondary small mt-1"><?php echo esc_html( ucwords( str_replace( '_', ' ', $milestone->get_status() ) ) ); ?><?php if ( $milestone->get_target_date() ) : ?> · <?php echo esc_html( sprintf( __( 'Target %s', 'projectpress' ), substr( $milestone->get_target_date(), 0, 10 ) ) ); ?><?php endif; ?></div>
+							<?php if ( $can_edit ) : $this->delete_form( $project, $milestone->get_id() ); endif; ?>
+						</div>
+					<?php endforeach; ?>
+				</div>
+			</div>
+			<div class="col-xl-4">
+				<div class="card card-body">
+					<h2 class="h4"><?php esc_html_e( 'Add Milestone', 'projectpress' ); ?></h2>
+					<?php if ( ! $can_edit ) : ?><p class="text-secondary mb-0"><?php esc_html_e( 'This section is read only.', 'projectpress' ); ?></p><?php else : $this->render_form( $project ); endif; ?>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
+
+	private function render_form( Project $project ): void {
+		?><form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>"><input type="hidden" name="action" value="projectpress_workspace_section_save"/><input type="hidden" name="project_id" value="<?php echo esc_attr( (string) $project->get_id() ); ?>"/><input type="hidden" name="section" value="milestones"/><?php wp_nonce_field( 'projectpress_workspace_section_save' ); ?><label class="form-label" for="ws-title"><?php esc_html_e( 'Title', 'projectpress' ); ?></label><input class="form-control" id="ws-title" name="title" required/><label class="form-label mt-3" for="ws-content"><?php esc_html_e( 'Description', 'projectpress' ); ?></label><textarea class="form-control" id="ws-content" name="content"></textarea><label class="form-label mt-3" for="ws-status"><?php esc_html_e( 'Status', 'projectpress' ); ?></label><select class="form-select" id="ws-status" name="status"><?php foreach ( MilestoneService::statuses() as $status ) : ?><option value="<?php echo esc_attr( $status ); ?>"><?php echo esc_html( ucwords( str_replace( '_', ' ', $status ) ) ); ?></option><?php endforeach; ?></select><label class="form-label mt-3" for="ws-target"><?php esc_html_e( 'Target date', 'projectpress' ); ?></label><input class="form-control" type="date" id="ws-target" name="target_date"/><button class="btn btn-primary mt-3" type="submit"><?php esc_html_e( 'Add', 'projectpress' ); ?></button></form><?php
+	}
+
+	private function delete_form( Project $project, int $id ): void {
+		?><form class="mt-2" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>"><input type="hidden" name="action" value="projectpress_workspace_section_delete"/><input type="hidden" name="project_id" value="<?php echo esc_attr( (string) $project->get_id() ); ?>"/><input type="hidden" name="section" value="milestones"/><input type="hidden" name="record_id" value="<?php echo esc_attr( (string) $id ); ?>"/><?php wp_nonce_field( 'projectpress_workspace_section_delete' ); ?><button class="btn btn-sm btn-outline-danger" type="submit"><?php esc_html_e( 'Delete', 'projectpress' ); ?></button></form><?php
+	}
+
+	public function handle_save(): void {
+		check_admin_referer( 'projectpress_workspace_section_save' );
+		$project_id = RequestHelper::integer( $_POST, 'project_id', 0 );
+		$section = RequestHelper::key( $_POST, 'section', '' );
+		if ( 'milestones' !== $section ) {
+			$this->redirect( $project_id, new WP_Error( 'projectpress_workspace_section_invalid', __( 'The project section is invalid.', 'projectpress' ) ) );
+		}
+		$result = $this->milestone_service->create( $project_id, array( 'title' => RequestHelper::text( $_POST, 'title', '' ), 'description' => RequestHelper::text( $_POST, 'content', '' ), 'status' => RequestHelper::key( $_POST, 'status', 'planned' ), 'target_date' => RequestHelper::text( $_POST, 'target_date', '' ) ) );
+		$this->redirect( $project_id, $result );
+	}
+
+	public function handle_delete(): void {
+		check_admin_referer( 'projectpress_workspace_section_delete' );
+		$project_id = RequestHelper::integer( $_POST, 'project_id', 0 );
+		$section = RequestHelper::key( $_POST, 'section', '' );
+		if ( 'milestones' !== $section ) {
+			$this->redirect( $project_id, new WP_Error( 'projectpress_workspace_section_invalid', __( 'The project section is invalid.', 'projectpress' ) ) );
+		}
+		$milestone = $this->milestones->find( RequestHelper::integer( $_POST, 'record_id', 0 ) );
+		$result = $milestone && $milestone->get_project_id() === $project_id ? $this->milestone_service->delete( $milestone ) : new WP_Error( 'projectpress_milestone_not_found', __( 'Milestone not found.', 'projectpress' ) );
+		$this->redirect( $project_id, $result );
+	}
+
+	private function redirect( int $project_id, $result ): void {
+		$url = add_query_arg( array( 'page' => 'projectpress', 'group' => 'projects', 'project_id' => absint( $project_id ), 'tab' => 'milestones' ), admin_url( 'admin.php' ) );
+		$url = is_wp_error( $result ) || false === $result ? add_query_arg( 'project_error', rawurlencode( is_wp_error( $result ) ? $result->get_error_message() : __( 'The change could not be saved.', 'projectpress' ) ), $url ) : add_query_arg( 'project_saved', '1', $url );
+		wp_safe_redirect( $url );
+		exit;
+	}
 }
