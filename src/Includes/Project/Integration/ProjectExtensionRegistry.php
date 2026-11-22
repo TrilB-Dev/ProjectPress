@@ -1,6 +1,6 @@
 <?php
 /** Project-domain extension registry. @package ProjectPress */
-namespace ProjectPress\Includes\Plugins;
+namespace ProjectPress\Includes\Project\Integration;
 use ProjectPress\Includes\Project\Core\Project;
 if(!defined('ABSPATH')){exit;}
 final class ProjectExtensionRegistry{

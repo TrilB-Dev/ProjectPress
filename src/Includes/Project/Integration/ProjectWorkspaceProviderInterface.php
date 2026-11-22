@@ -1,6 +1,6 @@
 <?php
 /** Project workspace provider contract. @package ProjectPress */
-namespace ProjectPress\Includes\Plugins;
+namespace ProjectPress\Includes\Project\Integration;
 if(!defined('ABSPATH')){exit;}
 interface ProjectWorkspaceProviderInterface{
  /** @return array<string,array<string,mixed>> */

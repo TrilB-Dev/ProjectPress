@@ -5,7 +5,7 @@ declare( strict_types=1 );
 namespace ProjectPress\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use ProjectPress\Includes\Plugins\ProjectExtensionRegistry;
+use ProjectPress\Includes\Project\Integration\ProjectExtensionRegistry;
 use ProjectPress\Includes\Project\Core\Project;
 
 final class ProjectExtensionRegistryTest extends TestCase {

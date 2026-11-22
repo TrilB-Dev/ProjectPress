@@ -1,6 +1,7 @@
 <?php
 /** Runtime integration for project extension providers. @package ProjectPress */
-namespace ProjectPress\Includes\Plugins;
+namespace ProjectPress\Includes\Project\Integration;
+use ProjectPress\Includes\Plugins\Plugins;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;

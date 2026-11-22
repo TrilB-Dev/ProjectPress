@@ -1,7 +1,7 @@
 <?php
 /** Core ProjectPress plugin class. @package ProjectPress */
 namespace ProjectPress;
-use ProjectPress\Admin\Admin;use ProjectPress\API\ProjectMembersRoutes;use ProjectPress\API\Routes;use ProjectPress\Assets\Assets;use ProjectPress\Includes\Core\WP\I18n;use ProjectPress\Includes\Functions\Helpers\LoaderHelper;use ProjectPress\Includes\Includes;use ProjectPress\Includes\Plugins\Plugins;use ProjectPress\Includes\Plugins\ProjectExtensions;use ProjectPress\Public\Frontend;
+use ProjectPress\Admin\Admin;use ProjectPress\API\ProjectMembersRoutes;use ProjectPress\API\Routes;use ProjectPress\Assets\Assets;use ProjectPress\Includes\Core\WP\I18n;use ProjectPress\Includes\Functions\Helpers\LoaderHelper;use ProjectPress\Includes\Includes;use ProjectPress\Includes\Plugins\Plugins;use ProjectPress\Includes\Project\Integration\ProjectExtensions;use ProjectPress\Public\Frontend;
 class Plugin{
  protected LoaderHelper $loader;protected string $plugin_file;protected string $plugin_name;protected Includes $includes;protected Assets $assets;protected Admin $admin;protected Frontend $frontend;protected Plugins $plugins;protected string $version;
  public function __construct(string $plugin_file=PROJECTPRESS_FILE,string $plugin_name=PROJECTPRESS_NAME,string $version=PROJECTPRESS_VERSION){$this->plugin_file=$plugin_file;$this->plugin_name=sanitize_key($plugin_name);$this->version=$version;$this->loader=new LoaderHelper();$this->set_locale();$this->define_core_hooks();}
