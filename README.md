@@ -1,32 +1,51 @@
 # ProjectPress
 
-ProjectPress is a reusable WordPress plugin template by TrilB.Dev. It provides a starting point for plugins with modular services, settings, REST routes, admin pages, frontend behavior, compiled assets, and optional internal or external extensions. Replace the placeholder names and remove the modules your plugin does not need.
+ProjectPress is a modular WordPress project-management plugin by TrilB.Dev. It provides global project management, individual project workspaces, project-owned data, REST API support, and an extension/integration layer.
 
 ## Requirements
 
 - WordPress with REST API support
-- PHP version supported by the current ProjectPress codebase and its Composer dependencies
-- Node.js and npm only when rebuilding frontend assets
+- PHP compatible with the Composer dependencies in this repository
+- Composer for PHP development dependencies
+- Node.js and npm when rebuilding frontend assets
 
-Install PHP dependencies with Composer and build the frontend assets with:
+Install PHP dependencies with Composer and build frontend assets with:
 
 ```bash
+composer install
 npm install
 npm run build
 ```
 
-The build writes compiled assets to `src/Assets/dist`.
+Compiled frontend assets are written beneath `src/Assets/dist`.
 
-## Included Architecture
+## Architecture
 
-- Optional custom post types, taxonomies, admin pages, and frontend features
-- A namespaced REST API when the plugin exposes routes
-- Database-backed settings grouped by feature
-- Shared sanitization, request, permission, query, content, URL, AJAX, and form helpers
-- Bootstrap-based admin assets compiled with Webpack and Sass
-- Optional Font Awesome integration
-- Internal extension discovery and registration
-- Integration with separately installed WordPress plugins
+ProjectPress follows a hybrid storage model. Project backend/domain code lives under `src/Includes/Project/`; global project-management interfaces live under `src/Admin/Manager/ProjectManager/`; individual project workspace interfaces live under `src/Admin/Manager/Projects/`; and REST API code lives under `src/API/`.
+
+Shared helpers are provided under `src/Includes/Functions/Helpers/` and should be reused rather than duplicated in domain, admin, or API code.
+
+The core project workspace covers overview, project details, members, tasks, milestones, discussions, notes, files, activity, and project-specific settings. Extension registration points support internal and separately installed WordPress integrations.
+
+## REST API
+
+The versioned ProjectPress REST namespace is `projectpress/v1`. Route implementations, permission callbacks, and related API components are maintained under `src/API/`.
+
+See [REST API](Docs/API.md) for additional API documentation.
+
+## Testing and QA
+
+PHPUnit is configured in `phpunit.xml.dist` with `Test/bootstrap.php` and tests under `Test/Unit/`.
+
+Run the principal checks with:
+
+```bash
+composer test
+composer lint
+npm run build
+```
+
+The repository also includes a GitHub Actions QA workflow that runs PHP syntax checks, PHPUnit, and coding standards for pushes and pull requests targeting `Master`.
 
 ## Documentation
 
@@ -40,38 +59,28 @@ The build writes compiled assets to `src/Assets/dist`.
 
 ```text
 src/
-|- API/                         REST API services, routes, schemas, responses
-|- Admin/                       Admin pages and UI managers
+|- API/                         REST API routes and API components
+|- Admin/                       Global management and project workspace UI
 |- Assets/                      Shared source and compiled assets
-|- Includes/Functions/          Reusable helper classes and functions
-|- Includes/Plugins/            Internal extension system
-|- Includes/Settings/           Settings facade and database manager
-|- Languages/                   Translation catalogs and compiled language files
-`- Plugin.php                   Main bootstrap class
+|- Includes/Core/               Core database, schema, defaults and services
+|- Includes/Functions/Helpers/  Reusable helper functionality
+|- Includes/Project/            Project domain and persistence components
+|- Includes/Plugins/            Internal plugin infrastructure
+|- Includes/Settings/           Settings infrastructure
+|- Languages/                   Translation resources
+`- Plugin.php                   Main plugin bootstrap
+
+Test/
+|- Unit/                        PHPUnit unit tests
+`- bootstrap.php                Unit-test bootstrap
 ```
 
-## Extension Model
+## Development Rules
 
-A ProjectPress extension implements `PluginInterface`, returns a unique slug, and exposes metadata and an `init()` method. Optional capability interfaces add settings, assets, admin pages, REST routes, frontend behavior, database tables, shortcodes, or translations.
+The authoritative development rules live under `.github/instructions/`. Changes should follow those architecture, storage, security, implementation and validation requirements.
 
-Internal extensions are discovered from the configured ProjectPress plugin directory. A normal WordPress plugin can register an extension by hooking `projectpress_register_plugin` and calling `Plugins::register_plugin()`.
-
-See [INTERNAL_PLUGINS.md](Docs/INTERNAL_PLUGINS.md) and [WORDPRESS_PLUGINS.md](Docs/WORDPRESS_PLUGINS.md) for complete examples.
-
-## Development Checks
-
-```bash
-npm run build
-php -l path/to/changed-file.php
-git diff --check
-```
-
-Check the package scripts and PHPUnit configuration before relying on a test command. The template may contain placeholder scripts that must be replaced when a plugin adds automated tests.
+Before completing a change, run the applicable automated checks and review input sanitisation, output escaping, permissions, nonces, prepared SQL, REST permission callbacks, and reuse of existing helpers.
 
 ## License
 
-ProjectPress is distributed under the license declared by the project and its individual dependencies. Confirm the applicable license before redistributing a packaged build.
-
-
-
-
+ProjectPress is licensed under GPL-2.0-or-later, as declared by `composer.json`.
