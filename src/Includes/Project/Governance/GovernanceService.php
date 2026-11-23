@@ -1,0 +1,12 @@
+<?php
+namespace ProjectPress\Includes\Project\Governance;
+use ProjectPress\Includes\Project\Core\ProjectPermissions;use ProjectPress\Includes\Project\Core\ProjectRepository;use WP_Error;
+if(!defined('ABSPATH')){exit;}
+final class GovernanceService{
+ private string $type;private GovernanceRepository $records;private ProjectRepository $projects;private ProjectPermissions $permissions;
+ public function __construct(string$type,GovernanceRepository$records,ProjectRepository$projects,ProjectPermissions$permissions){$this->type=$type;$this->records=$records;$this->projects=$projects;$this->permissions=$permissions;}
+ public function create(int$project_id,array$input){$project=$this->projects->find($project_id);if(!$project)return new WP_Error('projectpress_project_not_found',__('Project not found.','projectpress'));if(!$this->permissions->can_edit($project))return new WP_Error('projectpress_governance_forbidden',__('You cannot change governance records for this project.','projectpress'));$data=$this->validate($input);return is_wp_error($data)?$data:$this->records->create($project_id,$data);}
+ public function update($record,array$input){$project=$this->projects->find($record->get_project_id());if(!$project||!$this->permissions->can_edit($project))return new WP_Error('projectpress_governance_forbidden',__('You cannot change governance records for this project.','projectpress'));$data=$this->validate($input);if(is_wp_error($data))return$data;return $this->records->update($record,$data)?$this->records->find($record->get_id()):false;}
+ public function delete($record){$project=$this->projects->find($record->get_project_id());if(!$project||!$this->permissions->can_edit($project))return new WP_Error('projectpress_governance_forbidden',__('You cannot change governance records for this project.','projectpress'));return$this->records->delete($record);}
+ private function validate(array$input){$title=sanitize_text_field((string)($input['title']??''));if(''===$title)return new WP_Error('projectpress_governance_title_required',__('A title is required.','projectpress'));$data=array('title'=>$title,'description'=>sanitize_textarea_field((string)($input['description']??'')),'status'=>sanitize_key((string)($input['status']??'open')),'probability'=>sanitize_key((string)($input['probability']??'')),'impact'=>sanitize_key((string)($input['impact']??'')),'target_type'=>sanitize_key((string)($input['target_type']??'')),'target_id'=>absint($input['target_id']??0));return$data;}
+}
