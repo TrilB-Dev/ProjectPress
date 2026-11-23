@@ -1,0 +1,3 @@
+<?php
+
+declare(strict_types=1);namespace ProjectPress\Tests\Unit;use PHPUnit\Framework\TestCase;use ProjectPress\Includes\Core\Schema;use ProjectPress\Includes\Core\WP\Database;use ProjectPress\Includes\Project\Quality\Bug;use ProjectPress\Includes\Project\Quality\TestCase as QualityTestCase;final class PhaseNineQualityTest extends TestCase{public function testQualityTablesAreRegistered():void{Schema::register_tables();$tables=Database::get_core_tables();$this->assertArrayHasKey('bugs',$tables);$this->assertArrayHasKey('test_cases',$tables);}public function testQualityModelsRemainProjectScoped():void{$this->assertSame(12,(new Bug(array('project_id'=>12)))->get_project_id());$this->assertSame(12,(new QualityTestCase(array('project_id'=>12)))->get_project_id());}}
