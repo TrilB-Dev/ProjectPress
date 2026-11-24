@@ -1,0 +1,3 @@
+<?php
+
+declare(strict_types=1);namespace ProjectPress\Tests\Unit;use PHPUnit\Framework\TestCase;use ProjectPress\Includes\Project\Composition\Component;use ProjectPress\Includes\Project\Composition\SBOM;final class PhaseNineCompositionTest extends TestCase{public function testCompositionModelsRemainProjectScoped():void{$this->assertSame(31,(new Component(array('project_id'=>31,'name'=>'Library')))->get_project_id());$this->assertSame(31,(new SBOM(array('project_id'=>31,'format'=>'generic')))->get_project_id());}public function testCoreSbomModelIsFormatAgnostic():void{$sbom=new SBOM(array('project_id'=>31,'format'=>'generic'));$this->assertSame('generic',$sbom->get_format());}}
