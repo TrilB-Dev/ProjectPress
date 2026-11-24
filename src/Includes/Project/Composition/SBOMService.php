@@ -1,0 +1,5 @@
+<?php
+namespace ProjectPress\Includes\Project\Composition;
+use ProjectPress\Includes\Project\Core\ProjectPermissions;use ProjectPress\Includes\Project\Core\ProjectRepository;
+if(!defined('ABSPATH')){exit;}
+final class SBOMService{private ProjectRepository$projects;private ProjectPermissions$permissions;public function __construct(ProjectRepository$projects,ProjectPermissions$permissions){$this->projects=$projects;$this->permissions=$permissions;}public function snapshot(int$id):?array{$project=$this->projects->find(absint($id));if(!$project||!$this->permissions->can_view($project))return null;$data=array('project'=>$project->to_array(),'components'=>$this->rows('component',$id),'packages'=>$this->rows('package',$id),'assets'=>$this->rows('asset',$id),'licences'=>$this->rows('licence',$id),'attributions'=>$this->rows('attribution',$id),'provenance'=>$this->rows('provenance',$id),'relationships'=>$this->rows('relationship',$id));return apply_filters('projectpress_composition_snapshot',$data,$project);}private function rows(string$type,int$id):array{return array_map(static fn($row)=>$row->to_array(),(new CompositionRepository($type))->for_project($id));}}
