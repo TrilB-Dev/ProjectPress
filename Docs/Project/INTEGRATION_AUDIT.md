@@ -1,140 +1,82 @@
 # ProjectPress New Element Integration Audit
 
-This audit tracks the integration work required after the Project domain model expansion.
+This audit records the integration status after the Project domain expansion and Phase 9 implementation.
 
 ## Integration rule
 
-A domain model is not considered feature-complete merely because the PHP class exists. Each user-facing ProjectPress entity must be mapped deliberately through the appropriate persistence, service, permission, API, and UI layers.
-
-The intended flow is:
+A user-facing ProjectPress entity is complete when it is deliberately mapped through the appropriate architecture:
 
 `Domain model -> repository/storage -> service/validation -> permissions -> REST/API where required -> ProjectPress UI -> tests`
 
-## Existing integration boundaries
+Read models and aggregates derive from canonical persisted records rather than introducing duplicate sources of truth.
 
-### Storage
+## Storage boundaries
 
-Continue using the hybrid storage architecture documented in `PP_Storage.md`:
+ProjectPress retains its hybrid storage architecture:
 
-- custom ProjectPress tables for application entities and relationships;
+- custom ProjectPress tables for independently queryable application entities and relationships;
 - WordPress posts/meta for authored content;
 - WordPress taxonomies/term meta for classification;
 - WordPress attachments for uploaded files;
 - WordPress comments for discussion replies;
 - WordPress users for canonical user identities.
 
-Do not create a table merely because a domain class exists.
+## Workspace persistence audit
 
-### UI
+The earlier `WorkspaceSections.php` direct-persistence concern is no longer representative of the active workspace architecture. Current project workspace controllers delegate to owning repositories:
 
-- Global management belongs under `src/Admin/Manager/ProjectManager/`.
-- Per-project workspace features belong under `src/Admin/Manager/Projects/`.
-- UI controllers must call domain services/repositories rather than introducing further direct persistence.
+- `WorkspaceContent` uses `ContentRepository`, `ActivityRepository`, and `ProjectSettingsRepository`.
+- `Collaboration` uses `DocumentRepository` and `AttachmentRepository`.
+- task, milestone, requirement, feature, story, governance, quality, delivery, people/communication, reporting and composition sections use their domain repository/service boundaries.
 
-### Extension integration
+The workspace controllers retain nonce and `ProjectPermissions` checks around mutations.
 
-Use the existing project extension/provider infrastructure for workspace sections and related entities rather than adding a second extension mechanism.
+## Domain classification and integration
 
-## Verified integration gaps
+### Planning and work
 
-### `src/Admin/Manager/Projects/WorkspaceSections.php`
+Requirements, features, user stories, tasks and milestones are persistent project entities. Planning/backlog/reporting views derive from those canonical records. `ProjectPlan` remains an aggregate/read model and does not require a `project_plans` table.
 
-The current workspace implementation still accesses storage directly through `DBHelper` for milestones, discussions, notes, files, settings and activity. This bypasses the repository/service boundary defined by the storage architecture.
+### Collaboration
 
-Required follow-up:
+Documents/notes/discussions remain authored-content concerns, attachment ownership remains with WordPress, and ProjectPress stores project relationships/metadata around those WordPress entities.
 
-1. Replace direct `DBHelper` reads/writes/deletes with owning repositories/services.
-2. Preserve the existing nonce and project permission checks.
-3. Route authored content through WordPress-backed content services rather than treating every section as a custom-table record.
-4. Keep attachment ownership with WordPress and store only ProjectPress relationship metadata.
-5. Keep project settings behind an owning settings/service abstraction.
+### People and communication
 
-### `src/Includes/Project/Core/ProjectPlan.php`
+WordPress users and the existing ProjectPress team/member model remain authoritative for identity/membership. Timesheets and project notifications are independently queryable project entities.
 
-`ProjectPlan` is currently an in-memory aggregate of a project ID, milestones and work items. It has no persistence responsibility of its own.
+### Governance and quality
 
-Integration decision:
+Risks, issues, dependencies, decisions, bugs and test cases are project-scoped persistent entities with repository/service, permission, API/workspace and deletion-lifecycle integration.
 
-- keep `ProjectPlan` as an aggregate/read model;
-- hydrate it from the milestone/work-item persistence layer;
-- do not create a `project_plans` table solely for this class;
-- expose it through planning/workspace services where a combined project-plan view is required.
+### Delivery
 
-### Model-only expansion
+Sprints, releases, deployments and environments are project-scoped persistent entities integrated through the owning delivery repository/service and workspace/API layers.
 
-The recently expanded domain namespaces under `src/Includes/Project/` must be audited individually before new persistence is introduced:
+### Reporting
 
-- Collaboration
-- Communication
-- Composition
-- Delivery
-- Governance
-- People
-- Planning
-- Quality
-- Reports
-- Requirements
-- Tracking
-- Work
-- Workflow
+Reporting is a presentation/read model derived from canonical repositories. It does not create parallel reporting persistence.
 
-For every class, record one of these states:
+### Composition and SBOM
 
-- **Aggregate/value object**: no independent storage.
-- **Existing entity**: map to an existing ProjectPress table/repository.
-- **Authored content**: map to a ProjectPress WordPress post/meta model.
-- **Classification**: map to an existing taxonomy/term-meta model.
-- **Relationship**: map to an existing relational table or approved new relation.
-- **New persistent entity**: requires an explicit schema/repository/service decision before implementation.
-- **Presentation/read model**: derive from existing persisted records.
+Components, packages, assets, licences, attribution, provenance, relationships and generic SBOM records form the format-neutral ProjectPress composition foundation. The snapshot API derives a compositional view from these canonical records.
 
-## Implementation order
+SPDX-specific import, export and generation are intentionally outside ProjectPress core and belong in the separate SPDX extension.
 
-### Pass 1 - remove persistence leakage from the workspace
+### Tracking and workflow
 
-Refactor existing workspace sections to use domain-owned services/repositories. This should happen before adding UI for more entities, otherwise the current direct-database pattern will be copied into new sections.
+Activity is a tracked project record exposed through `ActivityRepository`. Workflow/read-model classes should continue to derive from canonical project entities unless an independently queryable persistence requirement is explicitly approved.
 
-### Pass 2 - planning and work
+## API/UI completion
 
-Connect ProjectPlan, milestones, tasks/work items, roadmap/Gantt presentation and related planning models using existing task/milestone storage wherever possible.
+Phase 9 workspace and REST integration is registered for the approved user-facing domains. Permission enforcement continues through `ProjectPermissions`, and mutation controllers use owning repositories/services rather than adding a second persistence mechanism.
 
-### Pass 3 - people and collaboration
+## Verification
 
-Connect teams/members and determine which collaboration models are WordPress-backed content, attachment relationships, or views over existing records.
+Focused Phase 9 tests cover planning, governance, quality, delivery, people/communication, reporting and composition. Consolidation coverage validates workspace registration, REST bootstrap registration and the absence of SPDX-specific REST bootstrap code from core.
 
-### Pass 4 - governance, quality and requirements
+The repository validation contract is documented in `PHASE_9_VALIDATION.md` and the Composer scripts.
 
-Map risks, issues, decisions, dependencies, bugs, test cases and requirements to explicit storage/service contracts. Do not create tables until ownership and lifecycle are defined.
+## Remaining release-candidate work
 
-### Pass 5 - composition and delivery
-
-Map assets, attributions, licences, packages, provenance/SBOM, environments, deployments, releases and sprints. Reuse relationships/content metadata when suitable and add schema only for independently queryable application entities.
-
-### Pass 6 - communication, reporting, tracking and workflow
-
-Integrate notifications, reports, activity views and workflow/read models with existing sources rather than duplicating persisted state.
-
-### Pass 7 - API and UI completion
-
-For approved persistent/user-facing entities:
-
-1. provide repository access;
-2. provide service validation/workflow;
-3. enforce ProjectPress permissions;
-4. provide REST routes only where required;
-5. register the relevant global/project workspace UI;
-6. implement create/edit/view/delete operations appropriate to the entity;
-7. add activity/deletion integration where relevant.
-
-### Pass 8 - verification
-
-Add focused tests for each completed integration path and then resume the Phase 8 release-candidate QA checklist.
-
-## Completion rule
-
-A newly introduced model is complete only when either:
-
-1. it is deliberately classified as a non-persistent domain/read/value object and is consumed by an owning service/UI; or
-2. its complete persistence -> service -> permission -> API/UI -> test path is implemented.
-
-Placeholder classes with no consumer do not count as integrated functionality.
+Phase 9 architecture/integration is considered closed by this audit. Release-candidate QA remains a separate verification activity: run the documented local test/lint contract in a supported WordPress test environment, resolve failures, exercise representative workspace flows, and validate upgrade behaviour before release tagging.
