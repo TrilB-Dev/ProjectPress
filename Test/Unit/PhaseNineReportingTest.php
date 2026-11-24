@@ -1,0 +1,3 @@
+<?php
+
+declare(strict_types=1);namespace ProjectPress\Tests\Unit;use PHPUnit\Framework\TestCase;use ProjectPress\API\ReportingRoutes;use ProjectPress\Includes\Project\Reports\Reports;final class PhaseNineReportingTest extends TestCase{public function testReportsCountCanonicalRowsByField():void{$counts=Reports::count_by(array(array('status'=>'open'),array('status'=>'open'),array('status'=>'done')),'status');$this->assertSame(2,$counts['open']);$this->assertSame(1,$counts['done']);}public function testReportingRestHandlersExist():void{$this->assertTrue(method_exists(ReportingRoutes::class,'report'));$this->assertTrue(method_exists(ReportingRoutes::class,'can_read'));}}
