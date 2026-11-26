@@ -50,6 +50,10 @@
                 <element value="projectpress_page_edit_others" />
                 <element value="projectpress_page_edit_published" />
                 <element value="projectpress_page_publish" />
+                <element value="projectpress_projects_view" />
+                <element value="projectpress_projects_create" />
+                <element value="projectpress_projects_delete" />
+                <element value="projectpress_projects_taxonomies" />
             </property>
         </properties>
     </rule>

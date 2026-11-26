@@ -1,13 +1,390 @@
 <?php
+/**
+ * Project composition and SBOM workspace controller.
+ *
+ * @package ProjectPress
+ * @subpackage Admin\Manager\Projects
+ * @since 1.0.0
+ */
+
 namespace ProjectPress\Admin\Manager\Projects;
-use ProjectPress\Includes\Functions\Helpers\RequestHelper;use ProjectPress\Includes\Project\Composition\CompositionRepository;use ProjectPress\Includes\Project\Composition\CompositionService;use ProjectPress\Includes\Project\Composition\SBOMService;use ProjectPress\Includes\Project\Core\Project;use ProjectPress\Includes\Project\Core\ProjectPermissions;use ProjectPress\Includes\Project\ProjectManager as DomainProjectManager;use WP_Error;
-if(!defined('ABSPATH')){exit;}
-final class Composition{
- private DomainProjectManager$projects;private ProjectPermissions$permissions;private const TYPES=array('component'=>'Components','package'=>'Packages','asset'=>'Assets','licence'=>'Licences','attribution'=>'Attributions','provenance'=>'Provenance','relationship'=>'Relationships','sbom'=>'SBOM Records');
- public function __construct(?DomainProjectManager$projects=null,?ProjectPermissions$permissions=null){$this->projects=$projects??DomainProjectManager::get_instance();$this->permissions=$permissions??new ProjectPermissions();}
- public function render(Project$project):void{$can=$this->permissions->can_edit($project);$snapshot=(new SBOMService($this->projects->repository(),$this->permissions))->snapshot($project->get_id());?><div class="card card-body mb-4"><h2 class="h4"><?php esc_html_e('Composition Snapshot','projectpress');?></h2><div class="row g-3"><?php foreach(array('components','packages','assets','licences','attributions','provenance','relationships')as$key):?><div class="col-sm-6 col-xl-3"><div class="border rounded p-3"><div class="small text-secondary"><?php echo esc_html(ucwords($key));?></div><strong><?php echo esc_html((string)count((array)($snapshot[$key]??array())));?></strong></div></div><?php endforeach;?></div></div><div class="row g-4"><?php foreach(self::TYPES as$type=>$label):$repo=new CompositionRepository($type);$items=$repo->for_project($project->get_id());?><div class="col-xl-6"><div class="card card-body h-100"><h3 class="h5"><?php echo esc_html(__($label,'projectpress'));?></h3><?php if(empty($items)):?><p class="text-secondary"><?php esc_html_e('No composition records added yet.','projectpress');?></p><?php endif;foreach($items as$item):$row=$item->to_array();?><div class="border rounded p-2 mb-2"><strong><?php echo esc_html((string)($row['name']??$row['relationship_type']??$row['format']??__('Record','projectpress')));?></strong><?php if($can):$this->delete_form($type,$project->get_id(),$item->get_id());endif;?></div><?php endforeach;?><?php if($can):?><form class="mt-3" method="post" action="<?php echo esc_url(admin_url('admin-post.php'));?>"><input type="hidden" name="action" value="projectpress_workspace_composition_save"/><input type="hidden" name="project_id" value="<?php echo esc_attr((string)$project->get_id());?>"/><input type="hidden" name="type" value="<?php echo esc_attr($type);?>"/><?php wp_nonce_field('projectpress_workspace_composition_save');?><label class="form-label"><?php esc_html_e('Name','projectpress');?></label><input class="form-control" name="name"/><label class="form-label mt-2"><?php esc_html_e('Version','projectpress');?></label><input class="form-control" name="version"/><label class="form-label mt-2"><?php esc_html_e('Identifier','projectpress');?></label><input class="form-control" name="identifier"/><label class="form-label mt-2"><?php esc_html_e('Licence','projectpress');?></label><input class="form-control" name="licence"/><label class="form-label mt-2"><?php esc_html_e('Relationship type','projectpress');?></label><input class="form-control" name="relationship_type"/><label class="form-label mt-2"><?php esc_html_e('Source type / ID','projectpress');?></label><div class="input-group"><input class="form-control" name="source_type"/><input class="form-control" type="number" min="0" name="source_id"/></div><label class="form-label mt-2"><?php esc_html_e('Target type / ID','projectpress');?></label><div class="input-group"><input class="form-control" name="target_type"/><input class="form-control" type="number" min="0" name="target_id"/></div><label class="form-label mt-2"><?php esc_html_e('Format','projectpress');?></label><input class="form-control" name="format" value="generic"/><button class="btn btn-primary mt-3" type="submit"><?php esc_html_e('Add Record','projectpress');?></button></form><?php endif;?></div></div><?php endforeach;?></div><?php }
- private function delete_form(string$type,int$project_id,int$id):void{?><form class="mt-2" method="post" action="<?php echo esc_url(admin_url('admin-post.php'));?>"><input type="hidden" name="action" value="projectpress_workspace_composition_delete"/><input type="hidden" name="project_id" value="<?php echo esc_attr((string)$project_id);?>"/><input type="hidden" name="type" value="<?php echo esc_attr($type);?>"/><input type="hidden" name="record_id" value="<?php echo esc_attr((string)$id);?>"/><?php wp_nonce_field('projectpress_workspace_composition_delete');?><button class="btn btn-sm btn-outline-danger" type="submit"><?php esc_html_e('Delete','projectpress');?></button></form><?php }
- public function handle_save():void{check_admin_referer('projectpress_workspace_composition_save');$id=RequestHelper::integer($_POST,'project_id',0);$type=RequestHelper::key($_POST,'type','');if(!isset(self::TYPES[$type]))$this->redirect($id,new WP_Error('projectpress_composition_type_invalid',__('Invalid composition type.','projectpress')));$repo=new CompositionRepository($type);$service=new CompositionService($type,$repo,$this->projects->repository(),$this->permissions);$this->redirect($id,$service->create($id,array('name'=>RequestHelper::text($_POST,'name',''),'version'=>RequestHelper::text($_POST,'version',''),'identifier'=>RequestHelper::text($_POST,'identifier',''),'licence'=>RequestHelper::text($_POST,'licence',''),'source_type'=>RequestHelper::key($_POST,'source_type',''),'source_id'=>RequestHelper::integer($_POST,'source_id',0),'target_type'=>RequestHelper::key($_POST,'target_type',''),'target_id'=>RequestHelper::integer($_POST,'target_id',0),'relationship_type'=>RequestHelper::key($_POST,'relationship_type',''),'format'=>RequestHelper::key($_POST,'format','generic'))));}
- public function handle_delete():void{check_admin_referer('projectpress_workspace_composition_delete');$id=RequestHelper::integer($_POST,'project_id',0);$type=RequestHelper::key($_POST,'type','');if(!isset(self::TYPES[$type]))$this->redirect($id,new WP_Error('projectpress_composition_type_invalid',__('Invalid composition type.','projectpress')));$repo=new CompositionRepository($type);$record=$repo->find(RequestHelper::integer($_POST,'record_id',0));$result=$record&&$record->get_project_id()===$id?(new CompositionService($type,$repo,$this->projects->repository(),$this->permissions))->delete($record):new WP_Error('projectpress_composition_not_found',__('Composition record not found.','projectpress'));$this->redirect($id,$result);}
- private function redirect(int$id,$result):void{$url=add_query_arg(array('page'=>'projectpress','group'=>'projects','project_id'=>absint($id),'tab'=>'composition'),admin_url('admin.php'));$url=is_wp_error($result)?add_query_arg('project_error',rawurlencode($result->get_error_message()),$url):add_query_arg('project_saved','1',$url);wp_safe_redirect($url);exit;}
+
+use ProjectPress\Includes\Functions\Helpers\RequestHelper;
+use ProjectPress\Includes\Project\Composition\CompositionRepository;
+use ProjectPress\Includes\Project\Composition\CompositionService;
+use ProjectPress\Includes\Project\Composition\SBOMService;
+use ProjectPress\Includes\Project\Core\Project;
+use ProjectPress\Includes\Project\Core\ProjectPermissions;
+use ProjectPress\Includes\Project\ProjectManager as DomainProjectManager;
+use WP_Error;
+
+if (!defined("ABSPATH")) {
+	exit();
+}
+
+/**
+ * Renders and handles project composition records.
+ */
+final class Composition {
+	/**
+	 * Domain project manager.
+	 *
+	 * @var DomainProjectManager
+	 */
+	private DomainProjectManager $projects;
+
+	/**
+	 * Project permissions service.
+	 *
+	 * @var ProjectPermissions
+	 */
+	private ProjectPermissions $permissions;
+
+	/**
+	 * Supported composition record types and labels.
+	 *
+	 * @var array<string, string>
+	 */
+	private const TYPES = [
+		"component" => "Components",
+		"package" => "Packages",
+		"asset" => "Assets",
+		"licence" => "Licences",
+		"attribution" => "Attributions",
+		"provenance" => "Provenance",
+		"relationship" => "Relationships",
+		"sbom" => "SBOM Records",
+	];
+
+	/**
+	 * Constructor.
+	 *
+	 * @param DomainProjectManager|null $projects   Domain project manager.
+	 * @param ProjectPermissions|null   $permissions Project permissions service.
+	 */
+	public function __construct(?DomainProjectManager $projects = null, ?ProjectPermissions $permissions = null) {
+		$this->projects = $projects ?? DomainProjectManager::get_instance();
+		$this->permissions = $permissions ?? new ProjectPermissions();
+	}
+
+	/**
+	 * Render composition records and snapshot counts for a project.
+	 *
+	 * @param Project $project Project to render.
+	 * @return void
+	 */
+	public function render(Project $project): void {
+		$can = $this->permissions->can_edit($project);
+		$snapshot = new SBOMService(
+			$this->projects->repository(),
+			$this->permissions,
+		)->snapshot($project->get_id());
+		?>
+		<div class="card card-body mb-4">
+			<h2 class="h4">
+				<?php esc_html_e("Composition Snapshot", "projectpress"); ?>
+			</h2>
+
+			<div class="row g-3">
+				<?php foreach (["components", "packages", "assets", "licences", "attributions", "provenance", "relationships"] as $key): ?>
+					<div class="col-sm-6 col-xl-3">
+						<div class="border rounded p-3">
+							<div class="small text-secondary">
+								<?php echo esc_html(ucwords($key)); ?>
+							</div>
+							<strong>
+								<?php echo esc_html((string) count((array) ($snapshot[$key] ?? []))); ?>
+							</strong>
+						</div>
+					</div>
+				<?php endforeach; ?>
+			</div>
+		</div>
+
+		<div class="row g-4">
+			<?php foreach (self::TYPES as $type => $label): ?>
+				<?php
+				$repo = new CompositionRepository($type);
+				$items = $repo->for_project($project->get_id());
+				?>
+				<div class="col-xl-6">
+					<div class="card card-body h-100">
+						<h3 class="h5">
+							<?php echo esc_html(__($label, "projectpress")); ?>
+						</h3>
+
+						<?php if (empty($items)): ?>
+							<p class="text-secondary">
+								<?php esc_html_e("No composition records added yet.", "projectpress"); ?>
+							</p>
+						<?php endif; ?>
+
+						<?php foreach ($items as $item): ?>
+							<?php $row = $item->to_array(); ?>
+							<div class="border rounded p-2 mb-2">
+								<strong>
+									<?php
+									echo esc_html(
+										(string) (
+											$row["name"]
+											?? $row["relationship_type"]
+											?? $row["format"]
+											?? __("Record", "projectpress")
+										),
+									);
+									?>
+								</strong>
+
+								<?php if ($can): ?>
+									<?php $this->delete_form($type, $project->get_id(), $item->get_id()); ?>
+								<?php endif; ?>
+							</div>
+						<?php endforeach; ?>
+
+						<?php if ($can): ?>
+							<form
+								class="mt-3"
+								method="post"
+								action="<?php echo esc_url(admin_url("admin-post.php")); ?>"
+							>
+								<input type="hidden" name="action" value="projectpress_workspace_composition_save"/>
+								<input type="hidden" name="project_id" value="<?php echo esc_attr((string) $project->get_id()); ?>"/>
+								<input type="hidden" name="type" value="<?php echo esc_attr($type); ?>"/>
+								<?php wp_nonce_field("projectpress_workspace_composition_save"); ?>
+
+								<label class="form-label" for="composition-name-<?php echo esc_attr($type); ?>">
+									<?php esc_html_e("Name", "projectpress"); ?>
+								</label>
+								<input
+									class="form-control"
+									id="composition-name-<?php echo esc_attr($type); ?>"
+									name="name"
+								/>
+
+								<label class="form-label mt-2" for="composition-version-<?php echo esc_attr($type); ?>">
+									<?php esc_html_e("Version", "projectpress"); ?>
+								</label>
+								<input
+									class="form-control"
+									id="composition-version-<?php echo esc_attr($type); ?>"
+									name="version"
+								/>
+
+								<label class="form-label mt-2" for="composition-identifier-<?php echo esc_attr($type); ?>">
+									<?php esc_html_e("Identifier", "projectpress"); ?>
+								</label>
+								<input
+									class="form-control"
+									id="composition-identifier-<?php echo esc_attr($type); ?>"
+									name="identifier"
+								/>
+
+								<label class="form-label mt-2" for="composition-license-<?php echo esc_attr($type); ?>">
+									<?php esc_html_e("Licence", "projectpress"); ?>
+								</label>
+								<input
+									class="form-control"
+									id="composition-license-<?php echo esc_attr($type); ?>"
+									name="licence"
+								/>
+
+								<label class="form-label mt-2" for="composition-relationship-<?php echo esc_attr($type); ?>">
+									<?php esc_html_e("Relationship type", "projectpress"); ?>
+								</label>
+								<input
+									class="form-control"
+									id="composition-relationship-<?php echo esc_attr($type); ?>"
+									name="relationship_type"
+								/>
+
+								<label class="form-label mt-2" for="composition-source-type-<?php echo esc_attr($type); ?>">
+									<?php esc_html_e("Source type / ID", "projectpress"); ?>
+								</label>
+								<div class="input-group">
+									<input
+										class="form-control"
+										id="composition-source-type-<?php echo esc_attr($type); ?>"
+										name="source_type"
+									/>
+									<input
+										class="form-control"
+										type="number"
+										min="0"
+										name="source_id"
+									/>
+								</div>
+
+								<label class="form-label mt-2" for="composition-target-type-<?php echo esc_attr($type); ?>">
+									<?php esc_html_e("Target type / ID", "projectpress"); ?>
+								</label>
+								<div class="input-group">
+									<input
+										class="form-control"
+										id="composition-target-type-<?php echo esc_attr($type); ?>"
+										name="target_type"
+									/>
+									<input
+										class="form-control"
+										type="number"
+										min="0"
+										name="target_id"
+									/>
+								</div>
+
+								<label class="form-label mt-2" for="composition-format-<?php echo esc_attr($type); ?>">
+									<?php esc_html_e("Format", "projectpress"); ?>
+								</label>
+								<input
+									class="form-control"
+									id="composition-format-<?php echo esc_attr($type); ?>"
+									name="format"
+									value="generic"
+								/>
+
+								<button class="btn btn-primary mt-3" type="submit">
+									<?php esc_html_e("Add Record", "projectpress"); ?>
+								</button>
+							</form>
+						<?php endif; ?>
+					</div>
+				</div>
+			<?php endforeach; ?>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Render a delete form for a composition record.
+	 *
+	 * @param string $type       Composition record type.
+	 * @param int    $project_id Project ID.
+	 * @param int    $id         Record ID.
+	 * @return void
+	 */
+	private function delete_form(string $type, int $project_id, int $id): void {
+		?>
+		<form
+			class="mt-2"
+			method="post"
+			action="<?php echo esc_url(admin_url("admin-post.php")); ?>"
+		>
+			<input type="hidden" name="action" value="projectpress_workspace_composition_delete"/>
+			<input type="hidden" name="project_id" value="<?php echo esc_attr((string) $project_id); ?>"/>
+			<input type="hidden" name="type" value="<?php echo esc_attr($type); ?>"/>
+			<input type="hidden" name="record_id" value="<?php echo esc_attr((string) $id); ?>"/>
+			<?php wp_nonce_field("projectpress_workspace_composition_delete"); ?>
+
+			<button class="btn btn-sm btn-outline-danger" type="submit">
+				<?php esc_html_e("Delete", "projectpress"); ?>
+			</button>
+		</form>
+		<?php
+	}
+
+	/**
+	 * Handle composition record creation.
+	 *
+	 * @return void
+	 */
+	public function handle_save(): void {
+		check_admin_referer("projectpress_workspace_composition_save");
+		$id = RequestHelper::integer($_POST, "project_id", 0);
+		$type = RequestHelper::key($_POST, "type", "");
+
+		if (!isset(self::TYPES[$type])) {
+			$this->redirect(
+				$id,
+				new WP_Error(
+					"projectpress_composition_type_invalid",
+					__("Invalid composition type.", "projectpress"),
+				),
+			);
+		}
+
+		$repo = new CompositionRepository($type);
+		$service = new CompositionService(
+			$type,
+			$repo,
+			$this->projects->repository(),
+			$this->permissions,
+		);
+		$this->redirect(
+			$id,
+			$service->create($id, [
+				"name" => RequestHelper::text($_POST, "name", ""),
+				"version" => RequestHelper::text($_POST, "version", ""),
+				"identifier" => RequestHelper::text($_POST, "identifier", ""),
+				"licence" => RequestHelper::text($_POST, "licence", ""),
+				"source_type" => RequestHelper::key($_POST, "source_type", ""),
+				"source_id" => RequestHelper::integer($_POST, "source_id", 0),
+				"target_type" => RequestHelper::key($_POST, "target_type", ""),
+				"target_id" => RequestHelper::integer($_POST, "target_id", 0),
+				"relationship_type" => RequestHelper::key($_POST, "relationship_type", ""),
+				"format" => RequestHelper::key($_POST, "format", "generic"),
+			]),
+		);
+	}
+
+	/**
+	 * Handle composition record deletion.
+	 *
+	 * @return void
+	 */
+	public function handle_delete(): void {
+		check_admin_referer("projectpress_workspace_composition_delete");
+		$id = RequestHelper::integer($_POST, "project_id", 0);
+		$type = RequestHelper::key($_POST, "type", "");
+
+		if (!isset(self::TYPES[$type])) {
+			$this->redirect(
+				$id,
+				new WP_Error(
+					"projectpress_composition_type_invalid",
+					__("Invalid composition type.", "projectpress"),
+				),
+			);
+		}
+
+		$repo = new CompositionRepository($type);
+		$record = $repo->find(RequestHelper::integer($_POST, "record_id", 0));
+		$result =
+			$record && $record->get_project_id() === $id
+				? new CompositionService(
+					$type,
+					$repo,
+					$this->projects->repository(),
+					$this->permissions,
+				)->delete($record)
+				: new WP_Error(
+					"projectpress_composition_not_found",
+					__("Composition record not found.", "projectpress"),
+				);
+
+		$this->redirect($id, $result);
+	}
+
+	/**
+	 * Redirect back to the composition workspace tab.
+	 *
+	 * @param int   $id     Project ID.
+	 * @param mixed $result Service or validation result.
+	 * @return void
+	 */
+	private function redirect(int $id, $result): void {
+		$url = add_query_arg(
+			[
+				"page" => "projectpress",
+				"group" => "projects",
+				"project_id" => absint($id),
+				"tab" => "composition",
+			],
+			admin_url("admin.php"),
+		);
+		$url = is_wp_error($result)
+			? add_query_arg("project_error", rawurlencode($result->get_error_message()), $url)
+			: add_query_arg("project_saved", "1", $url);
+
+		wp_safe_redirect($url);
+		exit();
+	}
 }

@@ -1,9 +1,39 @@
 <?php
+/**
+ * Normalises and stores project query arguments.
+ *
+ * @package ProjectPress\Includes\Project\Core
+ * @since 1.0.0
+ */
+
 namespace ProjectPress\Includes\Project\Core;
+
 use ProjectPress\Includes\Functions\Helpers\SanitizationHelper;
-if ( ! defined( 'ABSPATH' ) ) { exit; }
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Represents a sanitised project repository query.
+ *
+ * @since 1.0.0
+ */
 final class ProjectQuery {
+	/**
+	 * Sanitised query arguments.
+	 *
+	 * @var array
+	 * @since 1.0.0
+	 */
 	private array $arguments;
+
+	/**
+	 * Initialise and sanitise query arguments.
+	 *
+	 * @param array $arguments Query arguments.
+	 * @since 1.0.0
+	 */
 	public function __construct( array $arguments = array() ) {
 		$this->arguments = array(
 			'status' => SanitizationHelper::key( $arguments['status'] ?? '' ),
@@ -22,6 +52,26 @@ final class ProjectQuery {
 			'page' => SanitizationHelper::integer_range( $arguments['page'] ?? 1, 1, PHP_INT_MAX, 1 ),
 		);
 	}
-	public function get( string $key, $default = null ) { return $this->arguments[ $key ] ?? $default; }
-	public function to_array(): array { return $this->arguments; }
+
+	/**
+	 * Get a query argument.
+	 *
+	 * @param string $key Argument key.
+	 * @param mixed  $default Default value.
+	 * @return mixed
+	 * @since 1.0.0
+	 */
+	public function get( string $key, $default = null ) {
+		return $this->arguments[ $key ] ?? $default;
+	}
+
+	/**
+	 * Get all query arguments.
+	 *
+	 * @return array
+	 * @since 1.0.0
+	 */
+	public function to_array(): array {
+		return $this->arguments;
+	}
 }

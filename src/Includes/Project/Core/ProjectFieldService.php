@@ -1,14 +1,280 @@
 <?php
+/**
+ * Project field validation and mutation service.
+ *
+ * @package ProjectPress\Includes\Project\Core
+ * @since 1.0.0
+ */
+
 namespace ProjectPress\Includes\Project\Core;
-use ProjectPress\Includes\Functions\Helpers\PermissionHelper; use WP_Error;
-if(!defined('ABSPATH')){exit;}
-final class ProjectFieldService{
- private ProjectFieldRepository $repository; private ProjectRepository $projects; private ProjectPermissions $permissions;
- public function __construct(ProjectFieldRepository $repository,ProjectRepository $projects,ProjectPermissions $permissions){$this->repository=$repository;$this->projects=$projects;$this->permissions=$permissions;}
- public static function types():array{return array('text','textarea','integer','decimal','boolean','date','datetime','select','multi_select','user','url','email');}
- public function create(array $input){if(!$this->can_manage())return new WP_Error('projectpress_fields_forbidden',__('You do not have permission to manage global fields.','projectpress'));$name=sanitize_text_field($input['name']??'');$key=sanitize_key($input['key']??$name);$type=sanitize_key($input['type']??'text');if(''===$name||''===$key)return new WP_Error('projectpress_field_required',__('A field name and key are required.','projectpress'));if(!in_array($type,self::types(),true))return new WP_Error('projectpress_field_type_invalid',__('The field type is invalid.','projectpress'));$now=current_time('mysql',true);$id=$this->repository->create(array('field_key'=>$key,'field_name'=>$name,'field_description'=>sanitize_textarea_field($input['description']??''),'field_type'=>$type,'configuration'=>wp_json_encode(is_array($input['configuration']??null)?$input['configuration']:array()),'is_required'=>empty($input['required'])?0:1,'is_enabled'=>array_key_exists('enabled',$input)?(empty($input['enabled'])?0:1):1,'sort_order'=>absint($input['sort_order']??0),'created_by'=>get_current_user_id(),'created_at'=>$now,'updated_by'=>get_current_user_id(),'updated_at'=>$now));return false===$id?new WP_Error('projectpress_field_create_failed',__('The global field could not be created.','projectpress')):$this->repository->find((int)$id);}
- public function save_project_values(int $project_id,array $values){$project=$this->projects->find($project_id);if(!$project)return new WP_Error('projectpress_project_not_found',__('Project not found.','projectpress'));if(!$this->permissions->can_edit($project))return new WP_Error('projectpress_fields_project_forbidden',__('You do not have permission to edit this project.','projectpress'));foreach($this->repository->all(true) as $field){$id=(int)$field['id'];$raw=$values[$id]??null;$normalised=$this->normalise_value($field,$raw);if(is_wp_error($normalised))return $normalised;if(null===$normalised){$this->repository->delete_value($project_id,$id);continue;}if(!$this->repository->save_value($project_id,$id,$normalised))return new WP_Error('projectpress_field_value_failed',__('A project field value could not be saved.','projectpress'));}do_action('projectpress_project_fields_saved',$project_id);return true;}
- public function display_value(array $field,?array $row){if(!$row)return '';$type=$field['field_type'];if(in_array($type,array('integer','decimal','boolean'),true))return (string)($row['value_number']??'');if(in_array($type,array('date','datetime'),true))return (string)($row['value_date']??'');if(in_array($type,array('textarea','multi_select'),true))return (string)($row['value_longtext']??'');return (string)($row['value_text']??'');}
- private function normalise_value(array $field,$raw){$type=(string)$field['field_type'];$required=!empty($field['is_required']);if(null===$raw||''===$raw||array()===$raw){return $required?new WP_Error('projectpress_field_value_required',sprintf(__('A value is required for %s.','projectpress'),$field['field_name'])):null;}switch($type){case'integer':return array('value_number'=>(int)$raw);case'decimal':return is_numeric($raw)?array('value_number'=>(float)$raw):new WP_Error('projectpress_field_number_invalid',__('A numeric field contains an invalid value.','projectpress'));case'boolean':return array('value_number'=>empty($raw)?0:1);case'date':case'datetime':$time=strtotime((string)$raw);return false===$time?new WP_Error('projectpress_field_date_invalid',__('A date field contains an invalid value.','projectpress')):array('value_date'=>gmdate('Y-m-d H:i:s',$time));case'email':$value=sanitize_email((string)$raw);return is_email($value)?array('value_text'=>$value):new WP_Error('projectpress_field_email_invalid',__('An email field contains an invalid value.','projectpress'));case'url':return array('value_text'=>esc_url_raw((string)$raw));case'user':$id=absint($raw);return $id>0&&get_user_by('id',$id)?array('value_number'=>$id):new WP_Error('projectpress_field_user_invalid',__('A user field references an invalid user.','projectpress'));case'textarea':return array('value_longtext'=>sanitize_textarea_field((string)$raw));case'multi_select':return array('value_longtext'=>wp_json_encode(array_values(array_map('sanitize_text_field',(array)$raw))));default:return array('value_text'=>sanitize_text_field((string)$raw));}}
- private function can_manage():bool{return PermissionHelper::can_any(array('projectpress_fields_manage','manage_options'));}
+
+use ProjectPress\Includes\Functions\Helpers\PermissionHelper;
+use WP_Error;
+
+if (!defined("ABSPATH")) {
+    exit();
+}
+
+/**
+ * Applies global project field and project value rules.
+ *
+ * @since 1.0.0
+ */
+final class ProjectFieldService {
+    /**
+     * Project field repository.
+     *
+     * @var ProjectFieldRepository
+     * @since 1.0.0
+     */
+    private ProjectFieldRepository $repository;
+    /**
+     * Project repository.
+     *
+     * @var ProjectRepository
+     * @since 1.0.0
+     */
+    private ProjectRepository $projects;
+    /**
+     * Project permissions.
+     *
+     * @var ProjectPermissions
+     * @since 1.0.0
+     */
+    private ProjectPermissions $permissions;
+
+    /**
+     * Initialise the field service.
+     *
+     * @param ProjectFieldRepository $repository Field repository.
+     * @param ProjectRepository      $projects Project repository.
+     * @param ProjectPermissions     $permissions Project permissions.
+     * @since 1.0.0
+     */
+    public function __construct(
+        ProjectFieldRepository $repository,
+        ProjectRepository $projects,
+        ProjectPermissions $permissions,
+    ) {
+        $this->repository = $repository;
+        $this->projects = $projects;
+        $this->permissions = $permissions;
+    }
+
+    /**
+     * Returns the allowed field types.
+     *
+     * @return array
+     * @since 1.0.0
+     */
+    public static function types(): array {
+        return [
+            "text",
+            "textarea",
+            "integer",
+            "decimal",
+            "boolean",
+            "date",
+            "datetime",
+            "select",
+            "multi_select",
+            "user",
+            "url",
+            "email",
+        ];
+    }
+
+    /**
+     * Creates a new global project field.
+     *
+     * @param array $input
+     * @return array|WP_Error
+     * @since 1.0.0
+     */
+    public function create(array $input) {
+        if (!$this->can_manage()) {
+            return new WP_Error(
+                "projectpress_fields_forbidden",
+                __("You do not have permission to manage global fields.", "projectpress"),
+            );
+        }
+        $name = sanitize_text_field($input["name"] ?? "");
+        $key = sanitize_key($input["key"] ?? $name);
+        $type = sanitize_key($input["type"] ?? "text");
+        if ("" === $name || "" === $key) {
+            return new WP_Error(
+                "projectpress_field_required",
+                __("A field name and key are required.", "projectpress"),
+            );
+        }
+        if (!in_array($type, self::types(), true)) {
+            return new WP_Error("projectpress_field_type_invalid", __("The field type is invalid.", "projectpress"));
+        }
+        $now = current_time("mysql", true);
+        $id = $this->repository->create([
+            "field_key" => $key,
+            "field_name" => $name,
+            "field_description" => sanitize_textarea_field($input["description"] ?? ""),
+            "field_type" => $type,
+            "configuration" => wp_json_encode(is_array($input["configuration"] ?? null) ? $input["configuration"] : []),
+            "is_required" => empty($input["required"]) ? 0 : 1,
+            "is_enabled" => array_key_exists("enabled", $input) ? (empty($input["enabled"]) ? 0 : 1) : 1,
+            "sort_order" => absint($input["sort_order"] ?? 0),
+            "created_by" => get_current_user_id(),
+            "created_at" => $now,
+            "updated_by" => get_current_user_id(),
+            "updated_at" => $now,
+        ]);
+        return false === $id
+            ? new WP_Error(
+                "projectpress_field_create_failed",
+                __("The global field could not be created.", "projectpress"),
+            )
+            : $this->repository->find((int) $id);
+    }
+
+    /**
+     * Saves the values of all global fields for a given project.
+     *
+     * @param int $project_id
+     * @param array $values
+     * @return bool|WP_Error
+     * @since 1.0.0
+     */
+    public function save_project_values(int $project_id, array $values) {
+        $project = $this->projects->find($project_id);
+        if (!$project) {
+            return new WP_Error("projectpress_project_not_found", __("Project not found.", "projectpress"));
+        }
+        if (!$this->permissions->can_edit($project)) {
+            return new WP_Error(
+                "projectpress_fields_project_forbidden",
+                __("You do not have permission to edit this project.", "projectpress"),
+            );
+        }
+        foreach ($this->repository->all(true) as $field) {
+            $id = (int) $field["id"];
+            $raw = $values[$id] ?? null;
+            $normalised = $this->normalise_value($field, $raw);
+            if (is_wp_error($normalised)) {
+                return $normalised;
+            }
+            if (null === $normalised) {
+                $this->repository->delete_value($project_id, $id);
+                continue;
+            }
+            if (!$this->repository->save_value($project_id, $id, $normalised)) {
+                return new WP_Error(
+                    "projectpress_field_value_failed",
+                    __("A project field value could not be saved.", "projectpress"),
+                );
+            }
+        }
+        do_action("projectpress_project_fields_saved", $project_id);
+        return true;
+    }
+
+    /**
+     * Displays the value of a specific field for a given project.
+     *
+     * @param array $field
+     * @param array|null $row
+     * @return string
+     * @since 1.0.0
+     */
+    public function display_value(array $field, ?array $row) {
+        if (!$row) {
+            return "";
+        }
+        $type = $field["field_type"];
+        if (in_array($type, ["integer", "decimal", "boolean"], true)) {
+            return (string) ($row["value_number"] ?? "");
+        }
+        if (in_array($type, ["date", "datetime"], true)) {
+            return (string) ($row["value_date"] ?? "");
+        }
+        if (in_array($type, ["textarea", "multi_select"], true)) {
+            return (string) ($row["value_longtext"] ?? "");
+        }
+        return (string) ($row["value_text"] ?? "");
+    }
+
+    /**
+     * Normalises a raw field value according to its type.
+     *
+     * @param array $field
+     * @param mixed $raw
+     * @return array|WP_Error|null
+     * @since 1.0.0
+     */
+    private function normalise_value(array $field, $raw) {
+        $type = (string) $field["field_type"];
+        $required = !empty($field["is_required"]);
+        if (null === $raw || "" === $raw || [] === $raw) {
+            return $required
+                ? new WP_Error(
+                    "projectpress_field_value_required",
+                    sprintf(__("A value is required for %s.", "projectpress"), $field["field_name"]),
+                )
+                : null;
+        }
+        switch ($type) {
+            case "integer":
+                return ["value_number" => (int) $raw];
+            case "decimal":
+                return is_numeric($raw)
+                    ? ["value_number" => (float) $raw]
+                    : new WP_Error(
+                        "projectpress_field_number_invalid",
+                        __("A numeric field contains an invalid value.", "projectpress"),
+                    );
+            case "boolean":
+                return ["value_number" => empty($raw) ? 0 : 1];
+            case "date":
+            case "datetime":
+                $time = strtotime((string) $raw);
+                return false === $time
+                    ? new WP_Error(
+                        "projectpress_field_date_invalid",
+                        __("A date field contains an invalid value.", "projectpress"),
+                    )
+                    : ["value_date" => gmdate("Y-m-d H:i:s", $time)];
+            case "email":
+                $value = sanitize_email((string) $raw);
+                return is_email($value)
+                    ? ["value_text" => $value]
+                    : new WP_Error(
+                        "projectpress_field_email_invalid",
+                        __("An email field contains an invalid value.", "projectpress"),
+                    );
+            case "url":
+                return ["value_text" => esc_url_raw((string) $raw)];
+            case "user":
+                $id = absint($raw);
+                return $id > 0 && get_user_by("id", $id)
+                    ? ["value_number" => $id]
+                    : new WP_Error(
+                        "projectpress_field_user_invalid",
+                        __("A user field references an invalid user.", "projectpress"),
+                    );
+            case "textarea":
+                return ["value_longtext" => sanitize_textarea_field((string) $raw)];
+            case "multi_select":
+                return [
+                    "value_longtext" => wp_json_encode(array_values(array_map("sanitize_text_field", (array) $raw))),
+                ];
+            default:
+                return ["value_text" => sanitize_text_field((string) $raw)];
+        }
+    }
+
+    /**
+     * Checks if the current user can manage project fields.
+     *
+     * @return bool
+     * @since 1.0.0
+     */
+    private function can_manage(): bool {
+        return PermissionHelper::can_any(["projectpress_fields_manage", "manage_options"]);
+    }
 }
