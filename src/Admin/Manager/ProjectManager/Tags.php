@@ -11,20 +11,17 @@ namespace ProjectPress\Admin\Manager\ProjectManager;
 
 use ProjectPress\Includes\Pages\Taxonomies;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if (!defined("ABSPATH")) {
+    exit();
 }
 
 final class Tags extends Classifications {
-	/**
-	 * Constructor.
-	 *
-	 * @since 1.0.0
-	 */
-	public function __construct() {
-		parent::__construct(
-			Taxonomies::PROJECT_TAG,
-			__( 'Project Tags', 'projectpress' )
-		);
-	}
+    /**
+     * Constructor.
+     *
+     * @since 1.0.0
+     */
+    public function __construct() {
+        parent::__construct("pp_project_tag", __("Project Tags", "projectpress"));
+    }
 }
