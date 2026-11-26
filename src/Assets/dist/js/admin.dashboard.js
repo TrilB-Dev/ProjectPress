@@ -1,0 +1,1 @@
+document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll("[data-projectpress-count]").forEach(e=>{e.classList.add("projectpress-count-ready")})});
