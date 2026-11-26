@@ -77,11 +77,16 @@ jobs:
 
       - name: Install Composer dependencies
         shell: bash
-        run: composer install --prefer-dist --no-progress --no-interaction --no-scripts
+        run: |
+          composer install --no-dev --prefer-dist --no-progress --no-interaction --no-scripts --optimize-autoloader
+          test -f vendor/autoload.php
+          test -f vendor/composer/autoload_real.php
+          php -r 'require "vendor/autoload.php"; echo "Composer autoload verified\n";'
 
       - name: Add Composer changes
         shell: bash
-        run: git add vendor/ composer.lock || true
+        run: |
+          git add -f vendor/ composer.lock || true
 
       - name: Commit composer changes
         shell: bash

@@ -3,7 +3,7 @@
         'name' => 'mrtrilb/projectpress',
         'pretty_version' => 'dev-Master',
         'version' => 'dev-Master',
-        'reference' => 'de75daf16406153b082d19227231a095a5863a59',
+        'reference' => 'ab6febe741bd92b986d11f6700a4735c2e74f84d',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -94,7 +94,7 @@
         'mrtrilb/projectpress' => array(
             'pretty_version' => 'dev-Master',
             'version' => 'dev-Master',
-            'reference' => 'de75daf16406153b082d19227231a095a5863a59',
+            'reference' => 'ab6febe741bd92b986d11f6700a4735c2e74f84d',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
