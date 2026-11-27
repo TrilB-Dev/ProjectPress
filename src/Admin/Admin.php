@@ -26,7 +26,6 @@ use ProjectPress\Admin\Manager\Tools\Export;
 use ProjectPress\Admin\Manager\Tools\General;
 use ProjectPress\Admin\Manager\Tools\Import;
 use ProjectPress\Admin\Manager\Tools\Reset;
-use ProjectPress\Admin\Manager\Mods\ModManager;
 
 if (!defined("ABSPATH")) {
     exit();
@@ -35,7 +34,6 @@ if (!defined("ABSPATH")) {
 final class Admin {
     private DashboardManager $dashboard_manager;
     private SettingsManager $settings_manager;
-    private ModManager $mod_manager;
     private ProjectManager $projects_manager;
     private ToolsManager $tools_manager;
     private array $managers;
@@ -49,13 +47,11 @@ final class Admin {
             "project-manager" => $project_manager,
             "projects" => $project_manager,
             "settings" => new SettingsManager(),
-            "mods" => new ModManager(),
             "tools" => new ToolsManager(),
         ];
         $this->dashboard_manager = $this->managers["dashboard"];
         $this->projects_manager = $this->managers["project-manager"];
         $this->settings_manager = $this->managers["settings"];
-        $this->mod_manager = $this->managers["mods"];
         $this->tools_manager = $this->managers["tools"];
         $this->loader = new LoaderHelper();
         new General($this->loader);
@@ -110,10 +106,6 @@ final class Admin {
                 "dashboard" => "dashboard",
                 "projects" => "projects",
                 "project-manager" => "project-manager",
-                "mods" => "mods",
-                "mod-manager" => "mods",
-                "manage-mod" => "mods",
-                "manage-mods" => "mods",
                 "settings" => "settings",
                 "tools" => "tools",
                 "reports" => "reports",
@@ -125,9 +117,6 @@ final class Admin {
                     return;
                 case "projects":
                     $this->render_project_workspace($tab, $form);
-                    return;
-                case "mods":
-                    $this->render_mods($tab, $form);
                     return;
                 case "settings":
                     $this->render_settings();
@@ -182,9 +171,6 @@ final class Admin {
      */
     public function render_project_workspace(string $tab = "", string $form = ""): void {
         $this->projects_manager->render_workspace($tab, $form);
-    }
-    public function render_mods(string $tab = "", string $form = ""): void {
-        $this->mod_manager->render($tab, $form);
     }
     public function render_settings(): void {
         $this->settings_manager->render();
