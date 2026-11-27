@@ -6,425 +6,118 @@
  * @subpackage Includes\Functions\Admin
  * @since 1.0.0
  */
+
 namespace ProjectPress\Includes\Functions\Admin;
 
-use ProjectPress\Includes\Functions\Admin\FunctionsPlugins;
-use ProjectPress\Includes\Functions\Helpers\LoaderHelper;
-use ProjectPress\Includes\Functions\Helpers\LoggerHelper;
-use ProjectPress\Includes\Functions\Helpers\PermalinkHelper;
 use ProjectPress\Includes\Settings\Settings;
-use ProjectPress\Includes\Settings\SettingsManager;
 
 if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+	exit;
 }
 
 final class FunctionsSettings {
-    /**
-     * Plugin functions used to collect provider-backed settings pages.
-     *
-     * @var FunctionsPlugins
-     */
-    private FunctionsPlugins $plugin_functions;
+	private FunctionsPlugins $plugin_functions;
 
-    public function __construct( FunctionsPlugins $plugin_functions ) {
-        $this->plugin_functions = $plugin_functions;
-    }
-
-    /**
-     * Register ProjectPress and provider-backed plugin settings.
-     *
-     * @return void
-     */
-    public function register_settings(): void {
-        // ProjectPress stores settings in its own custom table rather than the default
-        // WordPress options table. The regular settings API is intentionally not used
-        // here; form submissions are handled through the custom admin-post flow.
-    }
-
-    /**
-	 * Register the WordPress admin-post actions used by the settings forms.
-	 *
-	 * @param LoaderHelper $loader Loader instance used to register hooks.
-	 * @return void
-	 */
-	public function register_admin_post_hooks( LoaderHelper $loader ): void {
-		$loader->register_component(
-			$this,
-			array(
-				array(
-					'type'     => 'action',
-					'hook'     => 'admin_post_projectpress_save_general_settings',
-					'callback' => 'handle_general_save',
-				),
-				array(
-					'type'     => 'action',
-					'hook'     => 'admin_post_projectpress_save_access_settings',
-					'callback' => 'handle_access_save',
-				),
-				array(
-					'type'     => 'action',
-					'hook'     => 'admin_post_projectpress_save_layout_settings',
-					'callback' => 'handle_layout_save',
-				),
-				array(
-					'type'     => 'action',
-					'hook'     => 'admin_post_projectpress_save_billing_invoice_settings',
-					'callback' => 'handle_billing_invoice_save',
-				),
-			)
-		)->run();
+	public function __construct( FunctionsPlugins $plugin_functions ) {
+		$this->plugin_functions = $plugin_functions;
 	}
-    /**
-	 * Save settings using the direct admin POST flow used by the custom table store.
-	 *
-	 * @return void
-	 */
+
+	public function register_settings(): void {}
+
 	public function save_settings(): void {
 		$action = isset( $_POST['action'] ) ? sanitize_key( wp_unslash( $_POST['action'] ) ) : '';
-		if ( '' === $action ) {
-			return;
-		}
-
-		if ( 'projectpress_save_general_settings' === $action ) {
-			$this->general_save();
-		}
-
-		if ( in_array( $action, array( 'projectpress_save_access_settings' ), true ) ) {
-			$this->access_save();
-		}
-
-		if ( 'projectpress_save_layout_settings' === $action ) {
-			$this->layout_save();
+		$map = array(
+			'projectpress_save_general_settings'       => 'general_save',
+			'projectpress_save_projects_settings'      => 'projects_save',
+			'projectpress_save_layout_settings'        => 'layout_save',
+			'projectpress_save_access_settings'        => 'access_save',
+			'projectpress_save_notifications_settings' => 'notifications_save',
+			'projectpress_save_activity_settings'      => 'activity_save',
+		);
+		if ( isset( $map[ $action ] ) ) {
+			$this->{$map[ $action ]}();
 		}
 	}
 
-	/**
-	 * Validate a save nonce against the standard WordPress field and the legacy plugin-specific field.
-	 *
-	 * @param string $action Nonce action.
-	 * @return void
-     * @since 1.0.0
-	 */
-	private function validate_save_nonce( string $action ): void {
-		if ( isset( $_REQUEST['_wpnonce'] ) ) {
-			check_admin_referer( $action, '_wpnonce' );
-			return;
-		}
-
-		check_admin_referer( $action );
-	}
-    /**
-	 * Save the general settings.
-	 *
-	 * @return void
-     * @since 1.0.0
-	 */
 	public function general_save(): void {
-		LoggerHelper::write_log( 'ProjectPress general settings save started.' );
-		LoggerHelper::write_log( array(
-			'request' => $_POST,
-			'action' => 'projectpress_save_general_settings',
-		) );
-		if ( ! user_can( get_current_user_id(), 'projectpress_settings_general_edit' ) ) {
-			LoggerHelper::write_log( 'ProjectPress general settings save denied: missing general_edit capability.' );
-			$this->redirect_after_save( 'general', false, __( 'You are not allowed to save ProjectPress general settings.', 'projectpress' ) );
-		}
-
-		$this->validate_save_nonce( 'projectpress_save_general_settings' );
-		$input = isset( $_POST['projectpress_general'] ) && is_array( $_POST['projectpress_general'] ) ? wp_unslash( $_POST['projectpress_general'] ) : array();
-		LoggerHelper::write_log( array(
-			'general_input' => $input,
-			'general_input_keys' => array_keys( $input ),
-		) );
-
-		try {
-			$sanitized = $this->sanitize_general( $input );
-			Settings::set_group( Settings::GENERAL, $sanitized );
-			foreach ( $sanitized as $key => $value ) {
-				Settings::set( $key, $value );
-			}
-			LoggerHelper::write_log( array(
-				'general_sanitized' => $sanitized,
-				'general_db_group' => Settings::get_group( Settings::GENERAL, array() ),
-			) );
-			$this->redirect_after_save( 'general', true, __( 'ProjectPress general settings saved successfully.', 'projectpress' ) );
-		} catch ( \Throwable $exception ) {
-			LoggerHelper::write_log( array(
-				'general_save_error' => $exception->getMessage(),
-				'general_save_trace' => $exception->getTraceAsString(),
-			) );
-			$this->redirect_after_save( 'general', false, __( 'Failed to save ProjectPress general settings.', 'projectpress' ) );
-		}
+		$this->save_group( Settings::GENERAL, 'projectpress_general', 'projectpress_save_general_settings', array( $this, 'sanitize_general' ) );
 	}
 
-	/**
-	 * Save the access settings.
-	 *
-	 * @return void
-	 */
-	public function access_save(): void {
-		LoggerHelper::write_log( 'ProjectPress access settings save started.' );
-		LoggerHelper::write_log( array(
-			'request' => $_POST,
-			'action' => 'projectpress_save_access_settings',
-		) );
-		if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'projectpress_settings_access_edit' ) ) {
-			LoggerHelper::write_log( 'ProjectPress access settings save denied: missing access_edit capability.' );
-			$this->redirect_after_save( 'access', false, __( 'You are not allowed to save ProjectPress access settings.', 'projectpress' ) );
-		}
-
-		$this->validate_save_nonce( 'projectpress_save_access_settings' );
-		$input = isset( $_POST['projectpress_access'] ) && is_array( $_POST['projectpress_access'] ) ? wp_unslash( $_POST['projectpress_access'] ) : array();
-		LoggerHelper::write_log( array(
-			'access_input' => $input,
-			'access_input_keys' => array_keys( $input ),
-		) );
-
-		try {
-			$sanitized = $this->sanitize_access( $input );
-			Settings::set_group( Settings::ACCESS, $sanitized );
-			foreach ( $sanitized as $key => $value ) {
-				Settings::set( $key, $value );
-			}
-			LoggerHelper::write_log( array(
-				'access_sanitized' => $sanitized,
-				'access_db_group' => Settings::get_group( Settings::ACCESS, array() ),
-			) );
-			$this->redirect_after_save( 'access', true, __( 'ProjectPress access settings saved successfully.', 'projectpress' ) );
-		} catch ( \Throwable $exception ) {
-			LoggerHelper::write_log( array(
-				'access_save_error' => $exception->getMessage(),
-				'access_save_trace' => $exception->getTraceAsString(),
-			) );
-			$this->redirect_after_save( 'access', false, __( 'Failed to save ProjectPress access settings.', 'projectpress' ) );
-		}
+	public function projects_save(): void {
+		$this->save_group( Settings::PROJECTS, 'projectpress_projects', 'projectpress_save_projects_settings', array( $this, 'sanitize_projects' ) );
 	}
 
-	/**
-	 * Save the layout settings.
-	 *
-	 * @return void
-	 */
 	public function layout_save(): void {
-		LoggerHelper::write_log( 'ProjectPress layout settings save started.' );
-		LoggerHelper::write_log( array(
-			'request' => $_POST,
-			'action' => 'projectpress_save_layout_settings',
-		) );
-		if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'projectpress_settings_layout_edit' ) ) {
-			LoggerHelper::write_log( 'ProjectPress layout settings save denied: missing layout_edit capability.' );
-			$this->redirect_after_save( 'layout', false, __( 'You are not allowed to save ProjectPress layout settings.', 'projectpress' ) );
-		}
-
-		$this->validate_save_nonce( 'projectpress_save_layout_settings' );
-		$input = isset( $_POST['projectpress_layout'] ) && is_array( $_POST['projectpress_layout'] ) ? wp_unslash( $_POST['projectpress_layout'] ) : array();
-		LoggerHelper::write_log( array(
-			'layout_input' => $input,
-			'layout_input_keys' => array_keys( $input ),
-		) );
-
-		try {
-			$section = sanitize_key( $input['layout_section'] ?? 'general' );
-			$sanitized = $this->sanitize_layout( $input );
-			Settings::set_group( Settings::LAYOUT, $sanitized );
-			foreach ( $sanitized as $key => $value ) {
-				Settings::set( $key, $value );
-			}
-			LoggerHelper::write_log( array(
-				'layout_section' => $section,
-				'layout_sanitized' => $sanitized,
-				'layout_db_group' => Settings::get_group( Settings::LAYOUT, array() ),
-			) );
-			$this->redirect_after_save( 'layout', true, __( 'ProjectPress layout settings saved successfully.', 'projectpress' ), array( 'layout_section' => $section ) );
-		} catch ( \Throwable $exception ) {
-			LoggerHelper::write_log( array(
-				'layout_save_error' => $exception->getMessage(),
-				'layout_save_trace' => $exception->getTraceAsString(),
-			) );
-			$this->redirect_after_save( 'layout', false, __( 'Failed to save ProjectPress layout settings.', 'projectpress' ) );
-		}
+		$this->save_group( Settings::LAYOUT, 'projectpress_layout', 'projectpress_save_layout_settings', array( $this, 'sanitize_layout' ) );
 	}
-    /**
-     * Redirect back to the settings page with a success or error notification flag.
-     *
-     * @param string $tab The settings tab to return to.
-     * @param bool $success Whether the save succeeded.
-     * @param string $message Optional notice message.
-     * @param array<string, string> $extra_query Extra query arguments.
-     * @return void
-     * @since 1.0.0
-     */
-    private function redirect_after_save( string $tab, bool $success, string $message = '', array $extra_query = array() ): void {
-        $query = array(
-            'page' => 'projectpress',
-            'group' => 'settings',
-            'tab' => $tab,
-            $success ? 'settings_saved' : 'settings_failed' => '1',
-        );
 
-        foreach ( $extra_query as $key => $value ) {
-            $query[ $key ] = $value;
-        }
+	public function access_save(): void {
+		$this->save_group( Settings::ACCESS, 'projectpress_access', 'projectpress_save_access_settings', array( $this, 'sanitize_access' ) );
+	}
 
-        if ( '' !== $message ) {
-            $query['settings_message'] = rawurlencode( $message );
-        }
+	public function notifications_save(): void {
+		$this->save_group( Settings::NOTIFICATIONS, 'projectpress_notifications', 'projectpress_save_notifications_settings', array( $this, 'sanitize_notifications' ) );
+	}
 
-        wp_safe_redirect( admin_url( 'admin.php?' . build_query( $query ) ) );
-        exit;
-    }
+	public function activity_save(): void {
+		$this->save_group( Settings::ACTIVITY, 'projectpress_activity', 'projectpress_save_activity_settings', array( $this, 'sanitize_activity' ) );
+	}
 
-    /**
-	 * Sanitize the general settings input.
-	 *
-	 * @param array $input The input data to sanitize.
-	 * @return array The sanitized general settings.
-     * @since 1.0.0
-	 */
-    public function sanitize_general( $input ): array {
-        LoggerHelper::write_log( 'ProjectPress general settings sanitization started.' );
-        if ( ! current_user_can( 'projectpress_settings_general_edit' ) ) {
-            LoggerHelper::write_log( 'ProjectPress general settings sanitization skipped: missing general_edit capability.' );
-            return (array) Settings::get_group( Settings::GENERAL, [] );
-        }
+	private function save_group( string $group, string $field, string $nonce, callable $sanitize ): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You are not allowed to change ProjectPress settings.', 'projectpress' ) );
+		}
+		check_admin_referer( $nonce );
+		$input     = isset( $_POST[ $field ] ) && is_array( $_POST[ $field ] ) ? wp_unslash( $_POST[ $field ] ) : array();
+		$sanitized = call_user_func( $sanitize, $input );
+		$result    = Settings::set_group( $group, $sanitized );
+		$this->redirect_after_save( $group, $result, $result ? __( 'ProjectPress settings saved successfully.', 'projectpress' ) : __( 'Failed to save ProjectPress settings.', 'projectpress' ) );
+	}
 
-        $input = is_array( $input ) ? $input : array();
-        LoggerHelper::write_log( array( 'general_input_to_sanitize' => $input ) );
+	public function sanitize_general( $input ): array {
+		$input = is_array( $input ) ? $input : array();
+		return array(
+			'product_name'        => sanitize_text_field( $input['product_name'] ?? 'ProjectPress' ),
+			'product_description' => sanitize_textarea_field( $input['product_description'] ?? '' ),
+			'items_per_page'      => max( 1, min( 100, absint( $input['items_per_page'] ?? 20 ) ) ),
+		);
+	}
 
-        $root_name = $input['root_name'] ?? '';
-        $root_description = $input['root_description'] ?? '';
-        $archive_title = $input['archive_title'] ?? '';
-        $archive_description = $input['archive_description'] ?? '';
-        $root_slug = $input['root_slug'] ?? '';
-        $category_slug = $input['category_slug'] ?? '';
-        $tag_slug = $input['tag_slug'] ?? '';
-        $permalink = $input['permalink'] ?? '';
-        $enable_schema = ! empty( $input['enable_schema'] );
-        $rewrite_changed = false;
+	public function sanitize_projects( $input ): array {
+		$input = is_array( $input ) ? $input : array();
+		$keys = array( 'default_status', 'default_priority', 'default_visibility', 'default_task_status', 'default_task_priority', 'default_milestone_status', 'default_requirement_status', 'default_feature_status', 'default_story_status' );
+		$output = array();
+		foreach ( $keys as $key ) {
+			$output[ $key ] = sanitize_key( (string) ( $input[ $key ] ?? '' ) );
+		}
+		return $output;
+	}
 
-        if ( $rewrite_changed ) {
-            flush_rewrite_rules();
-        }
+	public function sanitize_layout( $input ): array {
+		$input = is_array( $input ) ? $input : array();
+		$current = Settings::get_group( Settings::LAYOUT, array() );
+		return array_merge( $current, $input );
+	}
 
-        $general = array(
-            'root_name' => sanitize_text_field( $root_name ),
-            'root_description' => sanitize_textarea_field( $root_description ),
-            'archive_title' => sanitize_text_field( $archive_title ),
-            'archive_description' => sanitize_textarea_field( $archive_description ),
-            'root_slug' => sanitize_title( $root_slug ),
-            'category_slug' => sanitize_title( $category_slug ),
-            'tag_slug' => sanitize_title( $tag_slug ),
-            'permalink' => PermalinkHelper::sanitize_pattern( $permalink ),
-            'enable_schema' => $enable_schema,
-        );
+	public function sanitize_access( $input ): array {
+		return is_array( $input ) ? array_map( 'sanitize_text_field', $input ) : array();
+	}
 
-        foreach ( $general as $key => $value ) {
-            $input[ $key ] = $value;
-            Settings::set( $key, $value );
-        }
+	public function sanitize_notifications( $input ): array {
+		$input = is_array( $input ) ? $input : array();
+		$output = array();
+		foreach ( array( 'enabled', 'assignment_notifications', 'due_date_notifications', 'milestone_notifications' ) as $key ) {
+			$output[ $key ] = ! empty( $input[ $key ] );
+		}
+		return $output;
+	}
 
-        Settings::set_group( Settings::GENERAL, $general );
-        LoggerHelper::write_log( array(
-            'general_persisted' => $general,
-            'general_storage_group' => Settings::GENERAL,
-            'general_table_name' => SettingsManager::table_name(),
-        ) );
+	public function sanitize_activity( $input ): array {
+		return array( 'enabled' => ! empty( is_array( $input ) ? $input['enabled'] ?? false : false ) );
+	}
 
-        return $general;
-    }
-
-    public function sanitize_layout( $input ): array {
-        LoggerHelper::write_log( 'ProjectPress layout settings sanitization started.' );
-        if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'projectpress_settings_layout_edit' ) ) {
-            LoggerHelper::write_log( 'ProjectPress layout settings sanitization skipped: missing layout_edit capability.' );
-            return (array) Settings::get_group( Settings::LAYOUT, [] );
-        }
-
-        $input = is_array( $input ) ? $input : [];
-        LoggerHelper::write_log( array( 'layout_input_to_sanitize' => $input ) );
-
-        $section = sanitize_key( $input['layout_section'] ?? 'general' );
-        unset( $input['layout_section'] );
-        $section_keys = [
-            'general' => [ 'show_search', 'show_breadcrumbs', 'show_sidebar' ],
-            'search' => [ 'show_search', 'search_placeholder', 'search_button_text', 'search_scope', 'search_no_results_message', 'search_results_count', 'search_min_chars', 'search_live_results' ],
-            'sidebar' => [ 'show_sidebar', 'sidebar_position', 'sidebar_width', 'sidebar_sticky', 'sidebar_show_categories', 'sidebar_show_category_count', 'sidebar_expand_categories', 'sidebar_show_page_count' ],
-            'page' => [ 'page_show_title', 'show_breadcrumbs', 'page_show_toc', 'page_toc_position', 'toc_min_level', 'toc_max_level', 'show_last_updated', 'show_author', 'show_reading_time', 'reading_time_wpm', 'show_feedback', 'page_show_navigation', 'show_related_pages', 'related_pages_count' ],
-        ];
-        $active_keys = $section_keys[ $section ] ?? array_merge( ...array_values( $section_keys ) );
-
-        foreach ( [ 'show_search', 'show_toc', 'show_breadcrumbs', 'show_last_updated', 'show_author', 'show_reading_time', 'show_feedback', 'show_related_pages', 'search_live_results', 'show_sidebar', 'sidebar_sticky', 'sidebar_show_categories', 'sidebar_show_category_count', 'sidebar_expand_categories', 'sidebar_show_page_count', 'page_show_title', 'page_show_toc', 'page_show_navigation' ] as $key ) {
-            if ( ! in_array( $key, $active_keys, true ) ) {
-                continue;
-            }
-            $value = ! empty( $input[ $key ] );
-            $input[ $key ] = $value;
-        }
-        foreach ( [ 'search_placeholder', 'search_button_text', 'search_no_results_message' ] as $key ) {
-            if ( ! in_array( $key, $active_keys, true ) ) {
-                continue;
-            }
-            $input[ $key ] = sanitize_text_field( $input[ $key ] ?? '' );
-        }
-        if ( in_array( 'search_scope', $active_keys, true ) ) {
-            $input['search_scope'] = in_array( $input['search_scope'] ?? '', [ 'all', 'title', 'content' ], true ) ? $input['search_scope'] : 'all';
-        }
-        if ( in_array( 'sidebar_position', $active_keys, true ) ) {
-            $input['sidebar_position'] = in_array( $input['sidebar_position'] ?? '', [ 'left', 'right' ], true ) ? $input['sidebar_position'] : 'left';
-        }
-        if ( in_array( 'page_toc_position', $active_keys, true ) ) {
-            $input['page_toc_position'] = in_array( $input['page_toc_position'] ?? '', [ 'sidebar', 'content' ], true ) ? $input['page_toc_position'] : 'sidebar';
-        }
-        foreach ( [ 'related_pages_count' => [ 1, 12 ], 'search_results_count' => [ 1, 50 ], 'search_min_chars' => [ 1, 5 ], 'sidebar_width' => [ 180, 480 ], 'toc_min_level' => [ 1, 5 ], 'toc_max_level' => [ 2, 6 ], 'reading_time_wpm' => [ 100, 400 ] ] as $key => [ $minimum, $maximum ] ) {
-            if ( ! in_array( $key, $active_keys, true ) ) {
-                continue;
-            }
-            $input[ $key ] = max( $minimum, min( $maximum, absint( $input[ $key ] ?? $minimum ) ) );
-        }
-
-        LoggerHelper::write_log( array(
-            'layout_section' => $section,
-            'layout_sanitized' => $input,
-        ) );
-
-        return $input;
-    }
-
-    public function sanitize_access( $input ): array {
-        LoggerHelper::write_log( 'ProjectPress access settings sanitization started.' );
-        if ( ! current_user_can( 'manage_options' ) && ! current_user_can( 'projectpress_settings_access_edit' ) ) {
-            LoggerHelper::write_log( 'ProjectPress access settings sanitization skipped: missing access_edit capability.' );
-            return (array) Settings::get_group( Settings::ACCESS, [] );
-        }
-
-        $input = is_array( $input ) ? $input : [];
-        LoggerHelper::write_log( array( 'access_input_to_sanitize' => $input ) );
-
-        $allowed = [ 'manage_options', 'edit_posts', 'publish_posts' ];
-        foreach ( [ 'create_mods', 'write_pages', 'view_analytics', 'manage_plugins' ] as $key ) {
-            $values = is_array( $input[ $key ] ?? null ) ? $input[ $key ] : [ $input[ $key ] ?? 'manage_options' ];
-            $values = array_values( array_unique( array_intersect( $allowed, array_map( 'sanitize_key', $values ) ) ) );
-            $input[ $key ] = empty( $values ) ? [ 'manage_options' ] : $values;
-        }
-
-        LoggerHelper::write_log( array(
-            'access_sanitized' => $input,
-        ) );
-
-        return $input;
-    }
-
-    public function sanitize_tools( $input ): array {
-        LoggerHelper::write_log( 'ProjectPress tools settings sanitization started.' );
-        $input = is_array( $input ) ? $input : [];
-        foreach ( [ 'debug_logging', 'console_logging' ] as $key ) {
-            $input[ $key ] = ! empty( $input[ $key ] );
-        }
-        LoggerHelper::write_log( array(
-            'tools_sanitized' => $input,
-        ) );
-        return $input;
-    }
+	private function redirect_after_save( string $tab, bool $success, string $message ): void {
+		wp_safe_redirect( add_query_arg( array( 'page' => 'projectpress', 'group' => 'settings', 'tab' => $tab, $success ? 'settings_saved' : 'settings_failed' => '1', 'settings_message' => rawurlencode( $message ) ), admin_url( 'admin.php' ) ) );
+		exit;
+	}
 }
-
