@@ -11,8 +11,8 @@ namespace ProjectPress\Includes\Settings;
 
 use ProjectPress\Includes\Core\WP\Database;
 
-if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+if (!defined("ABSPATH")) {
+    exit();
 }
 
 final class SettingsManager {
@@ -37,7 +37,7 @@ final class SettingsManager {
      * @since 1.0.0
      */
     public static function table_name(): string {
-        return Database::table_name( 'settings' );
+        return Database::table_name("settings");
     }
     /**
      * Install the settings table and initialize default settings.
@@ -48,15 +48,10 @@ final class SettingsManager {
     public static function install(): void {
         Database::install();
 
-        foreach ( self::registered_defaults() as $group => $settings ) {
-            $stored_settings = self::get_group( $group );
-            if ( null === $stored_settings ) {
-                $legacy_settings = self::get_legacy_group( $group );
-                $stored_settings = is_array( $legacy_settings ) ? $legacy_settings : [];
-            }
+        foreach (self::registered_defaults() as $group => $settings) {
+            $stored_settings = self::get_group($group);
 
-            self::set_group( $group, array_merge( $settings, $stored_settings ) );
-            self::delete_legacy_group( $group );
+            self::set_group($group, array_merge($settings, $stored_settings));
         }
     }
     /**
@@ -66,13 +61,13 @@ final class SettingsManager {
      * @param mixed $default
      * @return mixed
      */
-    public static function get( string $key, $default = null ) {
-        foreach ( self::get_all() as $settings ) {
-            if ( is_array( $settings ) && array_key_exists( $key, $settings ) ) {
-                return $settings[ $key ];
+    public static function get(string $key, $default = null) {
+        foreach (self::get_all() as $settings) {
+            if (is_array($settings) && array_key_exists($key, $settings)) {
+                return $settings[$key];
             }
         }
-        return self::registered_default( $key, $default );
+        return self::registered_default($key, $default);
     }
     /**
      * Set a setting by its key.
@@ -81,11 +76,11 @@ final class SettingsManager {
      * @param mixed $value
      * @return boolean
      */
-    public static function set( string $key, $value ): bool {
-        $group = self::group_for_key( $key );
-        $settings = self::get_group( $group ) ?? [];
-        $settings[ $key ] = $value;
-        return self::set_group( $group, $settings );
+    public static function set(string $key, $value): bool {
+        $group = self::group_for_key($key);
+        $settings = self::get_group($group) ?? [];
+        $settings[$key] = $value;
+        return self::set_group($group, $settings);
     }
     /**
      * Delete a setting by its key.
@@ -93,14 +88,14 @@ final class SettingsManager {
      * @param string $key
      * @return boolean
      */
-    public static function delete( string $key ): bool {
-        $group = self::group_for_key( $key );
-        $settings = self::get_group( $group );
-        if ( ! is_array( $settings ) || ! array_key_exists( $key, $settings ) ) {
+    public static function delete(string $key): bool {
+        $group = self::group_for_key($key);
+        $settings = self::get_group($group);
+        if (!is_array($settings) || !array_key_exists($key, $settings)) {
             return false;
         }
-        unset( $settings[ $key ] );
-        return self::set_group( $group, $settings );
+        unset($settings[$key]);
+        return self::set_group($group, $settings);
     }
     /**
      * Check if a setting exists.
@@ -109,9 +104,9 @@ final class SettingsManager {
      * @return bool
      * @since 1.0.0
      */
-    public static function has( string $key ): bool {
-        foreach ( self::get_all() as $settings ) {
-            if ( is_array( $settings ) && array_key_exists( $key, $settings ) ) {
+    public static function has(string $key): bool {
+        foreach (self::get_all() as $settings) {
+            if (is_array($settings) && array_key_exists($key, $settings)) {
                 return true;
             }
         }
@@ -126,19 +121,19 @@ final class SettingsManager {
      */
     public static function get_all(): array {
         global $wpdb;
-        $rows = $wpdb->get_results( 'SELECT setting_group, setting_value FROM ' . self::table_name(), ARRAY_A );
+        $rows = $wpdb->get_results("SELECT setting_group, setting_value FROM " . self::table_name(), ARRAY_A);
         $settings = self::registered_defaults();
 
-        foreach ( $rows ?: [] as $row ) {
-            $group = self::logical_group( $row['setting_group'] );
-            $stored = maybe_unserialize( $row['setting_value'] );
+        foreach ($rows ?: [] as $row) {
+            $group = self::logical_group($row["setting_group"]);
+            $stored = maybe_unserialize($row["setting_value"]);
 
-            if ( ! is_array( $stored ) ) {
+            if (!is_array($stored)) {
                 continue;
             }
 
-            $defaults = self::registered_defaults()[ $group ] ?? [];
-            $settings[ $group ] = array_merge( $defaults, $stored );
+            $defaults = self::registered_defaults()[$group] ?? [];
+            $settings[$group] = array_merge($defaults, $stored);
         }
 
         return $settings;
@@ -151,54 +146,54 @@ final class SettingsManager {
      */
     public static function defaults(): array {
         return [
-            'general' => [
-                'root_name' => 'ProjectPress',
-                'root_description' => __( 'A searchable catalogue powered by ProjectPress.', 'projectpress' ),
-                'archive_title' => __( 'ProjectPress Catalogue', 'projectpress' ),
-                'archive_description' => __( 'Browse the ProjectPress catalogue.', 'projectpress' ),
-                'root_slug' => 'catalogue',
-                'category_slug' => 'catalogue-group',
-                'tag_slug' => 'catalogue-tag',
-                'permalink' => '%root%/%mod_group%/%mod_tag%/%mod_page%',
-                'enable_schema' => true,
+            "general" => [
+                "root_name" => "ProjectPress",
+                "root_description" => __("A searchable catalogue powered by ProjectPress.", "projectpress"),
+                "archive_title" => __("ProjectPress Catalogue", "projectpress"),
+                "archive_description" => __("Browse the ProjectPress catalogue.", "projectpress"),
+                "root_slug" => "catalogue",
+                "category_slug" => "catalogue-group",
+                "tag_slug" => "catalogue-tag",
+                "permalink" => "%root%/%mod_group%/%mod_tag%/%mod_page%",
+                "enable_schema" => true,
             ],
-            'layout' => [
-                'show_search' => true,
-                'show_toc' => true,
-                'show_breadcrumbs' => true,
-                'show_last_updated' => true,
-                'show_author' => false,
-                'show_reading_time' => false,
-                'show_feedback' => true,
-                'show_related_pages' => true,
-                'related_pages_count' => 4,
-                'search_placeholder' => __( 'Search the catalogue', 'projectpress' ),
-                'search_button_text' => __( 'Search', 'projectpress' ),
-                'search_scope' => 'all',
-                'search_no_results_message' => __( 'No catalogue entries found.', 'projectpress' ),
-                'search_results_count' => 10,
-                'search_min_chars' => 2,
-                'search_live_results' => true,
-                'show_sidebar' => true,
-                'sidebar_position' => 'left',
-                'sidebar_width' => 280,
-                'sidebar_sticky' => true,
-                'sidebar_show_categories' => true,
-                'sidebar_show_category_count' => false,
-                'sidebar_expand_categories' => true,
-                'sidebar_show_page_count' => false,
-                'page_show_title' => true,
-                'page_show_toc' => true,
-                'page_toc_position' => 'sidebar',
-                'toc_min_level' => 2,
-                'toc_max_level' => 4,
-                'page_show_navigation' => true,
-                'reading_time_wpm' => 200,
+            "layout" => [
+                "show_search" => true,
+                "show_toc" => true,
+                "show_breadcrumbs" => true,
+                "show_last_updated" => true,
+                "show_author" => false,
+                "show_reading_time" => false,
+                "show_feedback" => true,
+                "show_related_pages" => true,
+                "related_pages_count" => 4,
+                "search_placeholder" => __("Search the catalogue", "projectpress"),
+                "search_button_text" => __("Search", "projectpress"),
+                "search_scope" => "all",
+                "search_no_results_message" => __("No catalogue entries found.", "projectpress"),
+                "search_results_count" => 10,
+                "search_min_chars" => 2,
+                "search_live_results" => true,
+                "show_sidebar" => true,
+                "sidebar_position" => "left",
+                "sidebar_width" => 280,
+                "sidebar_sticky" => true,
+                "sidebar_show_categories" => true,
+                "sidebar_show_category_count" => false,
+                "sidebar_expand_categories" => true,
+                "sidebar_show_page_count" => false,
+                "page_show_title" => true,
+                "page_show_toc" => true,
+                "page_toc_position" => "sidebar",
+                "toc_min_level" => 2,
+                "toc_max_level" => 4,
+                "page_show_navigation" => true,
+                "reading_time_wpm" => 200,
             ],
-            'access' => [],
-            'tools' => [ 
-                'debug_logging' => false,
-                'console_logging' => false 
+            "access" => [],
+            "tools" => [
+                "debug_logging" => false,
+                "console_logging" => false,
             ],
         ];
     }
@@ -209,18 +204,23 @@ final class SettingsManager {
      * @return array
      * @since 1.0.0
      */
-    public static function get_group( string $group ): ?array {
+    public static function get_group(string $group): ?array {
         global $wpdb;
-        $group = self::normalize_group( $group );
-        $value = $wpdb->get_var( $wpdb->prepare( 'SELECT setting_value FROM ' . self::table_name() . ' WHERE setting_group = %s', self::storage_group( $group ) ) );
-        $settings = $value === null ? null : maybe_unserialize( $value );
+        $group = self::normalize_group($group);
+        $value = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT setting_value FROM " . self::table_name() . " WHERE setting_group = %s",
+                self::storage_group($group),
+            ),
+        );
+        $settings = $value === null ? null : maybe_unserialize($value);
 
-        if ( ! is_array( $settings ) ) {
-            return self::registered_defaults()[ $group ] ?? null;
+        if (!is_array($settings)) {
+            return self::registered_defaults()[$group] ?? null;
         }
 
-        $defaults = self::registered_defaults()[ $group ] ?? [];
-        return array_merge( $defaults, $settings );
+        $defaults = self::registered_defaults()[$group] ?? [];
+        return array_merge($defaults, $settings);
     }
     /**
      * Set the settings for a specific group.
@@ -230,14 +230,19 @@ final class SettingsManager {
      * @return bool
      * @since 1.0.0
      */
-    public static function set_group( string $group, array $settings ): bool {
+    public static function set_group(string $group, array $settings): bool {
         global $wpdb;
-        return false !== $wpdb->replace( self::table_name(), [
-            'setting_group' => self::storage_group( $group ),
-            'setting_value' => maybe_serialize( $settings ),
-            'autoload' => 'yes',
-            'updated_at' => current_time( 'mysql' ),
-        ], [ '%s', '%s', '%s', '%s' ] );
+        return false !==
+            $wpdb->replace(
+                self::table_name(),
+                [
+                    "setting_group" => self::storage_group($group),
+                    "setting_value" => maybe_serialize($settings),
+                    "autoload" => "yes",
+                    "updated_at" => current_time("mysql"),
+                ],
+                ["%s", "%s", "%s", "%s"],
+            );
     }
     /**
      * Register a settings group with default values.
@@ -247,17 +252,17 @@ final class SettingsManager {
      * @return bool
      * @since 1.0.0
      */
-    public static function register_group( string $group, array $defaults = [] ): bool {
-        $group = self::normalize_group( $group );
-        if ( '' === $group ) {
+    public static function register_group(string $group, array $defaults = []): bool {
+        $group = self::normalize_group($group);
+        if ("" === $group) {
             return false;
         }
 
-        self::$registered_groups[ $group ] = array_merge( self::$registered_groups[ $group ] ?? [], $defaults );
-        foreach ( $defaults as $key => $default ) {
-            $key = sanitize_key( (string) $key );
-            if ( '' !== $key ) {
-                self::$registered_keys[ $key ] = $group;
+        self::$registered_groups[$group] = array_merge(self::$registered_groups[$group] ?? [], $defaults);
+        foreach ($defaults as $key => $default) {
+            $key = sanitize_key((string) $key);
+            if ("" !== $key) {
+                self::$registered_keys[$key] = $group;
             }
         }
         return true;
@@ -271,15 +276,15 @@ final class SettingsManager {
      * @return bool
      * @since 1.0.0
      */
-    public static function register_key( string $key, string $group, $default = null ): bool {
-        $key = sanitize_key( $key );
-        if ( '' === $key || ! self::register_group( $group ) ) {
+    public static function register_key(string $key, string $group, $default = null): bool {
+        $key = sanitize_key($key);
+        if ("" === $key || !self::register_group($group)) {
             return false;
         }
 
-        $group = self::normalize_group( $group );
-        self::$registered_keys[ $key ] = $group;
-        self::$registered_groups[ $group ][ $key ] = $default;
+        $group = self::normalize_group($group);
+        self::$registered_keys[$key] = $group;
+        self::$registered_groups[$group][$key] = $default;
         return true;
     }
     /**
@@ -289,9 +294,9 @@ final class SettingsManager {
      * @return string
      * @since 1.0.0
      */
-    private static function storage_group( string $group ): string {
-        $group = self::normalize_group( $group );
-        return str_starts_with( $group, 'projectpress_' ) ? $group : 'projectpress_' . $group;
+    private static function storage_group(string $group): string {
+        $group = self::normalize_group($group);
+        return str_starts_with($group, "projectpress_") ? $group : "projectpress_" . $group;
     }
 
     /**
@@ -301,8 +306,8 @@ final class SettingsManager {
      * @return string
      * @since 1.0.0
      */
-    private static function logical_group( string $group ): string {
-        return str_starts_with( $group, 'projectpress_' ) ? substr( $group, 10 ) : $group;
+    private static function logical_group(string $group): string {
+        return str_starts_with($group, "projectpress_") ? substr($group, 10) : $group;
     }
     /**
      * Get the logical group name for a given setting key.
@@ -311,24 +316,24 @@ final class SettingsManager {
      * @return string
      * @since 1.0.0
      */
-    private static function group_for_key( string $key ): string {
-        $key = sanitize_key( $key );
-        if ( isset( self::$registered_keys[ $key ] ) ) {
-            return self::$registered_keys[ $key ];
+    private static function group_for_key(string $key): string {
+        $key = sanitize_key($key);
+        if (isset(self::$registered_keys[$key])) {
+            return self::$registered_keys[$key];
         }
-        if ( in_array( $key, [ 'create_mods', 'write_pages', 'view_analytics', 'manage_plugins' ], true ) ) {
-            return 'access';
+        if (in_array($key, ["create_mods", "write_pages", "view_analytics", "manage_plugins"], true)) {
+            return "access";
         }
-        if ( str_contains( $key, 'layout' ) ) {
-            return 'layout';
+        if (str_contains($key, "layout")) {
+            return "layout";
         }
-        if ( str_contains( $key, 'access' ) ) {
-            return 'access';
+        if (str_contains($key, "access")) {
+            return "access";
         }
-        if ( str_contains( $key, 'tool' ) ) {
-            return 'tools';
+        if (str_contains($key, "tool")) {
+            return "tools";
         }
-        return 'general';
+        return "general";
     }
 
     /**
@@ -339,8 +344,8 @@ final class SettingsManager {
      */
     private static function registered_defaults(): array {
         $defaults = self::defaults();
-        foreach ( self::$registered_groups as $group => $settings ) {
-            $defaults[ $group ] = array_merge( $defaults[ $group ] ?? [], $settings );
+        foreach (self::$registered_groups as $group => $settings) {
+            $defaults[$group] = array_merge($defaults[$group] ?? [], $settings);
         }
 
         return $defaults;
@@ -353,11 +358,11 @@ final class SettingsManager {
      * @return mixed
      * @since 1.0.0
      */
-    private static function registered_default( string $key, $fallback ) {
-        $key = sanitize_key( $key );
-        foreach ( self::registered_defaults() as $settings ) {
-            if ( array_key_exists( $key, $settings ) ) {
-                return $settings[ $key ];
+    private static function registered_default(string $key, $fallback) {
+        $key = sanitize_key($key);
+        foreach (self::registered_defaults() as $settings) {
+            if (array_key_exists($key, $settings)) {
+                return $settings[$key];
             }
         }
 
@@ -370,17 +375,14 @@ final class SettingsManager {
      * @return string
      * @since 1.0.0
      */
-    private static function normalize_group( string $group ): string {
-        $group = str_replace( '-', '_', sanitize_key( $group ) );
-        $group = str_replace( ' ', '_', $group );
+    private static function normalize_group(string $group): string {
+        $group = str_replace("-", "_", sanitize_key($group));
+        $group = str_replace(" ", "_", $group);
 
-        if ( str_starts_with( $group, 'projectpress_' ) ) {
-            return preg_replace( '/^projectpress_/', '', $group ) ?: $group;
+        if (str_starts_with($group, "projectpress_")) {
+            return preg_replace("/^projectpress_/", "", $group) ?: $group;
         }
 
         return $group;
     }
 }
-
-
-
