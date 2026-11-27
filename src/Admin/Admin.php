@@ -87,6 +87,7 @@ final class Admin {
         $project_manager = new ProjectManager();
         $this->managers = [
             "dashboard" => new DashboardManager(),
+            "project-manager" => $project_manager,
             "projects" => $project_manager,
             "settings" => new SettingsManager(),
             "tools" => new ToolsManager(),
@@ -146,6 +147,7 @@ final class Admin {
             [
                 "projectpress" => "dashboard",
                 "dashboard" => "dashboard",
+                "project-manager" => "project-manager",
                 "projects" => "projects",
                 "settings" => "settings",
                 "tools" => "tools",
