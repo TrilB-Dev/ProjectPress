@@ -77,7 +77,7 @@ class ComposerStaticInit63b9c64bbeb3b3ae65e485664320ebb9
         ),
         'Doctrine\\Instantiator\\' =>
         array (
-            0 => __DIR__ . '/..' . '/doctrine/instantiator/src/Doctrine/Instantiator',
+            0 => __DIR__ . '/..' . '/doctrine/instantiator/src',
         ),
         'DeepCopy\\' =>
         array (
