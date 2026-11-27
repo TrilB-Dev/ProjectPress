@@ -32,19 +32,61 @@ if (!defined("ABSPATH")) {
 }
 
 final class Admin {
+    /**
+     * Dashboard manager instance.
+     *
+     * @var DashboardManager
+     * @since 1.0.0
+     */
     private DashboardManager $dashboard_manager;
+    /**
+     * Settings manager instance.
+     *
+     * @var SettingsManager
+     * @since 1.0.0
+     */
     private SettingsManager $settings_manager;
+
+    /**
+     * Project manager instance.
+     *
+     * @var ProjectManager
+     * @since 1.0.0
+     */
     private ProjectManager $projects_manager;
+    /**
+     * Tools manager instance.
+     *
+     * @var ToolsManager
+     * @since 1.0.0
+     */
     private ToolsManager $tools_manager;
+    /**
+     * Array of all manager instances.
+     *
+     * @var array
+     * @since 1.0.0
+     */
     private array $managers;
+    /**
+     * Loader helper instance.
+     *
+     * @var LoaderHelper
+     * @since 1.0.0
+     */
     private LoaderHelper $loader;
+    /**
+     * Assets instance.
+     *
+     * @var Assets
+     * @since 1.0.0
+     */
     private Assets $assets;
 
     public function __construct(Assets $assets) {
         $project_manager = new ProjectManager();
         $this->managers = [
             "dashboard" => new DashboardManager(),
-            "project-manager" => $project_manager,
             "projects" => $project_manager,
             "settings" => new SettingsManager(),
             "tools" => new ToolsManager(),
@@ -105,7 +147,6 @@ final class Admin {
                 "projectpress" => "dashboard",
                 "dashboard" => "dashboard",
                 "projects" => "projects",
-                "project-manager" => "project-manager",
                 "settings" => "settings",
                 "tools" => "tools",
                 "reports" => "reports",
