@@ -3,11 +3,11 @@
  * Global project field administration.
  *
  * @package ProjectPress
- * @subpackage Admin\Manager\ProjectManager
+ * @subpackage Admin\Manager\Projects
  * @since 1.0.0
  */
 
-namespace ProjectPress\Admin\Manager\ProjectManager;
+namespace ProjectPress\Admin\Manager\Projects;
 
 use ProjectPress\Includes\Functions\Helpers\RequestHelper;
 use ProjectPress\Includes\Project\Core\ProjectFieldRepository;

@@ -67,6 +67,62 @@ final class ProjectManager extends Manager {
 	private Project $details;
 
 	/**
+	 * Global project list and lifecycle handler.
+	 *
+	 * @var Project
+	 * @since 1.0.0
+	 */
+	private Project $global_projects;
+
+	/**
+	 * Global category handler.
+	 *
+	 * @var Categories
+	 * @since 1.0.0
+	 */
+	private Categories $categories;
+
+	/**
+	 * Global tag handler.
+	 *
+	 * @var Tags
+	 * @since 1.0.0
+	 */
+	private Tags $tags;
+
+	/**
+	 * Global type handler.
+	 *
+	 * @var Types
+	 * @since 1.0.0
+	 */
+	private Types $types;
+
+	/**
+	 * Global label handler.
+	 *
+	 * @var Labels
+	 * @since 1.0.0
+	 */
+	private Labels $labels;
+
+	/**
+	 * Global team handler.
+	 *
+	 * @var Teams
+	 * @since 1.0.0
+	 */
+	private Teams $global_teams;
+
+	/**
+	 * Global field handler.
+	 *
+	 * @var Fields
+	 * @since 1.0.0
+	 */
+	private Fields $fields;
+
+	/**
 	 * @var Teams
 	 * @since 1.0.0
 	 */
@@ -195,6 +251,9 @@ final class ProjectManager extends Manager {
 
 	/**
 	 * Constructor.
+	 *
+	 * @return void
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		$this->page = "projects";
@@ -204,6 +263,13 @@ final class ProjectManager extends Manager {
 		$this->activity = new ActivityRepository();
 		$this->details = new Project($this->projects, $permissions);
 		$this->members = new Teams($this->projects, $permissions);
+		$this->global_projects = new Project($this->projects, $permissions);
+		$this->global_teams = new Teams($this->projects, $permissions);
+		$this->categories = new Categories();
+		$this->tags = new Tags();
+		$this->types = new Types();
+		$this->labels = new Labels();
+		$this->fields = new Fields();
 		$this->tasks = new Tasks($this->projects, $permissions);
 		$this->milestones = new Milestones($this->projects, $permissions);
 		$this->planning = new Planning($this->projects);
@@ -220,6 +286,16 @@ final class ProjectManager extends Manager {
 		$this->reporting = new Reporting($this->projects, $permissions);
 		$this->composition = new Composition($this->projects, $permissions);
 
+		add_action("admin_post_projectpress_project_save", [$this->global_projects, "handle_global_save"]);
+		add_action("admin_post_projectpress_project_archive", [$this->global_projects, "handle_global_archive"]);
+		add_action("admin_post_projectpress_project_restore", [$this->global_projects, "handle_global_restore"]);
+		add_action("admin_post_projectpress_project_delete", [$this->global_projects, "handle_global_delete"]);
+		add_action("admin_post_projectpress_projects_bulk", [$this->global_projects, "handle_global_bulk"]);
+		add_action("admin_post_projectpress_classification_save", [$this->types, "handle_save"]);
+		add_action("admin_post_projectpress_team_save", [$this->global_teams, "handle_global_save"]);
+		add_action("admin_post_projectpress_team_member_save", [$this->global_teams, "handle_global_member_save"]);
+		add_action("admin_post_projectpress_team_project_save", [$this->global_teams, "handle_global_project_save"]);
+		add_action("admin_post_projectpress_field_save", [$this->fields, "handle_save"]);
 		add_action("admin_post_projectpress_workspace_project_details_save", [$this->details, "handle_save"]);
 		add_action("admin_post_projectpress_workspace_project_team_assign", [$this->members, "handle_assign"]);
 		add_action("admin_post_projectpress_workspace_project_team_remove", [$this->members, "handle_remove"]);
@@ -269,6 +345,77 @@ final class ProjectManager extends Manager {
 	 * @return void
 	 */
 	public function render(string $tab = "", string $form = ""): void {
+		$group = sanitize_key(RequestHelper::get_key("group", ""));
+		if ("project-manager" === $group) {
+			$this->render_global($tab, $form);
+			return;
+		}
+		$this->render_workspace($tab, $form);
+	}
+
+	/**
+	 * Render global Project Manager routes.
+	 *
+	 * @param string $tab Global route tab.
+	 * @param string $form Global route form.
+	 * @return void
+	 * @since 1.0.0
+	 */
+	public function render_global(string $tab = "", string $form = ""): void {
+		if (!current_user_can("manage_options") && !current_user_can("projectpress_projects_view")) {
+			wp_die(esc_html__("You are not authorised to view Project Manager.", "projectpress"));
+		}
+
+		$allowed_tabs = ["projects", "new", "edit", "categories", "tags", "types", "labels", "fields", "teams"];
+		$tab = $this->normalize_route(
+			"" !== $tab ? $tab : RequestHelper::get_key("tab", "projects"),
+			array_combine($allowed_tabs, $allowed_tabs),
+			"projects",
+		);
+
+		$this->header(__("Project Manager", "projectpress"));
+
+		switch ($tab) {
+			case "new":
+				$this->global_projects->render_global_form();
+				break;
+			case "edit":
+				$this->global_projects->render_global_form(RequestHelper::get_integer("project_id", 0));
+				break;
+			case "categories":
+				$this->categories->render();
+				break;
+			case "tags":
+				$this->tags->render();
+				break;
+			case "types":
+				$this->types->render();
+				break;
+			case "labels":
+				$this->labels->render();
+				break;
+			case "fields":
+				$this->fields->render();
+				break;
+			case "teams":
+				$this->global_teams->render_global();
+				break;
+			default:
+				$this->global_projects->render_global_list();
+		}
+
+		$this->footer();
+	}
+
+	/**
+	 * Render an individual project workspace.
+	 *
+	 * @param string $tab Initial workspace tab.
+	 * @param string $form Initial workspace form.
+	 * @return void
+	 * @since 1.0.0
+	 */
+	public function render_workspace(string $tab = "", string $form = ""): void {
 		$identifier = RequestHelper::get_text("project", "");
 		if ("" === $identifier) {
 			$identifier = (string) RequestHelper::get_integer("project_id", 0);
